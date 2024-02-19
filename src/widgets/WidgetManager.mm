@@ -17,6 +17,7 @@
 #import "../extensions/LunarDate.h"
 #import "../extensions/FontUtils.h"
 #import "../extensions/WeatherUtils.h"
+#import "../extensions/HWeatherController.h"
 
 // Thanks to: https://github.com/lwlsw/NetworkSpeed13
 
@@ -54,11 +55,11 @@ static NSAttributedString *attributedUploadPrefix2 = nil;
 static NSAttributedString *attributedDownloadPrefix2 = nil;
 
 #pragma mark - Date Widget
-static NSString* formattedDate(NSString *dateFormat, NSString *dateLocale)
+static NSString* formattedDate(NSString *dateFormat)
 {
     if (!formatter) {
         formatter = [[NSDateFormatter alloc] init];
-        formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:dateLocale];
+        // formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:dateLocale];
     }
     NSDate *currentDate = [NSDate date];
     NSString *newDateFormat = [LunarDate getChineseCalendarWithDate:currentDate format:dateFormat];
@@ -282,6 +283,20 @@ static NSString* formattedChargingSymbol(BOOL filled)
 }
 
 
+static NSMutableAttributedString* replaceWeatherImage(NSString* formattedText, NSAttributedString *replacement) {
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"\\{([^}]+)\\}" options:NSRegularExpressionAnchorsMatchLines error:nil];
+    NSArray *matches = [regex matchesInString:formattedText options:kNilOptions range:NSMakeRange(0, formattedText.length)];
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:formattedText];
+    for (NSTextCheckingResult *result in [matches reverseObjectEnumerator])
+    {
+        NSString *match = [formattedText substringWithRange:result.range];
+        if ([match isEqual:@"{i}"]) {
+            [attributedString replaceCharactersInRange:result.range withAttributedString:replacement];
+        }
+    }
+    return attributedString;
+}
+
 #pragma mark - Main Widget Functions
 /*
  Widget Identifiers:
@@ -299,7 +314,7 @@ static NSString* formattedChargingSymbol(BOOL filled)
  TODO:
  - Music Visualizer
  */
-void formatParsedInfo(NSDictionary *parsedInfo, NSInteger parsedID, NSMutableAttributedString *mutableString, double fontSize, UIColor *textColor, NSString *apiKey, NSString *dateLocale)
+void formatParsedInfo(NSDictionary *parsedInfo, NSInteger parsedID, NSMutableAttributedString *mutableString, double fontSize, UIColor *textColor, UIFont *font, NSString *dateLocale)
 {
     NSString *widgetString;
     NSString *sfSymbolName;
@@ -309,7 +324,7 @@ void formatParsedInfo(NSDictionary *parsedInfo, NSInteger parsedID, NSMutableAtt
         case 5:
             // Date/Time
             widgetString = formattedDate(
-                [parsedInfo valueForKey:@"dateFormat"] ? [parsedInfo valueForKey:@"dateFormat"] : (parsedID == 1 ? NSLocalizedString(@"E MMM dd", comment: @"") : @"hh:mm"), dateLocale
+                [parsedInfo valueForKey:@"dateFormat"] ? [parsedInfo valueForKey:@"dateFormat"] : (parsedID == 1 ? NSLocalizedString(@"E MMM dd", comment: @"") : @"hh:mm")
             );
             break;
         case 2:
@@ -366,12 +381,30 @@ void formatParsedInfo(NSDictionary *parsedInfo, NSInteger parsedID, NSMutableAtt
         case 9:
             {
                 // Weather
-                NSString *location = [parsedInfo valueForKey:@"location"];
-                NSString *format = [parsedInfo valueForKey:@"format"];
-                NSDictionary *now = [WeatherUtils fetchNowWeatherForLocation: location apiKey:apiKey dateLocale:dateLocale];
-                NSDictionary *today = [WeatherUtils fetchTodayWeatherForLocation: location apiKey:apiKey dateLocale:dateLocale];
-                widgetString = [WeatherUtils formatNowResult:now format:format];
-                widgetString = [WeatherUtils formatTodayResult:today format:widgetString];
+                NSString *format = [parsedInfo valueForKey:@"format"] ?: @"{i}{n}{lt}°~{ht}°({t}°,{bt}°)💧{h}%";
+                HWeatherController *weatherController = [HWeatherController sharedInstance];
+                weatherController.locale = [[NSLocale alloc] initWithLocaleIdentifier:dateLocale];
+                [weatherController requestModelUpdate];
+                weatherController.useFahrenheit = [parsedInfo valueForKey:@"useFahrenheit"] ? [[parsedInfo valueForKey:@"useFahrenheit"] boolValue] : NO;
+                weatherController.useMetric = [parsedInfo valueForKey:@"useMetric"] ? [[parsedInfo valueForKey:@"useMetric"] boolValue] : NO;
+                NSDictionary *weatherData = [weatherController weatherData];
+                format = [WeatherUtils formatWeatherData:weatherData format:format];
+                // NSLog(@"boom format:%@", format);
+
+                UIImage *weatherImage = weatherData[@"conditions_image"];
+                if (weatherImage) {
+                    imageAttachment = [[NSTextAttachment alloc] init];
+                    CGFloat imgH = font.pointSize * 1.4f;
+                    CGFloat imgW = (weatherImage.size.width / weatherImage.size.height) * imgH;
+                    [imageAttachment setBounds:CGRectMake(0, roundf(font.capHeight - imgH)/2.f, imgW, imgH)];
+                    weatherImage = [weatherImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+                    imageAttachment.image = weatherImage;
+                    format = [format stringByReplacingOccurrencesOfString:@"\\n" withString:@"\n"];
+                    format = [format stringByReplacingOccurrencesOfString:@"\\t" withString:@"\t"];
+                    [mutableString appendAttributedString:replaceWeatherImage(format, [NSAttributedString attributedStringWithAttachment:imageAttachment])];
+                } else {
+                    widgetString = format;
+                }
             }
             break;
         default:
@@ -381,13 +414,11 @@ void formatParsedInfo(NSDictionary *parsedInfo, NSInteger parsedID, NSMutableAtt
     if (widgetString) {
         widgetString = [widgetString stringByReplacingOccurrencesOfString:@"\\n" withString:@"\n"];
         widgetString = [widgetString stringByReplacingOccurrencesOfString:@"\\t" withString:@"\t"];
-        [
-            mutableString appendAttributedString:[[NSAttributedString alloc] initWithString: widgetString]
-        ];
+        [mutableString appendAttributedString:[[NSAttributedString alloc] initWithString: widgetString]];
     }
 }
 
-NSAttributedString* formattedAttributedString(NSArray *identifiers, double fontSize, UIColor *textColor, NSString *apiKey, NSString *dateLocale)
+NSAttributedString* formattedAttributedString(NSArray *identifiers, double fontSize, UIColor *textColor, UIFont *font, NSString *dateLocale)
 {
     @autoreleasepool {
         NSMutableAttributedString* mutableString = [[NSMutableAttributedString alloc] init];
@@ -396,7 +427,7 @@ NSAttributedString* formattedAttributedString(NSArray *identifiers, double fontS
             for (id idInfo in identifiers) {
                 NSDictionary *parsedInfo = idInfo;
                 NSInteger parsedID = [parsedInfo valueForKey:@"widgetID"] ? [[parsedInfo valueForKey:@"widgetID"] integerValue] : 0;
-                formatParsedInfo(parsedInfo, parsedID, mutableString, fontSize, textColor, apiKey, dateLocale);
+                formatParsedInfo(parsedInfo, parsedID, mutableString, fontSize, textColor, font, dateLocale);
             }
         } else {
             return nil;
