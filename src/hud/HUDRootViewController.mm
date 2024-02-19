@@ -265,13 +265,6 @@ static void ReloadHUD
     return mode ? [mode boolValue] : NO;
 }
 
-- (NSString*) apiKey
-{
-    [self loadUserDefaults:NO];
-    NSString *apiKey = [_userDefaults objectForKey: @"apiKey"];
-    return apiKey ? apiKey : @"";
-}
-
 - (NSString*) dateLocale
 {
     [self loadUserDefaults:NO];
@@ -303,10 +296,6 @@ static void ReloadHUD
 {
     self = [super init];
     if (self) {
-        // load fonts from app
-        [FontUtils loadFontsFromFolder:[NSString stringWithFormat:@"%@%@", [[NSBundle mainBundle] resourcePath],  @"/fonts"]];
-        // load fonts from documents
-        [FontUtils loadFontsFromFolder:[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject]];
         _constraints = [NSMutableArray array];
         _blurViews = [NSMutableArray array];
         _labelViews = [NSMutableArray array];
@@ -408,7 +397,7 @@ static void ReloadHUD
 #if DEBUG
     os_log_debug(OS_LOG_DEFAULT, "updateLabel");
 #endif
-    NSAttributedString *attributedText = formattedAttributedString(identifiers, fontSize, label.textColor, [self apiKey], [self dateLocale]);
+    NSAttributedString *attributedText = formattedAttributedString(identifiers, fontSize, label.textColor, label.font, [self dateLocale]);
     if (attributedText) {
         // NSLog(@"boom attr:%@", attributedText);
         [label setAttributedText: attributedText];
