@@ -91,7 +91,7 @@ struct EditWidgetSetView: View {
                             Text(NSLocalizedString("Portrait", comment: "")).tag(1)
                             Text(NSLocalizedString("Landscape", comment: "")).tag(2)
                         } label: {}
-                        .pickerStyle(.menu)
+                        .pickerStyle(MenuPickerStyle())
                         .onChange(of: orientationMode) { _ in
                             changesMade = true
                         }
@@ -124,7 +124,7 @@ struct EditWidgetSetView: View {
                             Text(NSLocalizedString("Center", comment: "")).tag(1)
                             Text(NSLocalizedString("Right", comment: "")).tag(2)
                         } label: {}
-                        .pickerStyle(.menu)
+                        .pickerStyle(MenuPickerStyle())
                         .onChange(of: anchorSelection) { _ in
                             changesMade = true
                         }
@@ -138,7 +138,7 @@ struct EditWidgetSetView: View {
                             Text(NSLocalizedString("Center", comment: "")).tag(1)
                             Text(NSLocalizedString("Bottom", comment: "")).tag(2)
                         } label: {}
-                        .pickerStyle(.menu)
+                        .pickerStyle(MenuPickerStyle())
                         .onChange(of: anchorYSelection) { _ in
                             changesMade = true
                         }
@@ -304,7 +304,7 @@ struct EditWidgetSetView: View {
                                     Text(NSLocalizedString("Light", comment: "")).tag(0)
                                     Text(NSLocalizedString("Dark", comment: "")).tag(1)
                                 } label: {}
-                                .pickerStyle(.menu)
+                                .pickerStyle(MenuPickerStyle())
                                 .onChange(of: blurStyle) { _ in
                                     changesMade = true
                                 }
@@ -394,7 +394,7 @@ struct EditWidgetSetView: View {
                             Text(NSLocalizedString("Center", comment: "")).tag(1)
                             Text(NSLocalizedString("Right", comment: "")).tag(2)
                         } label: {}
-                        .pickerStyle(.menu)
+                        .pickerStyle(MenuPickerStyle())
                         .onChange(of: textAlignment) { _ in
                             changesMade = true
                         }

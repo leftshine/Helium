@@ -74,7 +74,7 @@ struct WidgetPreferencesView: View {
                             Text(NSLocalizedString("Download", comment:"")).tag(0)
                             Text(NSLocalizedString("Upload", comment:"")).tag(1)
                         } label: {}
-                        .pickerStyle(.menu)
+                        .pickerStyle(MenuPickerStyle())
                         .onAppear {
                             if let netUp = widgetID.config["isUp"] as? Bool {
                                 intSelection = netUp ? 1 : 0
@@ -93,7 +93,7 @@ struct WidgetPreferencesView: View {
                             Text(intSelection == 0 ? "▼" : "▲").tag(0)
                             Text(intSelection == 0 ? "↓" : "↑").tag(1)
                         } label: {}
-                        .pickerStyle(.menu)
+                        .pickerStyle(MenuPickerStyle())
                         .onAppear {
                             if let speedIcon = widgetID.config["speedIcon"] as? Int {
                                 intSelection2 = speedIcon
@@ -114,7 +114,7 @@ struct WidgetPreferencesView: View {
                             Text("Mb").tag(2)
                             Text("Gb").tag(3)
                         } label: {}
-                        .pickerStyle(.menu)
+                        .pickerStyle(MenuPickerStyle())
                         .onAppear {
                             if let minUnit = widgetID.config["minUnit"] as? Int {
                                 intSelection3 = minUnit
@@ -144,7 +144,7 @@ struct WidgetPreferencesView: View {
                         Text(NSLocalizedString("Celcius", comment:"")).tag(0)
                         Text(NSLocalizedString("Fahrenheit", comment:"")).tag(1)
                     } label: {}
-                    .pickerStyle(.menu)
+                    .pickerStyle(MenuPickerStyle())
                     .onAppear {
                         if widgetID.config["useFahrenheit"] as? Bool ?? false == true {
                             intSelection = 1
@@ -166,7 +166,7 @@ struct WidgetPreferencesView: View {
                         Text(NSLocalizedString("Amperage", comment:"")).tag(2)
                         Text(NSLocalizedString("Charge Cycles", comment:"")).tag(3)
                     } label: {}
-                    .pickerStyle(.menu)
+                    .pickerStyle(MenuPickerStyle())
                     .onAppear {
                         if let batteryType = widgetID.config["batteryValueType"] as? Int {
                             intSelection = batteryType
@@ -264,7 +264,7 @@ struct WidgetPreferencesView: View {
                                 Text(NSLocalizedString("Celcius", comment:"")).tag(0)
                                 Text(NSLocalizedString("Fahrenheit", comment:"")).tag(1)
                             } label: {}
-                            .pickerStyle(.menu)
+                            .pickerStyle(MenuPickerStyle())
                             .onAppear {
                                 if widgetID.config["useFahrenheit"] as? Bool ?? false == true {
                                     intSelection = 1
@@ -283,7 +283,7 @@ struct WidgetPreferencesView: View {
                                 Text(NSLocalizedString("Metric", comment:"")).tag(0)
                                 Text(NSLocalizedString("US", comment:"")).tag(1)
                             } label: {}
-                            .pickerStyle(.menu)
+                            .pickerStyle(MenuPickerStyle())
                             .onAppear {
                                 if let useMetric = widgetID.config["useMetric"] as? Bool {
                                     intSelection2 = useMetric ? 1 : 0

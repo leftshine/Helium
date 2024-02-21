@@ -45,7 +45,7 @@ struct SettingsView: View {
                             Text("en").tag("en")
                             Text("zh").tag("zh")
                         } label: { }
-                        .pickerStyle(.menu)
+                        .pickerStyle(MenuPickerStyle())
                     }
 
                     HStack {
