@@ -300,7 +300,8 @@ static NSMutableAttributedString* replaceWeatherImage(NSString* formattedText, N
 
 static NSString* getLyricsKeyByBundleIdentifier(NSString *bundleid) {
     if([bundleid isEqual:@"com.soda.music"] || [bundleid isEqual:@"com.tencent.QQMusic"] 
-        || [bundleid isEqual:@"com.yeelion.kwplayer"]) {
+        || [bundleid isEqual:@"com.yeelion.kwplayer"]
+        || [bundleid isEqual:@"com.migu.migumobilemusic"]) {
         return @"kMRMediaRemoteNowPlayingInfoArtist";
     } else if([bundleid isEqual:@"com.netease.cloudmusic"]) {
         return @"kMRMediaRemoteNowPlayingInfoTitle";
