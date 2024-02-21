@@ -14,6 +14,7 @@
 #import <objc/runtime.h>
 #import "WidgetManager.h"
 #import <IOKit/IOKitLib.h>
+#import <AVFoundation/AVAudioSession.h>
 #import "../extensions/LunarDate.h"
 #import "../extensions/FontUtils.h"
 #import "../extensions/WeatherUtils.h"
@@ -298,12 +299,33 @@ static NSMutableAttributedString* replaceWeatherImage(NSString* formattedText, N
     return attributedString;
 }
 
+static BOOL hasBluetoothHeadset() {
+    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+    AVAudioSessionRouteDescription *currentRoute = [audioSession currentRoute];
+    for (AVAudioSessionPortDescription *output in currentRoute.outputs) {
+        if ([[output portType] isEqualToString:@"BluetoothA2DPOutput"]) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
 static NSString* getLyricsKeyByBundleIdentifier(NSString *bundleid) {
-    if([bundleid isEqual:@"com.soda.music"] || [bundleid isEqual:@"com.tencent.QQMusic"] 
-        || [bundleid isEqual:@"com.yeelion.kwplayer"] || [bundleid isEqual:@"com.migu.migumobilemusic"]
-        || [bundleid isEqual:@"com.wenyu.bodian"] || [bundleid isEqual:@"com.kugou.kgyouth"]) {
-        return @"kMRMediaRemoteNowPlayingInfoArtist";
-    } else if([bundleid isEqual:@"com.netease.cloudmusic"]) {
+    if([bundleid isEqual:@"com.soda.music"]
+        || [bundleid isEqual:@"com.tencent.QQMusic"] 
+        || [bundleid isEqual:@"com.yeelion.kwplayer"]
+        || [bundleid isEqual:@"com.migu.migumobilemusic"]
+        || [bundleid isEqual:@"com.wenyu.bodian"]
+    ) {
+        if (!hasBluetoothHeadset()) {
+            return @"kMRMediaRemoteNowPlayingInfoArtist";
+        } else {
+            return @"kMRMediaRemoteNowPlayingInfoTitle";
+        }
+    } else if([bundleid isEqual:@"com.netease.cloudmusic"]
+        || [bundleid isEqual:@"com.kugou.kugou1002"]
+        || [bundleid isEqual:@"com.kugou.kgyouth"]
+    ) {
         return @"kMRMediaRemoteNowPlayingInfoTitle";
     } else {
         return nil;
