@@ -377,9 +377,7 @@ static void ReloadHUD
         float height = getDoubleFromDictKey(properties, @"scaleY", 12.0);
         if (isEnabled) {
             [[EZTimer shareInstance] timer:[NSString stringWithFormat:@"labelview%d", i] timerInterval:updateInterval leeway:0.1 resumeType:EZTimerResumeTypeNow queue:EZTimerQueueTypeConcurrent queueName:@"update" repeats:YES action:^(NSString *timerName) {
-                dispatch_sync(dispatch_get_main_queue(), ^{
-                    [self updateLabel: labelView updateMaskLabel: maskLabelView backdropView: backdropView identifiers: identifiers fontSize: fontSize autoResizes: autoResizes width: width height: height];
-                });
+                [self updateLabel: labelView updateMaskLabel: maskLabelView backdropView: backdropView blurView: blurView identifiers: identifiers fontSize: fontSize autoResizes: autoResizes width: width height: height properties: properties];
             }];
         } else {
             [blurView setEffect:nil];
@@ -392,22 +390,33 @@ static void ReloadHUD
     }
 }
 
-- (void) updateLabel:(UILabel *) label updateMaskLabel:(UILabel *) maskLabel backdropView:(AnyBackdropView *) backdropView identifiers:(NSArray *) identifiers fontSize:(double) fontSize autoResizes:(BOOL) autoResizes width:(CGFloat) width height:(CGFloat) height
+- (void) updateLabel:(UILabel *) label updateMaskLabel:(UILabel *) maskLabel backdropView:(AnyBackdropView *) backdropView blurView:(UIVisualEffectView *) blurView identifiers:(NSArray *) identifiers fontSize:(double) fontSize autoResizes:(BOOL) autoResizes width:(CGFloat) width height:(CGFloat) height properties:(NSDictionary *) properties
 {
 #if DEBUG
     os_log_debug(OS_LOG_DEFAULT, "updateLabel");
 #endif
     NSAttributedString *attributedText = formattedAttributedString(identifiers, fontSize, label.textColor, label.font, [self dateLocale]);
-    if (attributedText) {
-        // NSLog(@"boom attr:%@", attributedText);
-        [label setAttributedText: attributedText];
-        [maskLabel setAttributedText: attributedText];
-        if (autoResizes) {
-            [self useSizeThatFitsZeroWithLabel:maskLabel];
-        } else {
-            [self useSizeThatFitsCustomWithLabel:maskLabel width: width height: height];
+    
+    NSDictionary *blurDetails = [properties valueForKey:@"blurDetails"] ? [properties valueForKey:@"blurDetails"] : @{@"hasBlur" : @(NO)};
+    BOOL hasBlur = getBoolFromDictKey(blurDetails, @"hasBlur");
+    BOOL dynamicColor = getBoolFromDictKey(properties, @"dynamicColor", true);
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (attributedText) {
+            [label setAttributedText: attributedText];
+            [maskLabel setAttributedText: attributedText];
+            if (dynamicColor || attributedText.length == 0) {
+                [blurView setHidden: YES];
+            } else if (hasBlur) {
+                [blurView setHidden: NO];
+            }
+            if (autoResizes) {
+                [self useSizeThatFitsZeroWithLabel:maskLabel];
+            } else {
+                [self useSizeThatFitsCustomWithLabel:maskLabel width: width height: height];
+            }
         }
-    }
+    });
 }
 
 - (void) useSizeThatFitsZeroWithLabel:(UILabel *)label{

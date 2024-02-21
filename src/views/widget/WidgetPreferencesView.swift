@@ -21,7 +21,6 @@ struct WidgetPreferencesView: View {
     @State var boolSelection: Bool = false
     
     @State var modified: Bool = false
-    @State private var isPresented = false
     
     let timeFormats: [String] = [
         "hh:mm",
@@ -303,8 +302,8 @@ struct WidgetPreferencesView: View {
                         }
                     }
                 }
-            // default:
-            //     Text(NSLocalizedString("No Configurable Aspects", comment:""))
+            default:
+                Text(NSLocalizedString("No Configurable Aspects", comment:""))
             }
         }
         .padding(.horizontal, 15)
@@ -408,8 +407,8 @@ struct WidgetPreferencesView: View {
             } else {
                 widgetStruct.config["format"] = weatherFormat
             }
-        // default:
-        //     return;
+        default:
+            return;
         }
         
         widgetManager.updateWidgetConfig(widgetSet: widgetSet, id: widgetID, newID: widgetStruct)

@@ -18,6 +18,7 @@
 #import "../extensions/FontUtils.h"
 #import "../extensions/WeatherUtils.h"
 #import "../extensions/HWeatherController.h"
+#import "../extensions/MediaRemoteManager.h"
 
 // Thanks to: https://github.com/lwlsw/NetworkSpeed13
 
@@ -297,6 +298,16 @@ static NSMutableAttributedString* replaceWeatherImage(NSString* formattedText, N
     return attributedString;
 }
 
+static NSString* getLyricsKeyByBundleIdentifier(NSString *bundleid) {
+    if([bundleid isEqual:@"com.soda.music"] || [bundleid isEqual:@"com.tencent.QQMusic"]) {
+        return @"kMRMediaRemoteNowPlayingInfoArtist";
+    } else if([bundleid isEqual:@"com.netease.cloudmusic"]) {
+        return @"kMRMediaRemoteNowPlayingInfoTitle";
+    } else {
+        return nil;
+    }
+}
+
 #pragma mark - Main Widget Functions
 /*
  Widget Identifiers:
@@ -310,6 +321,7 @@ static NSMutableAttributedString* replaceWeatherImage(NSString* formattedText, N
  7 = Battery Percentage
  8 = Charging Symbol
  9 = Weather
+ 10 = Lyrics
 
  TODO:
  - Music Visualizer
@@ -407,6 +419,26 @@ void formatParsedInfo(NSDictionary *parsedInfo, NSInteger parsedID, NSMutableAtt
                 }
             }
             break;
+        case 10:
+            {
+                // Lyrics
+                __block NSString *resultMessage;
+                MediaRemoteManager *manager = [MediaRemoteManager sharedManager];
+                dispatch_group_t group = dispatch_group_create();
+                dispatch_group_enter(group);
+                [manager getBundleIdentifierWithCompletion:^(NSString *bundleIdentifier) {
+                    resultMessage = getLyricsKeyByBundleIdentifier(bundleIdentifier);
+                    dispatch_group_leave(group);
+                }];
+                dispatch_group_enter(group);
+                [manager getNowPlayingInfoWithCompletion:^(NSDictionary *info) {
+                    resultMessage = info[resultMessage];
+                    dispatch_group_leave(group);
+                }];
+                dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
+                widgetString = resultMessage;
+            }
+            break;
         default:
             // do not add anything
             break;
@@ -422,12 +454,15 @@ NSAttributedString* formattedAttributedString(NSArray *identifiers, double fontS
 {
     @autoreleasepool {
         NSMutableAttributedString* mutableString = [[NSMutableAttributedString alloc] init];
-        
+        dispatch_queue_t concurrentQueue = dispatch_queue_create("formatqueue", DISPATCH_QUEUE_CONCURRENT);
+
         if (identifiers) {
             for (id idInfo in identifiers) {
-                NSDictionary *parsedInfo = idInfo;
-                NSInteger parsedID = [parsedInfo valueForKey:@"widgetID"] ? [[parsedInfo valueForKey:@"widgetID"] integerValue] : 0;
-                formatParsedInfo(parsedInfo, parsedID, mutableString, fontSize, textColor, font, dateLocale);
+                dispatch_sync(concurrentQueue, ^{
+                    NSDictionary *parsedInfo = idInfo;
+                    NSInteger parsedID = [parsedInfo valueForKey:@"widgetID"] ? [[parsedInfo valueForKey:@"widgetID"] integerValue] : 0;
+                    formatParsedInfo(parsedInfo, parsedID, mutableString, fontSize, textColor, font, dateLocale);
+                });
             }
         } else {
             return nil;
