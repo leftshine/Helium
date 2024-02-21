@@ -300,7 +300,8 @@ static NSMutableAttributedString* replaceWeatherImage(NSString* formattedText, N
 
 static NSString* getLyricsKeyByBundleIdentifier(NSString *bundleid) {
     if([bundleid isEqual:@"com.soda.music"] || [bundleid isEqual:@"com.tencent.QQMusic"] 
-        || [bundleid isEqual:@"com.yeelion.kwplayer"]) {
+        || [bundleid isEqual:@"com.yeelion.kwplayer"] || [bundleid isEqual:@"com.migu.migumobilemusic"]
+        || [bundleid isEqual:@"com.wenyu.bodian"] || [bundleid isEqual:@"com.kugou.kgyouth"]) {
         return @"kMRMediaRemoteNowPlayingInfoArtist";
     } else if([bundleid isEqual:@"com.netease.cloudmusic"]) {
         return @"kMRMediaRemoteNowPlayingInfoTitle";
@@ -423,21 +424,31 @@ void formatParsedInfo(NSDictionary *parsedInfo, NSInteger parsedID, NSMutableAtt
         case 10:
             {
                 // Lyrics
-                __block NSString *resultMessage;
+                __block NSString *resultMessage1 = nil;
+                __block BOOL resultMessage2 = false;
+                __block NSString *resultMessage3 = nil;
                 MediaRemoteManager *manager = [MediaRemoteManager sharedManager];
-                dispatch_group_t group = dispatch_group_create();
-                dispatch_group_enter(group);
+                dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
                 [manager getBundleIdentifierWithCompletion:^(NSString *bundleIdentifier) {
-                    resultMessage = getLyricsKeyByBundleIdentifier(bundleIdentifier);
-                    dispatch_group_leave(group);
+                    resultMessage1 = getLyricsKeyByBundleIdentifier(bundleIdentifier);
+                    dispatch_semaphore_signal(semaphore);
                 }];
-                dispatch_group_enter(group);
-                [manager getNowPlayingInfoWithCompletion:^(NSDictionary *info) {
-                    resultMessage = info[resultMessage];
-                    dispatch_group_leave(group);
-                }];
-                dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
-                widgetString = resultMessage;
+                dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+                if (resultMessage1) {
+                    [manager getNowPlayingApplicationIsPlayingWithCompletion:^(BOOL isPlaying) {
+                        resultMessage2 = isPlaying;
+                        dispatch_semaphore_signal(semaphore);
+                    }];
+                    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+                    if (resultMessage2) {
+                        [manager getNowPlayingInfoWithCompletion:^(NSDictionary *info) {
+                            resultMessage3 = info[resultMessage1];
+                            dispatch_semaphore_signal(semaphore);
+                        }];
+                        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+                        widgetString = resultMessage3;
+                    }
+                }
             }
             break;
         default:

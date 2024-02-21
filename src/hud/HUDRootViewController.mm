@@ -400,6 +400,7 @@ static void ReloadHUD
     NSDictionary *blurDetails = [properties valueForKey:@"blurDetails"] ? [properties valueForKey:@"blurDetails"] : @{@"hasBlur" : @(NO)};
     BOOL hasBlur = getBoolFromDictKey(blurDetails, @"hasBlur");
     BOOL dynamicColor = getBoolFromDictKey(properties, @"dynamicColor", true);
+    NSInteger orientationMode = getIntFromDictKey(properties, @"orientationMode", 0);
 
     dispatch_async(dispatch_get_main_queue(), ^{
         if (attributedText) {
@@ -407,8 +408,9 @@ static void ReloadHUD
             [maskLabel setAttributedText: attributedText];
             if (dynamicColor || attributedText.length == 0) {
                 [blurView setHidden: YES];
-            } else if (hasBlur) {
-                [blurView setHidden: NO];
+            } else if (hasBlur && !((orientationMode == 1 && [self isLandscapeOrientation])
+                    || (orientationMode == 2 && ![self isLandscapeOrientation]))) {
+                [blurView setHidden:NO];
             }
             if (autoResizes) {
                 [self useSizeThatFitsZeroWithLabel:maskLabel];
