@@ -174,6 +174,7 @@
 "Battery Capacity" = "电池容量";
 "Charging Symbol" = "充电符号";
 "Weather" = "天气";
+"Lyrics" = "歌词";
 
 /* WeatherUtils.mm */
 "error" = "出错啦";

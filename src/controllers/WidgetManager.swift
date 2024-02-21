@@ -460,7 +460,7 @@ class WidgetDetails {
         case .weather:
             return (NSLocalizedString("Weather", comment: ""), "🌤 20℃")
         case .lyrics:
-            return (NSLocalizedString("Lyrics", comment: ""), "Lyrics")
+            return (NSLocalizedString("Lyrics", comment: ""), NSLocalizedString("Lyrics", comment: ""))
         }
     }
     

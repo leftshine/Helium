@@ -20,7 +20,7 @@
 
 - (void)getBundleIdentifierWithCompletion:(void (^)(NSString *bundleIdentifier))completion {
     MRMediaRemoteGetNowPlayingClient(dispatch_get_main_queue(), ^(id client) {
-        NSLog(@"boom: %@", client);
+        // NSLog(@"boom: %@", client);
         CFStringRef bundleid = MRNowPlayingClientGetBundleIdentifier(client);
         NSString *bundleIdentifier = (__bridge NSString*)bundleid;
         completion(bundleIdentifier);
@@ -29,7 +29,7 @@
 
 - (void)getNowPlayingApplicationIsPlayingWithCompletion:(void (^)(bool isPlaying))completion {
     MRMediaRemoteGetNowPlayingApplicationIsPlaying(dispatch_get_main_queue(), ^(Boolean isPlaying) {
-        NSLog(@"boom: %d", isPlaying);
+        // NSLog(@"boom: %d", isPlaying);
         completion(isPlaying);
     });
 }
