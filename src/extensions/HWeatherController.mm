@@ -167,8 +167,10 @@ typedef NSUInteger ConditionImageType;
 				[self imageForKey:[rootName stringByAppendingString:@"-night-white"]];
 			} break;
 		}
-	} @catch (NSException *e) {}
-	return conditionsImg;
+	} @catch (NSException *e) {
+		NSLog(@"boom: %@", e);
+	}
+	return conditionsImg ?: [self imageForKey:@"mostly-sunny-white"];
 }
 
 -(NSString *)conditionsImageName {
