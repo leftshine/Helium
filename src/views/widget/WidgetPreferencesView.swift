@@ -70,11 +70,12 @@ struct WidgetPreferencesView: View {
                             .foregroundColor(.primary)
                             .bold()
                             .frame(maxWidth: .infinity, alignment: .leading)
-                        Picker(selection: $intSelection) {
-                            Text(NSLocalizedString("Download", comment:"")).tag(0)
-                            Text(NSLocalizedString("Upload", comment:"")).tag(1)
-                        } label: {}
-                        .pickerStyle(MenuPickerStyle())
+                        DropdownPicker(selection: $intSelection) {
+                            return [
+                                DropdownItem(NSLocalizedString("Download", comment:""), tag: 0),
+                                DropdownItem(NSLocalizedString("Upload", comment:""), tag: 1)
+                            ]
+                        }
                         .onAppear {
                             if let netUp = widgetID.config["isUp"] as? Bool {
                                 intSelection = netUp ? 1 : 0
@@ -89,11 +90,12 @@ struct WidgetPreferencesView: View {
                             .foregroundColor(.primary)
                             .bold()
                             .frame(maxWidth: .infinity, alignment: .leading)
-                        Picker(selection: $intSelection2) {
-                            Text(intSelection == 0 ? "▼" : "▲").tag(0)
-                            Text(intSelection == 0 ? "↓" : "↑").tag(1)
-                        } label: {}
-                        .pickerStyle(MenuPickerStyle())
+                        DropdownPicker(selection: $intSelection2) {
+                            return [
+                                DropdownItem(intSelection == 0 ? "▼" : "▲", tag: 0),
+                                DropdownItem(intSelection == 0 ? "↓" : "↑", tag: 1)
+                            ]
+                        }
                         .onAppear {
                             if let speedIcon = widgetID.config["speedIcon"] as? Int {
                                 intSelection2 = speedIcon
@@ -108,13 +110,14 @@ struct WidgetPreferencesView: View {
                             .foregroundColor(.primary)
                             .bold()
                             .frame(maxWidth: .infinity, alignment: .leading)
-                        Picker(selection: $intSelection3) {
-                            Text("b").tag(0)
-                            Text("Kb").tag(1)
-                            Text("Mb").tag(2)
-                            Text("Gb").tag(3)
-                        } label: {}
-                        .pickerStyle(MenuPickerStyle())
+                        DropdownPicker(selection: $intSelection3) {
+                            return [
+                                DropdownItem("b", tag: 0),
+                                DropdownItem("Kb", tag: 1),
+                                DropdownItem("Mb", tag: 2),
+                                DropdownItem("Gb", tag: 3)
+                            ]
+                        }
                         .onAppear {
                             if let minUnit = widgetID.config["minUnit"] as? Int {
                                 intSelection3 = minUnit
@@ -140,11 +143,12 @@ struct WidgetPreferencesView: View {
                         .foregroundColor(.primary)
                         .bold()
                         .frame(maxWidth: .infinity, alignment: .leading)
-                    Picker(selection: $intSelection) {
-                        Text(NSLocalizedString("Celcius", comment:"")).tag(0)
-                        Text(NSLocalizedString("Fahrenheit", comment:"")).tag(1)
-                    } label: {}
-                    .pickerStyle(MenuPickerStyle())
+                    DropdownPicker(selection: $intSelection) {
+                        return [
+                            DropdownItem(NSLocalizedString("Celcius", comment:""), tag: 0),
+                            DropdownItem(NSLocalizedString("Fahrenheit", comment:""), tag: 1)
+                        ]
+                    }
                     .onAppear {
                         if widgetID.config["useFahrenheit"] as? Bool ?? false == true {
                             intSelection = 1
@@ -160,13 +164,14 @@ struct WidgetPreferencesView: View {
                         .foregroundColor(.primary)
                         .bold()
                         .frame(maxWidth: .infinity, alignment: .leading)
-                    Picker(selection: $intSelection) {
-                        Text(NSLocalizedString("Watts", comment:"")).tag(0)
-                        Text(NSLocalizedString("Charging Current", comment:"")).tag(1)
-                        Text(NSLocalizedString("Amperage", comment:"")).tag(2)
-                        Text(NSLocalizedString("Charge Cycles", comment:"")).tag(3)
-                    } label: {}
-                    .pickerStyle(MenuPickerStyle())
+                    DropdownPicker(selection: $intSelection) {
+                        return [
+                            DropdownItem(NSLocalizedString("Watts", comment:""), tag: 0),
+                            DropdownItem(NSLocalizedString("Charging Current", comment:""), tag: 1),
+                            DropdownItem(NSLocalizedString("Amperage", comment:""), tag: 2),
+                            DropdownItem(NSLocalizedString("Charge Cycles", comment:""), tag: 3)
+                        ]
+                    }
                     .onAppear {
                         if let batteryType = widgetID.config["batteryValueType"] as? Int {
                             intSelection = batteryType
@@ -260,11 +265,12 @@ struct WidgetPreferencesView: View {
                                 .foregroundColor(.primary)
                                 .bold()
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                            Picker(selection: $intSelection) {
-                                Text(NSLocalizedString("Celcius", comment:"")).tag(0)
-                                Text(NSLocalizedString("Fahrenheit", comment:"")).tag(1)
-                            } label: {}
-                            .pickerStyle(MenuPickerStyle())
+                            DropdownPicker(selection: $intSelection) {
+                                return [
+                                    DropdownItem(NSLocalizedString("Celcius", comment:""), tag: 0),
+                                    DropdownItem(NSLocalizedString("Fahrenheit", comment:""), tag: 1)
+                                ]
+                            }
                             .onAppear {
                                 if widgetID.config["useFahrenheit"] as? Bool ?? false == true {
                                     intSelection = 1
@@ -279,11 +285,12 @@ struct WidgetPreferencesView: View {
                                 .foregroundColor(.primary)
                                 .bold()
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                            Picker(selection: $intSelection2) {
-                                Text(NSLocalizedString("Metric", comment:"")).tag(0)
-                                Text(NSLocalizedString("US", comment:"")).tag(1)
-                            } label: {}
-                            .pickerStyle(MenuPickerStyle())
+                            DropdownPicker(selection: $intSelection2) {
+                                return [
+                                    DropdownItem(NSLocalizedString("Metric", comment:""), tag: 0),
+                                    DropdownItem(NSLocalizedString("US", comment:""), tag: 1)
+                                ]
+                            }
                             .onAppear {
                                 if let useMetric = widgetID.config["useMetric"] as? Bool {
                                     intSelection2 = useMetric ? 1 : 0

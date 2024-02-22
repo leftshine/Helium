@@ -86,12 +86,13 @@ struct EditWidgetSetView: View {
                         Text(NSLocalizedString("Orientation Mode", comment: ""))
                             .bold()
                             .frame(maxWidth: .infinity, alignment: .leading)
-                        Picker(selection: $orientationMode) {
-                            Text(NSLocalizedString("Portrait & Landscape", comment: "")).tag(0)
-                            Text(NSLocalizedString("Portrait", comment: "")).tag(1)
-                            Text(NSLocalizedString("Landscape", comment: "")).tag(2)
-                        } label: {}
-                        .pickerStyle(MenuPickerStyle())
+                        DropdownPicker(selection: $orientationMode) {
+                            return [
+                                DropdownItem(NSLocalizedString("Portrait & Landscape", comment:""), tag: 0),
+                                DropdownItem(NSLocalizedString("Portrait", comment:""), tag: 1),
+                                DropdownItem(NSLocalizedString("Landscape", comment:""), tag: 2)
+                            ]
+                        }
                         .onChange(of: orientationMode) { _ in
                             changesMade = true
                         }
@@ -119,12 +120,13 @@ struct EditWidgetSetView: View {
                         Text(NSLocalizedString("Horizontal Anchor Side", comment: ""))
                             .bold()
                             .frame(maxWidth: .infinity, alignment: .leading)
-                        Picker(selection: $anchorSelection) {
-                            Text(NSLocalizedString("Left", comment: "")).tag(0)
-                            Text(NSLocalizedString("Center", comment: "")).tag(1)
-                            Text(NSLocalizedString("Right", comment: "")).tag(2)
-                        } label: {}
-                        .pickerStyle(MenuPickerStyle())
+                        DropdownPicker(selection: $anchorSelection) {
+                            return [
+                                DropdownItem(NSLocalizedString("Left", comment:""), tag: 0),
+                                DropdownItem(NSLocalizedString("Center", comment:""), tag: 1),
+                                DropdownItem(NSLocalizedString("Right", comment:""), tag: 2)
+                            ]
+                        }
                         .onChange(of: anchorSelection) { _ in
                             changesMade = true
                         }
@@ -133,12 +135,13 @@ struct EditWidgetSetView: View {
                         Text(NSLocalizedString("Vertical Anchor Side", comment: ""))
                             .bold()
                             .frame(maxWidth: .infinity, alignment: .leading)
-                        Picker(selection: $anchorYSelection) {
-                            Text(NSLocalizedString("Top", comment: "")).tag(0)
-                            Text(NSLocalizedString("Center", comment: "")).tag(1)
-                            Text(NSLocalizedString("Bottom", comment: "")).tag(2)
-                        } label: {}
-                        .pickerStyle(MenuPickerStyle())
+                        DropdownPicker(selection: $anchorYSelection) {
+                            return [
+                                DropdownItem(NSLocalizedString("Top", comment:""), tag: 0),
+                                DropdownItem(NSLocalizedString("Center", comment:""), tag: 1),
+                                DropdownItem(NSLocalizedString("Bottom", comment:""), tag: 2)
+                            ]
+                        }
                         .onChange(of: anchorYSelection) { _ in
                             changesMade = true
                         }
@@ -300,11 +303,12 @@ struct EditWidgetSetView: View {
                                 Text(NSLocalizedString("Blur Style", comment: ""))
                                     .bold()
                                     .frame(maxWidth: .infinity, alignment: .leading)
-                                Picker(selection: $blurStyle) {
-                                    Text(NSLocalizedString("Light", comment: "")).tag(0)
-                                    Text(NSLocalizedString("Dark", comment: "")).tag(1)
-                                } label: {}
-                                .pickerStyle(MenuPickerStyle())
+                                DropdownPicker(selection: $blurStyle) {
+                                    return [
+                                        DropdownItem(NSLocalizedString("Light", comment:""), tag: 0),
+                                        DropdownItem(NSLocalizedString("Dark", comment:""), tag: 1)
+                                    ]
+                                }
                                 .onChange(of: blurStyle) { _ in
                                     changesMade = true
                                 }
@@ -389,12 +393,13 @@ struct EditWidgetSetView: View {
                         Text(NSLocalizedString("Text Alignment", comment: ""))
                             .bold()
                             .frame(maxWidth: .infinity, alignment: .leading)
-                        Picker(selection: $textAlignment) {
-                            Text(NSLocalizedString("Left", comment: "")).tag(0)
-                            Text(NSLocalizedString("Center", comment: "")).tag(1)
-                            Text(NSLocalizedString("Right", comment: "")).tag(2)
-                        } label: {}
-                        .pickerStyle(MenuPickerStyle())
+                        DropdownPicker(selection: $textAlignment) {
+                            return [
+                                DropdownItem(NSLocalizedString("Left", comment:""), tag: 0),
+                                DropdownItem(NSLocalizedString("Center", comment:""), tag: 1),
+                                DropdownItem(NSLocalizedString("Right", comment:""), tag: 2)
+                            ]
+                        }
                         .onChange(of: textAlignment) { _ in
                             changesMade = true
                         }

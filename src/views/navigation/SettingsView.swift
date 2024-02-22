@@ -41,11 +41,12 @@ struct SettingsView: View {
                         Text(NSLocalizedString("Locale", comment:""))
                             .bold()
                             .frame(maxWidth: .infinity, alignment: .leading)
-                        Picker(selection: $dateLocale) {
-                            Text("en").tag("en")
-                            Text("zh").tag("zh")
-                        } label: { }
-                        .pickerStyle(MenuPickerStyle())
+                        DropdownPicker(selection: $dateLocale) {
+                            return [
+                                DropdownItem("en", tag: "en"),
+                                DropdownItem("zh", tag: "zh")
+                            ]
+                        }
                     }
 
                     HStack {
