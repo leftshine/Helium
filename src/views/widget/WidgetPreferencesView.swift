@@ -355,8 +355,8 @@ struct WidgetPreferencesView: View {
     }
     
     func getFormattedDate(_ format: String) -> String {
-        // let locale = UserDefaults.standard.string(forKey: "dateLocale", forPath: USER_DEFAULTS_PATH) ?? "en_US"
-        // dateFormatter.locale = Locale(identifier: locale)
+        let locale = UserDefaults.standard.string(forKey: "dateLocale", forPath: USER_DEFAULTS_PATH) ?? "en"
+        dateFormatter.locale = Locale(identifier: locale)
         dateFormatter.dateFormat = format
         // dateFormatter.locale = Locale(identifier: NSLocalizedString("en_US", comment:""))
         return dateFormatter.string(from: currentDate)

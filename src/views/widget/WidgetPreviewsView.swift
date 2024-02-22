@@ -58,8 +58,8 @@ struct WidgetPreviewsView: View {
             let dateFormatter = DateFormatter()
             let newDateFormat = LunarDate.getChineseCalendar(with: Date(), format: dateFormat)
             dateFormatter.dateFormat = newDateFormat
-            // let locale = UserDefaults.standard.string(forKey: "dateLocale", forPath: USER_DEFAULTS_PATH) ?? "en_US"
-            // dateFormatter.locale = Locale(identifier: locale)
+            let locale = UserDefaults.standard.string(forKey: "dateLocale", forPath: USER_DEFAULTS_PATH) ?? "en"
+            dateFormatter.locale = Locale(identifier: locale)
             text = dateFormatter.string(from: Date())
             // SAFEGUARD
             if (text == "") {

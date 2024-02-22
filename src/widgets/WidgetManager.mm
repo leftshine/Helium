@@ -57,11 +57,11 @@ static NSAttributedString *attributedUploadPrefix2 = nil;
 static NSAttributedString *attributedDownloadPrefix2 = nil;
 
 #pragma mark - Date Widget
-static NSString* formattedDate(NSString *dateFormat)
+static NSString* formattedDate(NSString *dateFormat, NSString* dateLocale)
 {
     if (!formatter) {
         formatter = [[NSDateFormatter alloc] init];
-        // formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:dateLocale];
+        formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:dateLocale];
     }
     NSDate *currentDate = [NSDate date];
     NSString *newDateFormat = [LunarDate getChineseCalendarWithDate:currentDate format:dateFormat];
@@ -360,7 +360,8 @@ void formatParsedInfo(NSDictionary *parsedInfo, NSInteger parsedID, NSMutableAtt
         case 5:
             // Date/Time
             widgetString = formattedDate(
-                [parsedInfo valueForKey:@"dateFormat"] ? [parsedInfo valueForKey:@"dateFormat"] : (parsedID == 1 ? NSLocalizedString(@"E MMM dd", comment: @"") : @"hh:mm")
+                [parsedInfo valueForKey:@"dateFormat"] ? [parsedInfo valueForKey:@"dateFormat"] : (parsedID == 1 ? NSLocalizedString(@"E MMM dd", comment: @"") : @"hh:mm"),
+                dateLocale
             );
             break;
         case 2:
