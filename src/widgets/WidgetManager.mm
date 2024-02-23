@@ -483,7 +483,7 @@ void formatParsedInfo(NSDictionary *parsedInfo, NSInteger parsedID, NSMutableAtt
                     dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
                     if (resultMessage2) {
                         [manager getNowPlayingInfoWithCompletion:^(NSDictionary *info) {
-                            if (resultMessage1) {
+                            if (lyricsType == 0 && resultMessage1) {
                                 resultMessage3 = info[resultMessage1];
                             } else {
                                 if (hasBluetoothHeadset()) {
