@@ -1,26 +1,10 @@
 // https://github.com/DGh0st/HSWidgets
 // https://github.com/CreatureSurvive/CSWeather
 // https://github.com/midnightchip/Asteroid
+// https://github.com/Tr1Fecta-7/WeatherGround
 #import "HWeatherController.h"
 #import "HWeatherControllerObserver.h"
 #import "UsefulFunctions.h"
-
-#import <CoreLocation/CLLocation.h>
-#import <CoreLocation/CLLocationManager.h>
-
-#define FAKE_PAD_WEATHER @"FakePadWeather"
-#define FAKE_PAD_WEATHER_LATITUDE @"FakePadWeatherLatitude"
-#define FAKE_PAD_WEATHER_LONGITUDE @"FakePadWeatherLongitude"
-#define FAKE_PAD_WEATHER_DISPLAY_NAME @"FakePadWeatherDisplayName"
-#define FAKE_PAD_WEATHER_CONDITION_TEMPERATURE @"FakePadWeatherConditionTemperature"
-#define FAKE_PAD_WEATHER_CONDITION_DESCRIPTION @"FakePadWeatherConditionDescription"
-#define FAKE_PAD_WEATHER_CONDITION @"FakePadWeatherCondition"
-#define FAKE_LATITUDE 37.3333702
-#define FAKE_LONGITUDE -122.029488
-
-NSString *const HWeatherFakeDisplayName = @"Cupertino, CA";
-NSString *const HWeatherFakeDescription = @"Sunny";
-NSString *const HWeatherFakeTemperature = @"--";
 
 enum {
 	ConditionImageTypeDefault = 0,
@@ -63,27 +47,18 @@ typedef NSUInteger ConditionImageType;
 	self = [super init];
 
 	if (self != nil) {
-		self.todayModel = nil;
-		[self _setupWeatherModel];
-		self.observers = [NSMutableArray array];
 		self.useFahrenheit = NO;
 		self.useMetric = YES;
-
-		// TODO: find out if this notification is ever posted or if updating location tracking is enough
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_cityDidUpdate:) name:kCityNotificationNameDidUpdate object:nil];
+		[self updateModel];
 	}
 	return self;
 }
 
 -(NSString *)locationName {
-	if ([self _shouldFakeWeather]) {
-		return [[WeatherInternalPreferences sharedInternalPreferences] objectForKey:FAKE_PAD_WEATHER_DISPLAY_NAME] ?: HWeatherFakeDisplayName;
-	} else {
-		NSString *name = self.todayModel.forecastModel.city.name;
-		if (name)
-			return name;
-		return self.todayModel.forecastModel.location.displayName ?: HWeatherFakeDisplayName;
-	}
+	NSString *name = self.todayModel.forecastModel.city.name;
+	if (name)
+		return name;
+	return self.todayModel.forecastModel.location.displayName ?: @"No Data";
 }
 
 -(NSString *)temperature {
@@ -96,15 +71,9 @@ typedef NSUInteger ConditionImageType;
 	if ([temperatureFormatter respondsToSelector:@selector(setIncludeDegreeSymbol:)])
 		[temperatureFormatter setIncludeDegreeSymbol:withSymbol];
 
-	WeatherInternalPreferences *internalPreferences = [WeatherInternalPreferences sharedInternalPreferences];
-	id fakeConditionTemperature = [internalPreferences objectForKey:FAKE_PAD_WEATHER_CONDITION_TEMPERATURE];
-
 	NSString *temperatureString = nil;
-	if ([self _shouldFakeWeather] && fakeConditionTemperature != nil)
-		temperatureString = [temperatureFormatter stringForObjectValue:fakeConditionTemperature];
-	else
-		temperatureString = [temperatureFormatter stringForObjectValue:self.todayModel.forecastModel.currentConditions.temperature];
-	return temperatureString ?: HWeatherFakeTemperature;
+	temperatureString = [temperatureFormatter stringForObjectValue:self.todayModel.forecastModel.currentConditions.temperature];
+	return temperatureString ?: @"--";
 }
 
 -(NSString *)feelsLike {
@@ -117,28 +86,9 @@ typedef NSUInteger ConditionImageType;
 	if ([temperatureFormatter respondsToSelector:@selector(setIncludeDegreeSymbol:)])
 		[temperatureFormatter setIncludeDegreeSymbol:withSymbol];
 
-	WeatherInternalPreferences *internalPreferences = [WeatherInternalPreferences sharedInternalPreferences];
-	id fakeConditionTemperature = [internalPreferences objectForKey:FAKE_PAD_WEATHER_CONDITION_TEMPERATURE];
-
 	NSString *temperatureString = nil;
-	if ([self _shouldFakeWeather] && fakeConditionTemperature != nil)
-		temperatureString = [temperatureFormatter stringForObjectValue:fakeConditionTemperature];
-	else
-		temperatureString = [temperatureFormatter stringForObjectValue:self.todayModel.forecastModel.currentConditions.feelsLike];
-	return temperatureString ?: HWeatherFakeTemperature;
-}
-
--(UIImage *)conditionsImageLegacy {
-	WeatherInternalPreferences *internalPreferences = [WeatherInternalPreferences sharedInternalPreferences];
-	if ([self _shouldFakeWeather]) {
-		NSNumber *condition = [internalPreferences objectForKey:FAKE_PAD_WEATHER_CONDITION];
-		if (condition != nil)
-			return WAImageForLegacyConditionCode([condition intValue]);
-	}
-
-	if (self.todayModel.forecastModel.currentConditions != nil)
-		return WAImageForLegacyConditionCode(self.todayModel.forecastModel.currentConditions.conditionCode);
-	return WAImageForLegacyConditionCode(32);
+	temperatureString = [temperatureFormatter stringForObjectValue:self.todayModel.forecastModel.currentConditions.feelsLike];
+	return temperatureString ?: @"--";
 }
 
 -(UIImage *)conditionsImage {
@@ -174,33 +124,15 @@ typedef NSUInteger ConditionImageType;
 }
 
 -(NSString *)conditionsImageName {
-	WeatherInternalPreferences *internalPreferences = [WeatherInternalPreferences sharedInternalPreferences];
-	if ([self _shouldFakeWeather]) {
-		NSNumber *condition = [internalPreferences objectForKey:FAKE_PAD_WEATHER_CONDITION];
-		if (condition != nil)
-			return [WeatherImageLoader conditionImageNameWithConditionIndex:[condition intValue]];
-	}
-
 	if (self.todayModel.forecastModel.currentConditions != nil)
 		return [WeatherImageLoader conditionImageNameWithConditionIndex:self.todayModel.forecastModel.currentConditions.conditionCode];
 	return [WeatherImageLoader conditionImageNameWithConditionIndex:32];
 }
 
 -(NSString *)conditionsDescription {
-	WeatherInternalPreferences *internalPreferences = [WeatherInternalPreferences sharedInternalPreferences];
-	if ([self _shouldFakeWeather])
-		return [internalPreferences objectForKey:FAKE_PAD_WEATHER_CONDITION_DESCRIPTION] ?: HWeatherFakeDescription;
-
-	if ([internalPreferences respondsToSelector:@selector(isV3Enabled)] && [internalPreferences isV3Enabled]) {
-		WFAQIScaleCategory *airQualityScaleCategory = self.todayModel.forecastModel.city.airQualityScaleCategory;
-		NSString *longDescription = airQualityScaleCategory.longDescription;		
-		if (longDescription != nil && airQualityScaleCategory.categoryIndex > airQualityScaleCategory.warningLevel)
-			return longDescription;
-	}
-
 	if (self.todayModel.forecastModel.currentConditions != nil)
-		return WAConditionsLineStringFromCurrentForecasts(self.todayModel.forecastModel.currentConditions) ?: HWeatherFakeDescription;
-	return HWeatherFakeDescription;
+		return WAConditionsLineStringFromCurrentForecasts(self.todayModel.forecastModel.currentConditions) ?: @"Sun";
+	return @"Sun";
 }
 
 -(NSString *)lowDescription {
@@ -215,16 +147,10 @@ typedef NSUInteger ConditionImageType;
 
 	NSString *lowTemperature = @"--";
 
-	WeatherInternalPreferences *internalPreferences = [WeatherInternalPreferences sharedInternalPreferences];
-	id fakeConditionTemperature = [internalPreferences objectForKey:FAKE_PAD_WEATHER_CONDITION_TEMPERATURE];
-	if ([self _shouldFakeWeather] && fakeConditionTemperature != nil) {
-		lowTemperature = [temperatureFormatter stringForObjectValue:fakeConditionTemperature];
-	} else {
-		NSArray *dailyForecasts = self.todayModel.forecastModel.dailyForecasts;
-		if (dailyForecasts != nil && dailyForecasts.count > 0) {
-			WADayForecast *todayForecast = dailyForecasts.firstObject;
-			lowTemperature = [temperatureFormatter stringForObjectValue:todayForecast.low];
-		}
+	NSArray *dailyForecasts = self.todayModel.forecastModel.dailyForecasts;
+	if (dailyForecasts != nil && dailyForecasts.count > 0) {
+		WADayForecast *todayForecast = dailyForecasts.firstObject;
+		lowTemperature = [temperatureFormatter stringForObjectValue:todayForecast.low];
 	}
 
 	return lowTemperature;
@@ -242,16 +168,10 @@ typedef NSUInteger ConditionImageType;
 
 	NSString *highTemperature = @"--";
 
-	WeatherInternalPreferences *internalPreferences = [WeatherInternalPreferences sharedInternalPreferences];
-	id fakeConditionTemperature = [internalPreferences objectForKey:FAKE_PAD_WEATHER_CONDITION_TEMPERATURE];
-	if ([self _shouldFakeWeather] && fakeConditionTemperature != nil) {
-		highTemperature = [temperatureFormatter stringForObjectValue:fakeConditionTemperature];
-	} else {
-		NSArray *dailyForecasts = self.todayModel.forecastModel.dailyForecasts;
-		if (dailyForecasts != nil && dailyForecasts.count > 0) {
-			WADayForecast *todayForecast = dailyForecasts.firstObject;
-			highTemperature = [temperatureFormatter stringForObjectValue:todayForecast.high];
-		}
+	NSArray *dailyForecasts = self.todayModel.forecastModel.dailyForecasts;
+	if (dailyForecasts != nil && dailyForecasts.count > 0) {
+		WADayForecast *todayForecast = dailyForecasts.firstObject;
+		highTemperature = [temperatureFormatter stringForObjectValue:todayForecast.high];
 	}
 
 	return highTemperature;
@@ -424,106 +344,58 @@ typedef NSUInteger ConditionImageType;
     }
 }
 
--(void)requestModelUpdate {
-	[self _updateLocationTracking];
-	__block typeof(self) widgetController = self;
-	[self.todayModel executeModelUpdateWithCompletion:^{
-		[widgetController _todayModelWasUpdated];
-	}];
+-(void)updateModel {
+	if (!self.widgetVC) {
+        self.widgetVC = [[WALockscreenWidgetViewController alloc] init];
+
+        if ([self.widgetVC respondsToSelector:@selector(_setupWeatherModel)]) {
+            [self.widgetVC _setupWeatherModel];
+        }
+    }
+
+    if (self.widgetVC) {
+        if ([self.widgetVC.todayModel respondsToSelector:@selector(executeModelUpdateWithCompletion:)]) {
+            
+            if ([self.widgetVC.todayModel isKindOfClass:[WATodayAutoupdatingLocationModel class]]) {
+                WATodayAutoupdatingLocationModel *autoUpdatingModel = (WATodayAutoupdatingLocationModel *)self.widgetVC.todayModel;
+				[autoUpdatingModel setLocationServicesActive:YES];
+
+                if ([autoUpdatingModel respondsToSelector:@selector(updateLocationTrackingStatus)]) {
+			        [autoUpdatingModel updateLocationTrackingStatus];
+                }
+            }
+           
+            [self.widgetVC.todayModel executeModelUpdateWithCompletion:nil];
+        }
+        if ([self.widgetVC respondsToSelector:@selector(todayModelWantsUpdate:)] && self.widgetVC.todayModel) {
+            [self.widgetVC todayModelWantsUpdate:self.widgetVC.todayModel];
+        }
+        if ([self.widgetVC respondsToSelector:@selector(updateWeather)]) {
+            [self.widgetVC updateWeather];
+        }
+        if ([self.widgetVC respondsToSelector:@selector(_updateTodayView)]) {
+		    [self.widgetVC _updateTodayView];
+        }
+        if ([self.widgetVC respondsToSelector:@selector(_updateWithReason:)]) {
+            [self.widgetVC _updateWithReason:nil];
+        }
+        
+        /*if ([self.widgetVC respondsToSelector:@selector(_temperature)]) {
+		    self.currentTemperature = [self.widgetVC _temperature];
+	    }
+
+        if ([self.widgetVC respondsToSelector:@selector(_locationName)]) {
+		    self.myCity = [self.widgetVC _locationName];
+	    }*/
+    }
+
+    if (self.widgetVC.todayModel.forecastModel.city) {
+        self.myCity = self.widgetVC.todayModel.forecastModel.city;
+    }
+
+	if (self.widgetVC.todayModel.forecastModel.city) {
+        self.todayModel = self.widgetVC.todayModel;
+    }
 }
 
--(void)addObserver:(id<HWeatherControllerObserver>)observer {
-	[self.observers addObject:observer];
-}
-
--(void)removeObserver:(id<HWeatherControllerObserver>)observer {
-	[self.observers removeObject:observer];
-}
-
--(City *)currentCity {
-	return self.todayModel.forecastModel.city;
-}
-
--(void)_todayModelWasUpdated {
-	for (id<HWeatherControllerObserver> observer in self.observers)
-		[observer weatherModelUpdatedForController:self];
-}
-
--(void)_setupWeatherModel {
-	if ([self _shouldFakeWeather]) {
-		WeatherInternalPreferences *internalPreferences = [WeatherInternalPreferences sharedInternalPreferences];
-		NSNumber *fakeLatitude = [internalPreferences objectForKey:FAKE_PAD_WEATHER_LATITUDE];
-		NSNumber *fakeLongitude = [internalPreferences objectForKey:FAKE_PAD_WEATHER_LONGITUDE];
-		
-		CGFloat latitude;
-		CGFloat longitude;
-		if (fakeLatitude != nil && fakeLongitude != nil) {
-			latitude = [fakeLatitude floatValue];
-			longitude = [fakeLongitude floatValue];
-		} else {
-			latitude = FAKE_LATITUDE;
-			longitude = FAKE_LONGITUDE;
-		}
-
-		CLLocation *location = [[CLLocation alloc] initWithLatitude:latitude longitude:longitude];
-		WFLocation *weatherLocation = [[WFLocation alloc] init];
-		[weatherLocation setGeoLocation:location];
-
-		NSString *displayName = [internalPreferences objectForKey:FAKE_PAD_WEATHER_DISPLAY_NAME] ?: HWeatherFakeDisplayName;
-		[weatherLocation setDisplayName:displayName];
-
-		self.todayModel = [WATodayModel modelWithLocation:weatherLocation];
-		[self requestModelUpdate];
-	} else {
-		WeatherPreferences *preferences = [[WeatherPreferences alloc] init];
-		WATodayAutoupdatingLocationModel *todayModel = [WATodayModel autoupdatingLocationModelWithPreferences:preferences effectiveBundleIdentifier:nil];
-		[todayModel setLocationServicesActive:[self _locationServicesActive]];
-		self.todayModel = todayModel;
-		[self requestModelUpdate];
-	}
-
-	[self.todayModel addObserver:self];
-}
-
--(BOOL)_shouldFakeWeather {
-	return [[[WeatherInternalPreferences sharedInternalPreferences] objectForKey:FAKE_PAD_WEATHER] boolValue];
-}
-
--(BOOL)_locationServicesActive {
-	return YES;
-}
-
--(void)_updateLocationTracking {
-	if ([self.todayModel isKindOfClass:[WATodayAutoupdatingLocationModel class]]) {
-		WATodayAutoupdatingLocationModel *autoUpdatingTodayModel = (WATodayAutoupdatingLocationModel *)self.todayModel;
-		if ([autoUpdatingTodayModel respondsToSelector:@selector(updateLocationTrackingStatus)]) {
-			[autoUpdatingTodayModel updateLocationTrackingStatus];
-		} else {
-			autoUpdatingTodayModel.isLocationTrackingEnabled = [CLLocationManager locationServicesEnabled];
-		}
-	}
-}
-
--(void)todayModelWantsUpdate:(WATodayModel *)model {
-	[self requestModelUpdate];
-}
-
--(void)todayModel:(WATodayModel *)model forecastWasUpdated:(id)forecast {
-	[self _todayModelWasUpdated];
-}
-
--(void)_cityDidUpdate:(id)object {
-	[self requestModelUpdate];
-}
-
--(void)dealloc {
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:kCityNotificationNameDidUpdate object:nil];
-
-	if (self.todayModel != nil) {
-		[self.todayModel removeObserver:self];
-		self.todayModel = nil;
-	}
-
-	self.observers = nil;
-}
 @end

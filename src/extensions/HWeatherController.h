@@ -1,25 +1,20 @@
 // https://github.com/DGh0st/HSWidgets
-#import "../helpers/private_headers/WeatherHeaders.h"
+#import "../helpers/private_headers/Weather/WeatherHeaders.h"
 
 @class City, WATodayModel;
-@protocol HWeatherControllerObserver;
 
-extern NSString *const HWeatherFakeDisplayName;
-extern NSString *const HWeatherFakeDescription;
-extern NSString *const HWeatherFakeTemperature;
-
-@interface HWeatherController : NSObject <WATodayModelObserver>
-@property (nonatomic, retain) WATodayModel *todayModel;
+@interface HWeatherController : NSObject
+@property (nonatomic, strong) WALockscreenWidgetViewController *widgetVC;
+@property (nonatomic, strong) City *myCity;
+@property (nonatomic, strong) WATodayModel *todayModel;
 @property (nonatomic, retain) NSBundle *weatherBundle;
-@property (nonatomic, retain) NSMutableArray *observers;
-@property (nonatomic, retain) WeatherPreferences *weatherPreferences;
 @property (nonatomic) BOOL useFahrenheit;
 @property (nonatomic) BOOL useMetric;
 @property (nonatomic) NSLocale *locale;
+
 +(instancetype)sharedInstance;
 -(NSString *)locationName;
 -(UIImage *)conditionsImage;
--(UIImage *)conditionsImageLegacy;
 -(NSString *)conditionsImageName;
 -(NSString *)conditionsDescription;
 -(NSString *)temperature;
@@ -45,10 +40,6 @@ extern NSString *const HWeatherFakeTemperature;
 -(NSString *)precipitation:(BOOL) withUnit;
 -(NSString *)airQualityIndex;
 -(NSDictionary *)weatherData;
--(WAForecastModel *)forcastModel;
--(City *)currentCity;
 
--(void)requestModelUpdate;
--(void)addObserver:(id<HWeatherControllerObserver>)observer;
--(void)removeObserver:(id<HWeatherControllerObserver>)observer;
+-(void)updateModel;
 @end

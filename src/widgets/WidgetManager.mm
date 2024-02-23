@@ -433,7 +433,7 @@ void formatParsedInfo(NSDictionary *parsedInfo, NSInteger parsedID, NSMutableAtt
                 NSString *format = [parsedInfo valueForKey:@"format"] ?: @"{i}{n}{lt}°~{ht}°({t}°,{bt}°)💧{h}%";
                 HWeatherController *weatherController = [HWeatherController sharedInstance];
                 weatherController.locale = [[NSLocale alloc] initWithLocaleIdentifier:dateLocale];
-                [weatherController requestModelUpdate];
+                [weatherController updateModel];
                 weatherController.useFahrenheit = [parsedInfo valueForKey:@"useFahrenheit"] ? [[parsedInfo valueForKey:@"useFahrenheit"] boolValue] : NO;
                 weatherController.useMetric = [parsedInfo valueForKey:@"useMetric"] ? [[parsedInfo valueForKey:@"useMetric"] boolValue] : NO;
                 NSDictionary *weatherData = [weatherController weatherData];

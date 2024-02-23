@@ -18,3 +18,4 @@
 #import "WeatherVisibilityFormatter.h"
 #import "WeatherPrecipitationFormatter.h"
 #import "WeatherPressureFormatter.h"
+#import "WALockscreenWidgetViewController.h"
