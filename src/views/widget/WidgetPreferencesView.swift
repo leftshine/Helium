@@ -309,6 +309,59 @@ struct WidgetPreferencesView: View {
                         }
                     }
                 }
+            case .lyrics:
+                // MARK: Battery Value Type
+                VStack {
+                    Toggle(isOn: $boolSelection) {
+                        Text(NSLocalizedString("Unsupported Apps Are Displayed", comment:""))
+                            .foregroundColor(.primary)
+                            .bold()
+                    }
+
+                    HStack {
+                        Text(NSLocalizedString("Lyrics Option", comment:""))
+                            .foregroundColor(.primary)
+                            .bold()
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        DropdownPicker(selection: $intSelection) {
+                            return [
+                                DropdownItem(NSLocalizedString("Auto Detection", comment:""), tag: 0),
+                                DropdownItem(NSLocalizedString("Title", comment:""), tag: 1),
+                                DropdownItem(NSLocalizedString("Artist", comment:""), tag: 2),
+                                DropdownItem(NSLocalizedString("Album", comment:""), tag: 3)
+                            ]
+                        }
+                    }
+
+                    if boolSelection || intSelection != 0 {
+                        HStack{
+                            Text(NSLocalizedString("Bluetooth Headset Option", comment:""))
+                                .foregroundColor(.primary)
+                                .bold()
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            DropdownPicker(selection: $intSelection2) {
+                                return [
+                                    DropdownItem(NSLocalizedString("Title", comment:""), tag: 1),
+                                    DropdownItem(NSLocalizedString("Artist", comment:""), tag: 2),
+                                    DropdownItem(NSLocalizedString("Album", comment:""), tag: 3)
+                                ]
+                            }
+                        }
+                    }
+                }
+                .onAppear {
+                    boolSelection = widgetID.config["unsupported"] as? Bool ?? false
+                    if let lyricsType = widgetID.config["lyricsType"] as? Int {
+                        intSelection = lyricsType
+                    } else {
+                        intSelection = boolSelection ? 1 : 0
+                    }
+                    if let bluetoothType = widgetID.config["bluetoothType"] as? Int {
+                        intSelection2 = bluetoothType
+                    } else {
+                        intSelection2 = 0
+                    }
+                }
             default:
                 Text(NSLocalizedString("No Configurable Aspects", comment:""))
             }
@@ -414,6 +467,11 @@ struct WidgetPreferencesView: View {
             } else {
                 widgetStruct.config["format"] = weatherFormat
             }
+        case .lyrics:
+            // MARK: Weather Handling
+            widgetStruct.config["unsupported"] = boolSelection
+            widgetStruct.config["lyricsType"] = (boolSelection && intSelection == 0) ? 1 : intSelection
+            widgetStruct.config["bluetoothType"] = intSelection2
         default:
             return;
         }

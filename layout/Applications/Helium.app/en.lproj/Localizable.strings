@@ -93,6 +93,12 @@
 "Would you like to save changes to the widget?" = "Would you like to save changes to the widget?";
 "Weather Format" = "This weather format explanation includes:\nWeather Icon: {i}\nWeather Description: {n}\nCurrent Temperature: {t} {ts}\nCurrent Humidity: {h} {hs}\nFeels Like Temperature: {bt} {bts}\nLowest Temperature: {lt} {lts}\nHighest Temperature: {ht} {hts}\nWind Speed: {ws} {wsu}\nWind Direction: {wd} {wds}\nVisibility: {v} {vu}\nPrecipitation: {pp} {ppu}\nPressure: {ps} {psu}\nUV Index: {uvi}\nAir Quality Index: {aqi}\nLocation: {l}\nThose ending with 's' include symbols, those ending with 'u' include units.";
 "Format" = "Format";
+"Auto Detection" = "Default";
+"Artist" = "Artist";
+"Album" = "Album";
+"Lyrics Option" = "Lyrics Display Option";
+"Bluetooth Headset Option" = "Bluetooth Headset Option";
+"Unsupported Apps Are Displayed" = "Unsupported Apps Are Displayed";
 
 /* WidgetPreviewsView.swift */
 "ERROR" = "ERROR";

@@ -332,6 +332,18 @@ static NSString* getLyricsKeyByBundleIdentifier(NSString *bundleid) {
     }
 }
 
+static NSString* getLyricsKeyByType(int type) {
+    if(type == 1) {
+        return @"kMRMediaRemoteNowPlayingInfoTitle";
+    } else if(type == 2) {
+        return @"kMRMediaRemoteNowPlayingInfoArtist";
+    } else if(type == 3) {
+        return @"kMRMediaRemoteNowPlayingInfoAlbum";
+    } else {
+        return nil;
+    }
+}
+
 #pragma mark - Main Widget Functions
 /*
  Widget Identifiers:
@@ -447,17 +459,23 @@ void formatParsedInfo(NSDictionary *parsedInfo, NSInteger parsedID, NSMutableAtt
         case 10:
             {
                 // Lyrics
+                int lyricsType = [parsedInfo valueForKey:@"lyricsType"] ? [[parsedInfo valueForKey:@"lyricsType"] integerValue] : 0;
+                int bluetoothType = [parsedInfo valueForKey:@"bluetoothType"] ? [[parsedInfo valueForKey:@"bluetoothType"] integerValue] : 0;
+                bool unsupported = [parsedInfo valueForKey:@"unsupported"] ? [[parsedInfo valueForKey:@"unsupported"] boolValue] : NO;
+
                 __block NSString *resultMessage1 = nil;
                 __block BOOL resultMessage2 = false;
                 __block NSString *resultMessage3 = nil;
                 MediaRemoteManager *manager = [MediaRemoteManager sharedManager];
                 dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-                [manager getBundleIdentifierWithCompletion:^(NSString *bundleIdentifier) {
-                    resultMessage1 = getLyricsKeyByBundleIdentifier(bundleIdentifier);
-                    dispatch_semaphore_signal(semaphore);
-                }];
-                dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-                if (resultMessage1) {
+                if (!unsupported) {
+                    [manager getBundleIdentifierWithCompletion:^(NSString *bundleIdentifier) {
+                        resultMessage1 = getLyricsKeyByBundleIdentifier(bundleIdentifier);
+                        dispatch_semaphore_signal(semaphore);
+                    }];
+                    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+                }
+                if (unsupported || resultMessage1) {
                     [manager getNowPlayingApplicationIsPlayingWithCompletion:^(BOOL isPlaying) {
                         resultMessage2 = isPlaying;
                         dispatch_semaphore_signal(semaphore);
@@ -465,7 +483,15 @@ void formatParsedInfo(NSDictionary *parsedInfo, NSInteger parsedID, NSMutableAtt
                     dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
                     if (resultMessage2) {
                         [manager getNowPlayingInfoWithCompletion:^(NSDictionary *info) {
-                            resultMessage3 = info[resultMessage1];
+                            if (resultMessage1) {
+                                resultMessage3 = info[resultMessage1];
+                            } else {
+                                if (hasBluetoothHeadset()) {
+                                    resultMessage3 = info[getLyricsKeyByType(bluetoothType)];
+                                } else {
+                                    resultMessage3 = info[getLyricsKeyByType(lyricsType)];
+                                }
+                            }
                             dispatch_semaphore_signal(semaphore);
                         }];
                         dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
