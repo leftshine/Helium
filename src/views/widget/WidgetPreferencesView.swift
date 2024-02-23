@@ -187,11 +187,11 @@ struct WidgetPreferencesView: View {
                         .foregroundColor(.primary)
                         .bold()
                         .frame(maxWidth: .infinity, alignment: .leading)
-                    Picker(selection: $intSelection) {
-                        ForEach(0..<timeFormats.count, id: \.self) { index in
-                            Text("\(getFormattedDate(timeFormats[index]))\n(\(timeFormats[index]))").tag(index)
+                    DropdownPicker(selection: $intSelection) {
+                        return timeFormats.indices.map { index in
+                            DropdownItem("\(getFormattedDate(timeFormats[index]))\n(\(timeFormats[index]))", tag: index)
                         }
-                    } label: {}
+                    }
                     .onAppear {
                         if let timeFormat = widgetID.config["dateFormat"] as? String {
                             intSelection = timeFormats.firstIndex(of: timeFormat) ?? 0
