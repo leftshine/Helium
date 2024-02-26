@@ -19,6 +19,7 @@
 #import "../extensions/FontUtils.h"
 #import "../extensions/WeatherUtils.h"
 #import "../extensions/HWeatherController.h"
+#import "../extensions/HFPSStatus.h"
 #import "../extensions/MediaRemoteManager.h"
 
 // Thanks to: https://github.com/lwlsw/NetworkSpeed13
@@ -358,6 +359,7 @@ static NSString* getLyricsKeyByType(int type) {
  8 = Charging Symbol
  9 = Weather
  10 = Lyrics
+ 11 = FPS
 
  TODO:
  - Music Visualizer
@@ -498,6 +500,11 @@ void formatParsedInfo(NSDictionary *parsedInfo, NSInteger parsedID, NSMutableAtt
                         widgetString = resultMessage3;
                     }
                 }
+            }
+            break;
+        case 11:
+            {
+                widgetString = [NSString stringWithFormat: @"%.0f FPS", [HFPSStatus sharedInstance].fpsValue];
             }
             break;
         default:
