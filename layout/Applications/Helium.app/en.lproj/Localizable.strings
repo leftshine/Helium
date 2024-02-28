@@ -91,7 +91,7 @@
 "No Configurable Aspects" = "No Configurable Aspects";
 "Save Changes" = "Save Changes";
 "Would you like to save changes to the widget?" = "Would you like to save changes to the widget?";
-"Weather Format" = "This weather format explanation includes:\nWeather Icon: {i}\nWeather Description: {n}\nCurrent Temperature: {t} {ts}\nCurrent Humidity: {h} {hs}\nFeels Like Temperature: {bt} {bts}\nLowest Temperature: {lt} {lts}\nHighest Temperature: {ht} {hts}\nWind Speed: {ws} {wsu}\nWind Direction: {wd} {wds}\nVisibility: {v} {vu}\nPrecipitation: {pp} {ppu}\nPressure: {ps} {psu}\nUV Index: {uvi}\nAir Quality Index: {aqi}\nLocation: {l}\nThose ending with 's' include symbols, those ending with 'u' include units.";
+"Weather Format" = "This weather format explanation includes:\nWeather Icon: {i}\nWeather Description: {n}\nCurrent Temperature: {t} {ts}\nCurrent Humidity: {h} {hs}\nFeels Like Temperature: {bt} {bts}\nLowest Temperature: {lt} {lts}\nHighest Temperature: {ht} {hts}\nWind Speed: {ws} {wsu}\nWind Direction: {wd} {wds}\nVisibility: {v} {vu}\nNext Hour Precipitation: {pp} {pps}\nPrecipitation Past 24 Hours: {pp24} {pp24u}\nPressure: {ps} {psu}\nUV Index: {uvi}\nAir Quality Index: {aqi}\nLocation: {l}\nThose ending with 's' include symbols, those ending with 'u' include units.";
 "Format" = "Format";
 "Auto Detection" = "Default";
 "Artist" = "Artist";

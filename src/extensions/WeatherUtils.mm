@@ -53,8 +53,11 @@
             format = [format stringByReplacingOccurrencesOfString:@"{v}" withString:data[@"visibility"]];
             format = [format stringByReplacingOccurrencesOfString:@"{vu}" withString:data[@"visibility_with_unit"]];
             
-            format = [format stringByReplacingOccurrencesOfString:@"{pp}" withString:data[@"precipitation"]];
-            format = [format stringByReplacingOccurrencesOfString:@"{ppu}" withString:data[@"precipitation_with_unit"]];
+            format = [format stringByReplacingOccurrencesOfString:@"{pp}" withString:data[@"precipitation_next_hour"]];
+            format = [format stringByReplacingOccurrencesOfString:@"{pps}" withString:data[@"precipitation_next_hour_with_symbol"]];
+
+            format = [format stringByReplacingOccurrencesOfString:@"{pp24}" withString:data[@"precipitation_24h"]];
+            format = [format stringByReplacingOccurrencesOfString:@"{pp24u}" withString:data[@"precipitation_24h_with_unit"]];
 
             format = [format stringByReplacingOccurrencesOfString:@"{ps}" withString:data[@"pressure"]];
             format = [format stringByReplacingOccurrencesOfString:@"{psu}" withString:data[@"pressure_with_unit"]];

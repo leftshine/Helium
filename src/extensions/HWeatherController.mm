@@ -233,11 +233,11 @@ typedef NSUInteger ConditionImageType;
 	return visibilityString ?: @"--";
 }
 
--(NSString *)precipitation {
-	return [self precipitation:NO];
+-(NSString *)precipitationPast24Hours {
+	return [self precipitationPast24Hours:NO];
 }
 
--(NSString *)precipitation:(BOOL) withUnit {
+-(NSString *)precipitationPast24Hours:(BOOL) withUnit {
 	NSMeasurementFormatter *formatter = [[self class] sharedNSMeasurementFormatter];
 	formatter.locale = self.locale;
 	NSString *precipitationString = nil;
@@ -248,6 +248,19 @@ typedef NSUInteger ConditionImageType;
 	else
 		precipitationString = [self formatFloat:measurement.doubleValue];
 	return precipitationString ?: @"--";
+}
+
+-(NSString *)precipitationNextHour {
+	return [self precipitationNextHour:NO];
+}
+
+-(NSString *)precipitationNextHour:(BOOL) withSymbol {
+	NSArray *hourlyForecasts = self.todayModel.forecastModel.hourlyForecasts;
+	if (hourlyForecasts.count > 0) {
+		WAHourlyForecast *hourlyForecast = [hourlyForecasts firstObject];
+		return [NSString stringWithFormat:withSymbol ? @"%.0f%%" : @"%.0f", hourlyForecast.percentPrecipitation];
+	}
+	return @"--";
 }
 
 -(NSString *)pressure {
@@ -311,8 +324,11 @@ typedef NSUInteger ConditionImageType;
 	[data setObject:self.visibility forKey:@"visibility"];
 	[data setObject:[self visibility:YES] forKey:@"visibility_with_unit"];
 
-	[data setObject:self.precipitation forKey:@"precipitation"];
-	[data setObject:[self precipitation:YES] forKey:@"precipitation_with_unit"];
+	[data setObject:self.precipitationNextHour forKey:@"precipitation_next_hour"];
+	[data setObject:[self precipitationNextHour:YES] forKey:@"precipitation_next_hour_with_symbol"];
+
+	[data setObject:self.precipitationPast24Hours forKey:@"precipitation_24h"];
+	[data setObject:[self precipitationPast24Hours:YES] forKey:@"precipitation_24h_with_unit"];
 
 	[data setObject:self.pressure forKey:@"pressure"];
 	[data setObject:[self pressure:YES] forKey:@"pressure_with_unit"];
@@ -357,8 +373,11 @@ typedef NSUInteger ConditionImageType;
         if ([self.widgetVC.todayModel respondsToSelector:@selector(executeModelUpdateWithCompletion:)]) {
             
             if ([self.widgetVC.todayModel isKindOfClass:[WATodayAutoupdatingLocationModel class]]) {
+				WeatherPreferences *preferences = [WeatherPreferences sharedPreferences];
                 WATodayAutoupdatingLocationModel *autoUpdatingModel = (WATodayAutoupdatingLocationModel *)self.widgetVC.todayModel;
+				autoUpdatingModel.preferences = preferences;
 				[autoUpdatingModel setLocationServicesActive:YES];
+				[autoUpdatingModel setIsLocationTrackingEnabled:YES];
 
                 if ([autoUpdatingModel respondsToSelector:@selector(updateLocationTrackingStatus)]) {
 			        [autoUpdatingModel updateLocationTrackingStatus];

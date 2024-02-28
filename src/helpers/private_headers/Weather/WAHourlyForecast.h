@@ -5,4 +5,6 @@
 @property (nonatomic, assign) NSInteger conditionCode; // iOS 10 - 13
 @property (nonatomic, copy) NSString *time; // iOS 10 - 13
 @property (nonatomic, assign) NSInteger hourIndex; // iOS 10 - 13
+@property (nonatomic) CGFloat percentPrecipitation;
+@property (copy, nonatomic) NSString *forecastDetail;
 @end

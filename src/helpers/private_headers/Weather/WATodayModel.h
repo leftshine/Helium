@@ -3,6 +3,7 @@
 
 @interface WATodayModel : NSObject // iOS 10 - 13
 @property (nonatomic, retain) WAForecastModel *forecastModel; // iOS 10 - 13
+@property (nonatomic, retain) WeatherPreferences *preferences;
 +(WATodayAutoupdatingLocationModel *)autoupdatingLocationModelWithPreferences:(WeatherPreferences *)preferences effectiveBundleIdentifier:(id)identifier; // iOS 10 - 13
 +(instancetype)modelWithLocation:(WFLocation *)location; // iOS 10 - 13
 -(void)addObserver:(id<WATodayModelObserver>)observer; // iOS 10 - 13

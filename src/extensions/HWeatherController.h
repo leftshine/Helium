@@ -36,8 +36,10 @@
 -(NSString *)pressure;
 -(NSString *)pressure:(BOOL) withUnit;
 -(NSString *)UVIndex;
--(NSString *)precipitation;
--(NSString *)precipitation:(BOOL) withUnit;
+-(NSString *)precipitationNextHour;
+-(NSString *)precipitationNextHour:(BOOL) withSymbol;
+-(NSString *)precipitationPast24Hours;
+-(NSString *)precipitationPast24Hours:(BOOL) withUnit;
 -(NSString *)airQualityIndex;
 -(NSDictionary *)weatherData;
 
