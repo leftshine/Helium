@@ -347,6 +347,20 @@ struct WidgetPreferencesView: View {
                                 ]
                             }
                         }
+
+                        HStack{
+                            Text(NSLocalizedString("Wired Headset Option", comment:""))
+                                .foregroundColor(.primary)
+                                .bold()
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            DropdownPicker(selection: $intSelection3) {
+                                return [
+                                    DropdownItem(NSLocalizedString("Title", comment:""), tag: 1),
+                                    DropdownItem(NSLocalizedString("Artist", comment:""), tag: 2),
+                                    DropdownItem(NSLocalizedString("Album", comment:""), tag: 3)
+                                ]
+                            }
+                        }
                     }
                 }
                 .onAppear {
@@ -359,7 +373,12 @@ struct WidgetPreferencesView: View {
                     if let bluetoothType = widgetID.config["bluetoothType"] as? Int {
                         intSelection2 = bluetoothType
                     } else {
-                        intSelection2 = 0
+                        intSelection2 = 1
+                    }
+                    if let wiredType = widgetID.config["wiredType"] as? Int {
+                        intSelection3 = wiredType
+                    } else {
+                        intSelection3 = 1
                     }
                 }
             default:
@@ -472,6 +491,7 @@ struct WidgetPreferencesView: View {
             widgetStruct.config["unsupported"] = boolSelection
             widgetStruct.config["lyricsType"] = (boolSelection && intSelection == 0) ? 1 : intSelection
             widgetStruct.config["bluetoothType"] = intSelection2
+            widgetStruct.config["wiredType"] = intSelection3
         default:
             return;
         }

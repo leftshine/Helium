@@ -14,9 +14,9 @@
 #import <objc/runtime.h>
 #import "WidgetManager.h"
 #import <IOKit/IOKitLib.h>
-#import <AVFoundation/AVAudioSession.h>
 #import "../extensions/LunarDate.h"
 #import "../extensions/FontUtils.h"
+#import "../extensions/MusicPlayerUtils.h"
 #import "../extensions/WeatherUtils.h"
 #import "../extensions/HWeatherController.h"
 #import "../extensions/MediaRemoteManager.h"
@@ -299,51 +299,6 @@ static NSMutableAttributedString* replaceWeatherImage(NSString* formattedText, N
     return attributedString;
 }
 
-static BOOL hasBluetoothHeadset() {
-    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
-    AVAudioSessionRouteDescription *currentRoute = [audioSession currentRoute];
-    for (AVAudioSessionPortDescription *output in currentRoute.outputs) {
-        if ([[output portType] isEqualToString:@"BluetoothA2DPOutput"]) {
-            return YES;
-        }
-    }
-    return NO;
-}
-
-static NSString* getLyricsKeyByBundleIdentifier(NSString *bundleid) {
-    if([bundleid isEqual:@"com.soda.music"]
-        || [bundleid isEqual:@"com.tencent.QQMusic"] 
-        || [bundleid isEqual:@"com.yeelion.kwplayer"]
-        || [bundleid isEqual:@"com.migu.migumobilemusic"]
-        || [bundleid isEqual:@"com.wenyu.bodian"]
-    ) {
-        if (!hasBluetoothHeadset()) {
-            return @"kMRMediaRemoteNowPlayingInfoArtist";
-        } else {
-            return @"kMRMediaRemoteNowPlayingInfoTitle";
-        }
-    } else if([bundleid isEqual:@"com.netease.cloudmusic"]
-        || [bundleid isEqual:@"com.kugou.kugou1002"]
-        || [bundleid isEqual:@"com.kugou.kgyouth"]
-    ) {
-        return @"kMRMediaRemoteNowPlayingInfoTitle";
-    } else {
-        return nil;
-    }
-}
-
-static NSString* getLyricsKeyByType(int type) {
-    if(type == 1) {
-        return @"kMRMediaRemoteNowPlayingInfoTitle";
-    } else if(type == 2) {
-        return @"kMRMediaRemoteNowPlayingInfoArtist";
-    } else if(type == 3) {
-        return @"kMRMediaRemoteNowPlayingInfoAlbum";
-    } else {
-        return nil;
-    }
-}
-
 #pragma mark - Main Widget Functions
 /*
  Widget Identifiers:
@@ -460,42 +415,27 @@ void formatParsedInfo(NSDictionary *parsedInfo, NSInteger parsedID, NSMutableAtt
             {
                 // Lyrics
                 int lyricsType = [parsedInfo valueForKey:@"lyricsType"] ? [[parsedInfo valueForKey:@"lyricsType"] integerValue] : 0;
-                int bluetoothType = [parsedInfo valueForKey:@"bluetoothType"] ? [[parsedInfo valueForKey:@"bluetoothType"] integerValue] : 0;
+                int bluetoothType = [parsedInfo valueForKey:@"bluetoothType"] ? [[parsedInfo valueForKey:@"bluetoothType"] integerValue] : 1;
+                int wiredType = [parsedInfo valueForKey:@"wiredType"] ? [[parsedInfo valueForKey:@"wiredType"] integerValue] : 1;
                 bool unsupported = [parsedInfo valueForKey:@"unsupported"] ? [[parsedInfo valueForKey:@"unsupported"] boolValue] : NO;
 
-                __block NSString *resultMessage1 = nil;
-                __block BOOL resultMessage2 = false;
-                __block NSString *resultMessage3 = nil;
+                NSString *bundleIdentifier = nil;
+                NSString *lyricsKey = nil;
+                BOOL isPlaying = false;
+                NSDictionary *info = nil;
+
                 MediaRemoteManager *manager = [MediaRemoteManager sharedManager];
-                dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
                 if (!unsupported) {
-                    [manager getBundleIdentifierWithCompletion:^(NSString *bundleIdentifier) {
-                        resultMessage1 = getLyricsKeyByBundleIdentifier(bundleIdentifier);
-                        dispatch_semaphore_signal(semaphore);
-                    }];
-                    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+                    bundleIdentifier = [manager getBundleIdentifier];
                 }
-                if (unsupported || resultMessage1) {
-                    [manager getNowPlayingApplicationIsPlayingWithCompletion:^(BOOL isPlaying) {
-                        resultMessage2 = isPlaying;
-                        dispatch_semaphore_signal(semaphore);
-                    }];
-                    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-                    if (resultMessage2) {
-                        [manager getNowPlayingInfoWithCompletion:^(NSDictionary *info) {
-                            if (lyricsType == 0 && resultMessage1) {
-                                resultMessage3 = info[resultMessage1];
-                            } else {
-                                if (hasBluetoothHeadset()) {
-                                    resultMessage3 = info[getLyricsKeyByType(bluetoothType)];
-                                } else {
-                                    resultMessage3 = info[getLyricsKeyByType(lyricsType)];
-                                }
-                            }
-                            dispatch_semaphore_signal(semaphore);
-                        }];
-                        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-                        widgetString = resultMessage3;
+                lyricsKey = [MusicPlayerUtils getLyricsKeyByBundleIdentifier:bundleIdentifier lyricsType:lyricsType bluetoothType:bluetoothType wiredType:wiredType unsupported:unsupported];
+                if (lyricsKey) {
+                    isPlaying = [manager getNowPlayingApplicationIsPlaying];
+                    if (isPlaying) {
+                        info = [manager getNowPlayingInfo];
+                        if (info) {
+                            widgetString = info[lyricsKey];
+                        }
                     }
                 }
             }

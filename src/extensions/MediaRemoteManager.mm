@@ -11,27 +11,44 @@
     return sharedInstance;
 }
 
-- (void)getNowPlayingInfoWithCompletion:(void (^)(NSDictionary *info))completion {
-    MRMediaRemoteGetNowPlayingInfo(dispatch_get_main_queue(), ^(CFDictionaryRef information) {
-        NSDictionary *info = (__bridge NSDictionary*)information;
-        completion(info);
+- (NSDictionary *)getNowPlayingInfo {
+    __block NSDictionary *info = nil;
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+
+    MRMediaRemoteGetNowPlayingInfo(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(CFDictionaryRef information) {
+        info = (__bridge NSDictionary*)information;
+        dispatch_semaphore_signal(semaphore);
     });
+
+    dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_SEC));
+    return info;
 }
 
-- (void)getBundleIdentifierWithCompletion:(void (^)(NSString *bundleIdentifier))completion {
-    MRMediaRemoteGetNowPlayingClient(dispatch_get_main_queue(), ^(id client) {
-        // NSLog(@"boom: %@", client);
+- (NSString *)getBundleIdentifier {
+    __block NSString *bundleIdentifier = nil;
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+
+    MRMediaRemoteGetNowPlayingClient(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(id client) {
         CFStringRef bundleid = MRNowPlayingClientGetBundleIdentifier(client);
-        NSString *bundleIdentifier = (__bridge NSString*)bundleid;
-        completion(bundleIdentifier);
+        bundleIdentifier = (__bridge NSString*)bundleid;
+        dispatch_semaphore_signal(semaphore);
     });
+
+    dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_SEC));
+    return bundleIdentifier;
 }
 
-- (void)getNowPlayingApplicationIsPlayingWithCompletion:(void (^)(bool isPlaying))completion {
-    MRMediaRemoteGetNowPlayingApplicationIsPlaying(dispatch_get_main_queue(), ^(Boolean isPlaying) {
-        // NSLog(@"boom: %d", isPlaying);
-        completion(isPlaying);
+- (bool)getNowPlayingApplicationIsPlaying {
+    __block bool isPlaying = false;
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+
+    MRMediaRemoteGetNowPlayingApplicationIsPlaying(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(Boolean playing) {
+        isPlaying = playing;
+        dispatch_semaphore_signal(semaphore);
     });
+
+    dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_SEC));
+    return isPlaying;
 }
 
 @end

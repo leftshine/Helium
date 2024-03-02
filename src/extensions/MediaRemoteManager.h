@@ -5,8 +5,8 @@
 
 + (instancetype)sharedManager;
 
-- (void)getNowPlayingInfoWithCompletion:(void (^)(NSDictionary *info))completion;
-- (void)getBundleIdentifierWithCompletion:(void (^)(NSString *bundleIdentifier))completion;
-- (void)getNowPlayingApplicationIsPlayingWithCompletion:(void (^)(bool isPlaying))completion;
+- (NSDictionary *)getNowPlayingInfo;
+- (NSString *)getBundleIdentifier;
+- (bool)getNowPlayingApplicationIsPlaying;
 
 @end
