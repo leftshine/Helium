@@ -41,16 +41,12 @@ struct WidgetCustomizationView: View {
                                     switch (anchorSide) {
                                     case NSLocalizedString("Left", comment:""):
                                         anchor = 0
-                                        break
                                     case NSLocalizedString("Center", comment:""):
                                         anchor = 1
-                                        break
                                     case NSLocalizedString("Right", comment:""):
                                         anchor = 2
-                                        break
                                     default:
                                         anchor = 0
-                                        break
                                     }
                                     widgetManager.createWidgetSet(title: title == "" ? NSLocalizedString("Untitled", comment:"") : title, anchor: anchor)
                                 }

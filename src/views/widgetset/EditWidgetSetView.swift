@@ -553,6 +553,10 @@ struct EditWidgetSetView: View {
     
     func saveSet(save: Bool = true) {
         changesMade = false
+        if !checkWeatherUpdateInterval() {
+            UIApplication.shared.alert(title: NSLocalizedString("Weather Update Interval", comment: ""), body: NSLocalizedString("The weather update interval needs to be greater than or equal to 5 minutes.", comment: ""))
+            updateInterval = 5 * 60
+        }
         widgetManager.editWidgetSet(widgetSet: widgetSet, newSetDetails: .init(
             isEnabled: isEnabled,
             orientationMode: orientationMode,
@@ -596,5 +600,16 @@ struct EditWidgetSetView: View {
         if updatedSet != nil {
             widgetSet = updatedSet!
         }
+    }
+
+    func checkWeatherUpdateInterval() -> Bool {
+        var hasWeather = false
+        for item in widgetIDs {
+            if item.module == .weather {
+                hasWeather = true
+            }
+        }
+
+        return hasWeather ? updateInterval >= 5 * 60 ? true : false : true
     }
 }

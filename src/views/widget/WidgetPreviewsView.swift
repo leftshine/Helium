@@ -87,17 +87,14 @@ struct WidgetPreviewsView: View {
             }
         case .textWidget:
             text = widget.config["text"] as? String ?? NSLocalizedString("Unknown", comment:"")
-            break;
         case .weather:
             text = NSLocalizedString("Weather Preview", comment:"")
-            break;
         case .currentCapacity:
             text = "50\(widget.config["showPercentage"] as? Bool ?? true ? "%" : "")"
         case .chargeSymbol:
             image = widget.config["filled"] as? Bool ?? true ? Image(systemName: "bolt.fill") : Image(systemName: "bolt")
         case .lyrics:
             text = NSLocalizedString("Lyrics", comment:"")
-            break;
         }
         widget.modified = false
     }

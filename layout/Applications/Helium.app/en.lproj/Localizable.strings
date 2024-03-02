@@ -155,6 +155,8 @@
 "Widgets" = "Widgets";
 "Edit Widget" = "Edit Widget";
 "Would you like to save the changes to your current widget set?" = "Would you like to save the changes to your current widget set?";
+"Weather Update Interval" = "Weather Update Interval";
+"The weather update interval needs to be greater than or equal to 5 minutes." = "The weather update interval needs to be greater than or equal to 5 minutes.";
 
 /* UIApplicationViews.swift */
 "Home" = "Home";

@@ -159,6 +159,8 @@
 "Edit Widget" = "编辑小部件";
 "Save Changes" = "保存更改";
 "Would you like to save the changes to your current widget set?" = "是否保存当前小部件集的更改？";
+"Weather Update Interval" = "天气更新间隔";
+"The weather update interval needs to be greater than or equal to 5 minutes." = "天气更新间隔需要大于等于5分钟";
 
 /* UIApplicationViews.swift */
 "Home" = "首页";
