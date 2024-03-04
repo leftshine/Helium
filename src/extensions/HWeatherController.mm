@@ -3,7 +3,6 @@
 // https://github.com/midnightchip/Asteroid
 // https://github.com/Tr1Fecta-7/WeatherGround
 #import "HWeatherController.h"
-#import "HWeatherControllerObserver.h"
 #import "UsefulFunctions.h"
 
 enum {
@@ -127,6 +126,142 @@ typedef NSUInteger ConditionImageType;
 	if (self.todayModel.forecastModel.currentConditions != nil)
 		return [WeatherImageLoader conditionImageNameWithConditionIndex:self.todayModel.forecastModel.currentConditions.conditionCode];
 	return [WeatherImageLoader conditionImageNameWithConditionIndex:32];
+}
+
+-(NSString *)conditionsEmoji {
+	NSString *weatherString = nil;
+	if (self.todayModel.forecastModel.currentConditions != nil) {
+	NSInteger currentCode = self.todayModel.forecastModel.currentConditions.conditionCode;
+	int hour = [[NSCalendar currentCalendar] component:NSCalendarUnitHour fromDate:[NSDate date]];
+
+	if (currentCode <= 2)
+		weatherString = @"🌪";
+	else if (currentCode <= 4)
+		weatherString = @"⛈";
+	else if (currentCode <= 8)
+		weatherString = @"🌨";
+	else if (currentCode == 9)
+		weatherString = @"🌧";
+	else if (currentCode == 10)
+		weatherString = @"🌨";
+	else if (currentCode <= 12)
+		weatherString = @"🌧";
+	else if (currentCode <= 18)
+		weatherString = @"🌨";
+	else if (currentCode <= 22)
+		weatherString = @"🌫";
+	else if (currentCode <= 24)
+		weatherString = @"💨";
+	else if (currentCode == 25)
+		weatherString = @"❄️";
+	else if (currentCode == 26)
+		weatherString = @"☁️";
+	else if (currentCode <= 28)
+		weatherString = @"🌥";
+	else if (currentCode <= 30)
+		weatherString = @"⛅️";
+	else if (currentCode <= 32 && (hour >= 18 || hour <= 6))
+		weatherString = @"🌙";
+	else if (currentCode <= 32)
+		weatherString = @"☀️";
+	else if (currentCode <= 34)
+		weatherString = @"🌤";
+	else if (currentCode == 35)
+		weatherString = @"🌧";
+	else if (currentCode == 36)
+		weatherString = @"🔥";
+	else if (currentCode <= 38)
+		weatherString = @"🌩";
+	else if (currentCode == 39)
+		weatherString = @"🌦";
+	else if (currentCode == 40)
+		weatherString = @"🌧";
+	else if (currentCode <= 43)
+		weatherString = @"🌨";
+	} else
+		weatherString = @"N/A";
+	return weatherString;
+}
+
+- (UIImage *)conditionsImage2:(double) fontSize {
+    UIImage *weatherImage = nil;
+    
+    if (self.todayModel.forecastModel.currentConditions != nil) {
+        NSInteger currentCode = self.todayModel.forecastModel.currentConditions.conditionCode;
+        int hour = [[NSCalendar currentCalendar] component:NSCalendarUnitHour fromDate:[NSDate date]];
+
+        if (currentCode <= 2)
+            weatherImage = [UIImage systemImageNamed:@"tornado"
+                        withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
+        else if (currentCode <= 4)
+            weatherImage = [UIImage systemImageNamed:@"cloud.bolt.rain.fill"
+                        withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
+        else if (currentCode <= 8)
+            weatherImage = [UIImage systemImageNamed:@"cloud.sleet.fill"
+                        withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
+        else if (currentCode == 9)
+            weatherImage = [UIImage systemImageNamed:@"cloud.drizzle.fill"
+                        withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
+        else if (currentCode == 10)
+            weatherImage = [UIImage systemImageNamed:@"cloud.sleet.fill"
+                        withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
+        else if (currentCode <= 12)
+            weatherImage = [UIImage systemImageNamed:@"cloud.rain.fill"
+                        withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
+        else if (currentCode <= 18)
+            weatherImage = [UIImage systemImageNamed:@"cloud.sleet.fill"
+                        withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
+        else if (currentCode <= 22)
+            weatherImage = [UIImage systemImageNamed:@"cloud.fog.fill"
+                        withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
+        else if (currentCode <= 24)
+            weatherImage = [UIImage systemImageNamed:@"wind"
+                        withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
+        else if (currentCode == 25)
+            weatherImage = [UIImage systemImageNamed:@"snow"
+                        withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
+        else if (currentCode == 26)
+            weatherImage = [UIImage systemImageNamed:@"cloud.fill"
+                        withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
+        else if (currentCode <= 28)
+            weatherImage = [UIImage systemImageNamed:@"cloud.sun.fill"
+                        withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
+        else if (currentCode <= 30)
+            weatherImage = [UIImage systemImageNamed:@"cloud.sun.fill"
+                        withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
+        else if (currentCode <= 32 && (hour >= 18 || hour <= 6))
+            weatherImage = [UIImage systemImageNamed:@"thermometer.sun.fill"
+                        withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
+        else if (currentCode <= 32)
+            weatherImage = [UIImage systemImageNamed:@"moon.fill"
+                        withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
+        else if (currentCode <= 34)
+            weatherImage = [UIImage systemImageNamed:@"cloud.sun.fill"
+                        withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
+        else if (currentCode == 35)
+            weatherImage = [UIImage systemImageNamed:@"cloud.sleet.fill"
+                        withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
+        else if (currentCode == 36)
+            weatherImage = [UIImage systemImageNamed:@"thermometer.sun.fill"
+                        withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
+        else if (currentCode <= 38)
+            weatherImage = [UIImage systemImageNamed:@"cloud.bolt.fill"
+                        withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
+        else if (currentCode == 39)
+            weatherImage = [UIImage systemImageNamed:@"cloud.sun.rain.fill"
+                        withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
+        else if (currentCode == 40)
+            weatherImage = [UIImage systemImageNamed:@"cloud.heavyrain.fill"
+                        withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
+        else if (currentCode <= 43)
+            weatherImage = [UIImage systemImageNamed:@"cloud.snow.fill"
+                        withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
+    } else {
+        weatherImage = [UIImage systemImageNamed:@"exclamationmark.triangle.fill"
+                        withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
+    }
+    
+    return weatherImage;
 }
 
 -(NSString *)conditionsDescription {
@@ -292,10 +427,12 @@ typedef NSUInteger ConditionImageType;
 	return @"--";
 }
 
--(NSDictionary *)weatherData {
+-(NSDictionary *)weatherData:(double) fontSize {
 	NSMutableDictionary *data = [NSMutableDictionary dictionary];
 	[data setObject:self.conditionsDescription forKey:@"conditions"];
 	[data setObject:self.conditionsImage forKey:@"conditions_image"];
+	[data setObject:[self conditionsImage2:fontSize] forKey:@"conditions_image2"];
+	[data setObject:self.conditionsEmoji forKey:@"conditions_emoji"];
 	[data setObject:self.locationName forKey:@"location"];
 	[data setObject:self.UVIndex forKey:@"uv_index"];
 	[data setObject:self.airQualityIndex forKey:@"aqi"];

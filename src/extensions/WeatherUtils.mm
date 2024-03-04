@@ -25,6 +25,7 @@
     if(data) {
         @try {
             format = [format stringByReplacingOccurrencesOfString:@"{n}" withString:data[@"conditions"]];
+            format = [format stringByReplacingOccurrencesOfString:@"{e}" withString:data[@"conditions_emoji"]];
             format = [format stringByReplacingOccurrencesOfString:@"{l}" withString:data[@"location"]];
             format = [format stringByReplacingOccurrencesOfString:@"{uvi}" withString:data[@"uv_index"]];
             format = [format stringByReplacingOccurrencesOfString:@"{aqi}" withString:data[@"aqi"]];

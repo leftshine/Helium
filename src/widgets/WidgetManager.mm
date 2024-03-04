@@ -391,16 +391,16 @@ void formatParsedInfo(NSDictionary *parsedInfo, NSInteger parsedID, NSMutableAtt
                 [weatherController updateModel];
                 weatherController.useFahrenheit = [parsedInfo valueForKey:@"useFahrenheit"] ? [[parsedInfo valueForKey:@"useFahrenheit"] boolValue] : NO;
                 weatherController.useMetric = [parsedInfo valueForKey:@"useMetric"] ? [[parsedInfo valueForKey:@"useMetric"] boolValue] : NO;
-                NSDictionary *weatherData = [weatherController weatherData];
+                NSDictionary *weatherData = [weatherController weatherData:fontSize];
                 format = [WeatherUtils formatWeatherData:weatherData format:format];
                 // NSLog(@"boom format:%@", format);
 
-                UIImage *weatherImage = weatherData[@"conditions_image"];
+                UIImage *weatherImage = weatherData[@"conditions_image2"];
                 if (weatherImage) {
                     imageAttachment = [[NSTextAttachment alloc] init];
-                    CGFloat imgH = font.pointSize * 1.4f;
-                    CGFloat imgW = (weatherImage.size.width / weatherImage.size.height) * imgH;
-                    [imageAttachment setBounds:CGRectMake(0, roundf(font.capHeight - imgH)/2.f, imgW, imgH)];
+                    // CGFloat imgH = font.pointSize;// * 1.4f;
+                    // CGFloat imgW = (weatherImage.size.width / weatherImage.size.height) * imgH;
+                    // [imageAttachment setBounds:CGRectMake(0, roundf(font.capHeight - imgH)/2.f, imgW, imgH)];
                     weatherImage = [weatherImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
                     imageAttachment.image = weatherImage;
                     format = [format stringByReplacingOccurrencesOfString:@"\\n" withString:@"\n"];

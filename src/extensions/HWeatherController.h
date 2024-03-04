@@ -15,6 +15,7 @@
 +(instancetype)sharedInstance;
 -(NSString *)locationName;
 -(UIImage *)conditionsImage;
+-(UIImage *)conditionsImage2:(double) fontSize;
 -(NSString *)conditionsImageName;
 -(NSString *)conditionsDescription;
 -(NSString *)temperature;
@@ -41,7 +42,7 @@
 -(NSString *)precipitationPast24Hours;
 -(NSString *)precipitationPast24Hours:(BOOL) withUnit;
 -(NSString *)airQualityIndex;
--(NSDictionary *)weatherData;
+-(NSDictionary *)weatherData:(double) fontSize;
 
 -(void)updateModel;
 @end
