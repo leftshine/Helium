@@ -18,6 +18,7 @@
 #import "../extensions/FontUtils.h"
 #import "../extensions/MusicPlayerUtils.h"
 #import "../extensions/WeatherUtils.h"
+#import "../extensions/QWeather.h"
 #import "../extensions/HWeatherController.h"
 #import "../extensions/MediaRemoteManager.h"
 
@@ -317,7 +318,7 @@ static NSMutableAttributedString* replaceWeatherImage(NSString* formattedText, N
  TODO:
  - Music Visualizer
  */
-void formatParsedInfo(NSDictionary *parsedInfo, NSInteger parsedID, NSMutableAttributedString *mutableString, double fontSize, UIColor *textColor, UIFont *font, NSString *dateLocale)
+void formatParsedInfo(NSDictionary *parsedInfo, NSInteger parsedID, NSMutableAttributedString *mutableString, double fontSize, UIColor *textColor, UIFont *font, NSString *dateLocale, NSInteger weatherService, NSString *apiKey, BOOL freeSub)
 {
     NSString *widgetString;
     NSString *sfSymbolName;
@@ -386,28 +387,58 @@ void formatParsedInfo(NSDictionary *parsedInfo, NSInteger parsedID, NSMutableAtt
             {
                 // Weather
                 NSString *format = [parsedInfo valueForKey:@"format"] ?: @"{i}{n}{lt}°~{ht}°({t}°,{bt}°)💧{h}%";
-                HWeatherController *weatherController = [HWeatherController sharedInstance];
-                weatherController.locale = [[NSLocale alloc] initWithLocaleIdentifier:dateLocale];
-                [weatherController updateModel];
-                weatherController.useFahrenheit = [parsedInfo valueForKey:@"useFahrenheit"] ? [[parsedInfo valueForKey:@"useFahrenheit"] boolValue] : NO;
-                weatherController.useMetric = [parsedInfo valueForKey:@"useMetric"] ? [[parsedInfo valueForKey:@"useMetric"] boolValue] : NO;
-                NSDictionary *weatherData = [weatherController weatherData:fontSize];
-                format = [WeatherUtils formatWeatherData:weatherData format:format];
-                // NSLog(@"boom format:%@", format);
 
-                UIImage *weatherImage = weatherData[@"conditions_image2"];
-                if (weatherImage) {
-                    imageAttachment = [[NSTextAttachment alloc] init];
-                    // CGFloat imgH = font.pointSize;// * 1.4f;
-                    // CGFloat imgW = (weatherImage.size.width / weatherImage.size.height) * imgH;
-                    // [imageAttachment setBounds:CGRectMake(0, roundf(font.capHeight - imgH)/2.f, imgW, imgH)];
-                    weatherImage = [weatherImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-                    imageAttachment.image = weatherImage;
-                    format = [format stringByReplacingOccurrencesOfString:@"\\n" withString:@"\n"];
-                    format = [format stringByReplacingOccurrencesOfString:@"\\t" withString:@"\t"];
-                    [mutableString appendAttributedString:replaceWeatherImage(format, [NSAttributedString attributedStringWithAttachment:imageAttachment])];
-                } else {
-                    widgetString = format;
+                if (weatherService == 0) {
+                    HWeatherController *weatherController = [HWeatherController sharedInstance];
+                    weatherController.locale = [[NSLocale alloc] initWithLocaleIdentifier:dateLocale];
+                    [weatherController updateModel];
+                    weatherController.useFahrenheit = [parsedInfo valueForKey:@"useFahrenheit"] ? [[parsedInfo valueForKey:@"useFahrenheit"] boolValue] : NO;
+                    weatherController.useMetric = [parsedInfo valueForKey:@"useMetric"] ? [[parsedInfo valueForKey:@"useMetric"] boolValue] : NO;
+                    NSDictionary *weatherData = [weatherController weatherData:fontSize];
+                    format = [WeatherUtils formatWeatherData:weatherData format:format];
+                    // NSLog(@"boom format:%@", format);
+
+                    UIImage *weatherImage = weatherData[@"conditions_image2"];
+                    if (weatherImage) {
+                        imageAttachment = [[NSTextAttachment alloc] init];
+                        // CGFloat imgH = font.pointSize;// * 1.4f;
+                        // CGFloat imgW = (weatherImage.size.width / weatherImage.size.height) * imgH;
+                        // [imageAttachment setBounds:CGRectMake(0, roundf(font.capHeight - imgH)/2.f, imgW, imgH)];
+                        weatherImage = [weatherImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+                        imageAttachment.image = weatherImage;
+                        format = [format stringByReplacingOccurrencesOfString:@"\\n" withString:@"\n"];
+                        format = [format stringByReplacingOccurrencesOfString:@"\\t" withString:@"\t"];
+                        [mutableString appendAttributedString:replaceWeatherImage(format, [NSAttributedString attributedStringWithAttachment:imageAttachment])];
+                    } else {
+                        widgetString = format;
+                    }
+                } else if (weatherService == 1) {
+                    NSString *location = [parsedInfo valueForKey:@"location"];
+                    QWeather *qweather = [QWeather sharedInstance];
+                    qweather.useMetric = [parsedInfo valueForKey:@"useMetric"] ? [[parsedInfo valueForKey:@"useMetric"] boolValue] : NO;
+                    qweather.useFahrenheit = [parsedInfo valueForKey:@"useFahrenheit"] ? [[parsedInfo valueForKey:@"useFahrenheit"] boolValue] : NO;
+                    qweather.apiKey = apiKey;
+                    qweather.locale = dateLocale;
+                    [qweather updateWeather:location];
+                    NSDictionary *weatherData = [qweather getWeatherData:fontSize];
+                    NSLog(@"boom :%@", weatherData);
+                    format = [WeatherUtils formatWeatherData:weatherData format:format];
+                    NSLog(@"boom format:%@", format);
+
+                    UIImage *weatherImage = weatherData[@"conditions_image"];
+                    if (weatherImage) {
+                        imageAttachment = [[NSTextAttachment alloc] init];
+                        // CGFloat imgH = font.pointSize;// * 1.4f;
+                        // CGFloat imgW = (weatherImage.size.width / weatherImage.size.height) * imgH;
+                        // [imageAttachment setBounds:CGRectMake(0, roundf(font.capHeight - imgH)/2.f, imgW, imgH)];
+                        weatherImage = [weatherImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+                        imageAttachment.image = weatherImage;
+                        format = [format stringByReplacingOccurrencesOfString:@"\\n" withString:@"\n"];
+                        format = [format stringByReplacingOccurrencesOfString:@"\\t" withString:@"\t"];
+                        [mutableString appendAttributedString:replaceWeatherImage(format, [NSAttributedString attributedStringWithAttachment:imageAttachment])];
+                    } else {
+                        widgetString = format;
+                    }
                 }
             }
             break;
@@ -451,7 +482,7 @@ void formatParsedInfo(NSDictionary *parsedInfo, NSInteger parsedID, NSMutableAtt
     }
 }
 
-NSAttributedString* formattedAttributedString(NSArray *identifiers, double fontSize, UIColor *textColor, UIFont *font, NSString *dateLocale)
+NSAttributedString* formattedAttributedString(NSArray *identifiers, double fontSize, UIColor *textColor, UIFont *font, NSString *dateLocale, NSInteger weatherService, NSString *weatherApiKey, BOOL freeSub)
 {
     @autoreleasepool {
         NSMutableAttributedString* mutableString = [[NSMutableAttributedString alloc] init];
@@ -462,7 +493,7 @@ NSAttributedString* formattedAttributedString(NSArray *identifiers, double fontS
                 dispatch_sync(concurrentQueue, ^{
                     NSDictionary *parsedInfo = idInfo;
                     NSInteger parsedID = [parsedInfo valueForKey:@"widgetID"] ? [[parsedInfo valueForKey:@"widgetID"] integerValue] : 0;
-                    formatParsedInfo(parsedInfo, parsedID, mutableString, fontSize, textColor, font, dateLocale);
+                    formatParsedInfo(parsedInfo, parsedID, mutableString, fontSize, textColor, font, dateLocale, weatherService, weatherApiKey, freeSub);
                 });
             }
         } else {

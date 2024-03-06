@@ -469,7 +469,7 @@ typedef NSUInteger ConditionImageType;
 
 	[data setObject:self.pressure forKey:@"pressure"];
 	[data setObject:[self pressure:YES] forKey:@"pressure_with_unit"];
-	return data;
+	return [data copy];
 }
 
 -(WAForecastModel *)forcastModel {

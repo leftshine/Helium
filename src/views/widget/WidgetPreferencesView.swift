@@ -15,12 +15,14 @@ struct WidgetPreferencesView: View {
     
     @State var text: String = ""
     @State var weatherFormat: String = ""
+    @State var weatherService: Int = 0
     @State var intSelection: Int = 0
     @State var intSelection2: Int = 0
     @State var intSelection3: Int = 1
     @State var boolSelection: Bool = false
     
     @State var modified: Bool = false
+    @State private var isPresented = false
     
     let timeFormats: [String] = [
         "hh:mm",
@@ -261,6 +263,26 @@ struct WidgetPreferencesView: View {
                         }
 
                         HStack {
+                            Text(NSLocalizedString("Measurement System", comment:""))
+                                .foregroundColor(.primary)
+                                .bold()
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            DropdownPicker(selection: $intSelection2) {
+                                return [
+                                    DropdownItem(NSLocalizedString("Metric", comment:""), tag: 0),
+                                    DropdownItem(NSLocalizedString("US", comment:""), tag: 1)
+                                ]
+                            }
+                            .onAppear {
+                                if let useMetric = widgetID.config["useMetric"] as? Bool {
+                                    intSelection2 = useMetric ? 1 : 0
+                                } else {
+                                    intSelection2 = 0
+                                }
+                            }
+                        }
+                        
+                        HStack {
                             Text(NSLocalizedString("Temperature Unit", comment:""))
                                 .foregroundColor(.primary)
                                 .bold()
@@ -280,32 +302,44 @@ struct WidgetPreferencesView: View {
                             }
                         }
 
-                        HStack {
-                            Text(NSLocalizedString("Measurement System", comment:""))
-                                .foregroundColor(.primary)
-                                .bold()
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                            DropdownPicker(selection: $intSelection2) {
-                                return [
-                                    DropdownItem(NSLocalizedString("Metric", comment:""), tag: 0),
-                                    DropdownItem(NSLocalizedString("US", comment:""), tag: 1)
-                                ]
+                        if weatherService == 0 {
+                            HStack {
+                                Text(NSLocalizedString("Weather Format System", comment:""))
+                                    .multilineTextAlignment(.leading)
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                                Spacer()
                             }
-                            .onAppear {
-                                if let useMetric = widgetID.config["useMetric"] as? Bool {
-                                    intSelection2 = useMetric ? 1 : 0
-                                } else {
-                                    intSelection2 = 0
+                        } else if weatherService != 0 {
+                            HStack {
+                                Text(NSLocalizedString("Location", comment:""))
+                                    .foregroundColor(.primary)
+                                    .bold()
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                TextField(NSLocalizedString("Input", comment:""), text: $text)
+                                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                                    .onAppear {
+                                        if let format = widgetID.config["location"] as? String {
+                                            text = format
+                                        } else {
+                                            text = "101010100"
+                                        }
+                                    }
+                                Button(NSLocalizedString("Get", comment:"")) {
+                                    isPresented = true
+                                }
+                                .sheet(isPresented: $isPresented) {
+                                    WeatherLocationView(locationID: self.$text)
                                 }
                             }
-                        }
 
-                        HStack {
-                            Text(NSLocalizedString("Weather Format", comment:""))
-                                .multilineTextAlignment(.leading)
-                                .font(.subheadline)
-                                .foregroundColor(.secondary)
-                            Spacer()
+                            HStack {
+                                Text(NSLocalizedString("Weather Format QWeather", comment:""))
+                                    .multilineTextAlignment(.leading)
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                                Spacer()
+                            }
                         }
                     }
                 }
@@ -399,6 +433,9 @@ struct WidgetPreferencesView: View {
                 }
             }
         }
+        .onAppear {
+            weatherService = UserDefaults.standard.integer(forKey: "weatherService", forPath: USER_DEFAULTS_PATH)
+        }
         .onDisappear {
             if modified {
                 UIApplication.shared.confirmAlert(title: NSLocalizedString("Save Changes", comment:""), body: NSLocalizedString("Would you like to save changes to the widget?", comment:""), onOK: {
@@ -486,6 +523,11 @@ struct WidgetPreferencesView: View {
             } else {
                 widgetStruct.config["format"] = weatherFormat
             }
+            if text == "" {
+                widgetStruct.config["location"] = nil
+            } else {
+                widgetStruct.config["location"] = text
+            }
         case .lyrics:
             // MARK: Weather Handling
             widgetStruct.config["unsupported"] = boolSelection
@@ -499,5 +541,105 @@ struct WidgetPreferencesView: View {
         widgetManager.updateWidgetConfig(widgetSet: widgetSet, id: widgetID, newID: widgetStruct)
         widgetID.config = widgetStruct.config
         modified = false
+    }
+}
+
+struct Location: Identifiable {
+    var id: String
+    var name: String
+    var country: String
+    var adm1: String
+    var adm2: String
+    var lat: String
+    var lon: String
+}
+
+struct WeatherLocationView: View {
+    @State var searchString = ""
+    @Binding var locationID: String
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+
+    @State var locations: [Location] = []
+    
+    var body: some View {
+        NavigationView{
+            VStack {
+                HStack {
+                    if #available(iOS 15.0, *) {
+                        TextField("", text: $searchString)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .onSubmit {
+                                search()
+                            }
+                    } else {
+                        TextField("", text: $searchString, onCommit: {
+                            search()
+                        })
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                    }
+                    Button(NSLocalizedString("Search", comment:"")) {
+                        search()
+                    }
+                }
+                .padding()
+                Spacer()
+                List(locations) {location in
+                    ListCell(item: location)
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            locationID = location.id
+                            presentationMode.wrappedValue.dismiss()
+                        }
+                }
+                .listStyle(PlainListStyle())
+                .padding(.vertical, 0)
+                .navigationBarTitle(Text(NSLocalizedString("Get Location ID", comment:"")))
+            }
+        }
+    }
+
+    func search() {
+        if !searchString.isEmpty {
+            let qweather = QWeather.sharedInstance()
+            qweather!.locale = UserDefaults.standard.string(forKey: "dateLocale", forPath: USER_DEFAULTS_PATH) ?? "en"
+            qweather!.apiKey = UserDefaults.standard.string(forKey: "weatherApiKey", forPath: USER_DEFAULTS_PATH) ?? ""
+            let data = qweather!.fetchLocationID(forName:searchString)
+            let json = try! JSONSerialization.jsonObject(with: data!, options: []) as! Dictionary<String, Any>
+            if json["code"] as? String == "200" {
+                let array = json["location"] as! [Dictionary<String, Any>]
+                for item in array {
+                    let name = item["name"] as! String
+                    let id = item["id"] as! String
+                    let country = item["country"] as! String
+                    let adm1 = item["adm1"] as! String
+                    let adm2 = item["adm2"] as! String
+                    let lat = item["lat"] as! String
+                    let lon = item["lon"] as! String
+                    locations.append(Location(id: id, name: name, country: country, adm1: adm1, adm2: adm2, lat: lat, lon: lon))
+                }
+            }
+        }
+    }
+}
+
+struct ListCell: View {
+    var item: Location
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            HStack {
+                Text("\(item.id),\(item.name)")
+                    .font(.system(size: 18, weight: .bold))
+                    .foregroundColor(.primary)
+                Spacer()
+            }
+            HStack {
+                Text("\(item.adm1),\(item.adm2)")
+                    .lineLimit(1)
+                    .font(.system(size: 15))
+                    .foregroundColor(.secondary)
+                Spacer()
+            }
+        }
     }
 }

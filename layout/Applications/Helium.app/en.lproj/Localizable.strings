@@ -25,6 +25,12 @@
 "UNKNOWN" = "UNKNOWN";
 "Release" = "Release";
 "Locale" = "Locale";
+"Weather Service" = "Weather Service";
+"System Weather" = "System";
+"QWeather" = "QWeather";
+"Gaode" = "Gaode";
+"Weather API Key" = "Weather API Key";
+"Free Subscription API" = "API Free Subscription";
 "Hide Save Confirmation Popup" = "Hide Save Confirmation Popup";
 "Display Debug Border" = "Display Debug Border";
 "Use Adaptive Colors" = "Use Adaptive Colors";
@@ -83,6 +89,11 @@
 "Label Text" = "Label Text";
 "Example" = "Example";
 "Input" = "Input";
+"Location" = "LocationID or Latitude,Longitude";
+"Get" = "Get";
+"Input Location Name" = "Input Location Name";
+"Get Location ID" = "Get Location ID";
+"Search" = "Search";
 "Measurement System" = "Measurement System";
 "Metric" = "Metric";
 "US" = "US";
@@ -91,7 +102,8 @@
 "No Configurable Aspects" = "No Configurable Aspects";
 "Save Changes" = "Save Changes";
 "Would you like to save changes to the widget?" = "Would you like to save changes to the widget?";
-"Weather Format" = "This weather format explanation includes:\nWeather Icon: {i}\nWeather Emoji: {e}\nWeather Description: {n}\nCurrent Temperature: {t} {ts}\nCurrent Humidity: {h} {hs}\nFeels Like Temperature: {bt} {bts}\nLowest Temperature: {lt} {lts}\nHighest Temperature: {ht} {hts}\nWind Speed: {ws} {wsu}\nWind Direction: {wd} {wds}\nVisibility: {v} {vu}\nNext Hour Precipitation: {pp} {pps}\nPrecipitation Past 24 Hours: {pp24} {pp24u}\nPressure: {ps} {psu}\nUV Index: {uvi}\nAir Quality Index: {aqi}\nLocation: {l}\nThose ending with 's' include symbols, those ending with 'u' include units.";
+"Weather Format System" = "This weather format explanation includes:\nWeather Icon: {i}\nWeather Emoji: {e}\nWeather Description: {n}\nCurrent Temperature: {t} {ts}\nCurrent Humidity: {h} {hs}\nFeels Like Temperature: {bt} {bts}\nLowest Temperature: {lt} {lts}\nHighest Temperature: {ht} {hts}\nWind Speed: {ws} {wsu}\nWind Direction: {wd} {wds}\nVisibility: {v} {vu}\nNext Hour Precipitation: {pn} {pns}\nPrecipitation Past 24 Hours: {pp24} {pp24u}\nPressure: {ps} {psu}\nUV Index: {uvi}\nAir Quality Index: {aqi}\nLocation: {l}\nThose ending with 's' include symbols, those ending with 'u' include units.";
+"Weather Format QWeather" = "This weather format explanation includes:\nWeather Icon: {i}\nWeather Emoji: {e}\nWeather Description: {n}\nCurrent Temperature: {t} {ts}\nCurrent Humidity: {h} {hs}\nFeels Like Temperature: {bt} {bts}\nLowest Temperature: {lt} {lts}\nHighest Temperature: {ht} {hts}\nWind Speed: {ws} {wsu}\nWind Direction: {wd} {wds}\nVisibility: {v} {vu}\nNext Hour Precipitation: {pn} {pns}\nNext Hour Precipitation Percent: {ppn} {ppns}\nPrecipitation Past 24 Hours: {pp24} {pp24u}\nPressure: {ps} {psu}\nUV Index: {uvi}\nAir Quality Index: {aqi}\nLocation: {l}\nThose ending with 's' include symbols, those ending with 'u' include units.";
 "Format" = "Format";
 "Auto Detection" = "Default";
 "Artist" = "Artist";
@@ -156,7 +168,7 @@
 "Edit Widget" = "Edit Widget";
 "Would you like to save the changes to your current widget set?" = "Would you like to save the changes to your current widget set?";
 "Weather Update Interval" = "Weather Update Interval";
-"The weather update interval needs to be greater than or equal to 5 minutes." = "The weather update interval needs to be greater than or equal to 5 minutes.";
+"The weather update interval needs to be greater than or equal to 30 minutes." = "The weather update interval needs to be greater than or equal to 30 minutes.";
 
 /* UIApplicationViews.swift */
 "Home" = "Home";

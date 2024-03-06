@@ -24,6 +24,9 @@ struct SettingsView: View {
     @State var dateLocale: String = Locale.current.languageCode!
     @State var hideSaveConfirmation: Bool = false
     @State var debugBorder: Bool = false
+    @State var weatherService: Int = 0
+    @State var weatherApiKey: String = ""
+    @State var freeSub: Bool = true
     
     var body: some View {
         NavigationView {
@@ -84,7 +87,43 @@ struct SettingsView: View {
                 } header: {
                     Label(NSLocalizedString("Preferences", comment:""), systemImage: "gear")
                 }
-                
+
+                // Weather List
+                Section {
+                    HStack {
+                        Text(NSLocalizedString("Weather Service", comment:""))
+                            .bold()
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        DropdownPicker(selection: $weatherService) {
+                            return [
+                                DropdownItem(NSLocalizedString("System Weather", comment:""), tag: 0),
+                                DropdownItem(NSLocalizedString("QWeather", comment:""), tag: 1),
+                                // DropdownItem(NSLocalizedString("Gaode", comment:""), tag: 2)
+                            ]
+                        }
+                    }
+
+                    if weatherService == 1 {
+                        HStack {
+                            Text(NSLocalizedString("Weather API Key", comment:""))
+                                .bold()
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            TextField("", text: $weatherApiKey)
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                        }
+
+                        HStack {
+                            Toggle(isOn: $freeSub) {
+                                Text(NSLocalizedString("Free Subscription API", comment:""))
+                                    .bold()
+                                    .minimumScaleFactor(0.5)
+                            }
+                        }
+                    }
+                } header: {
+                    Label(NSLocalizedString("Weather", comment:""), systemImage: "cloud.sun")
+                }
+
                 // Credits List
                 Section {
                     LinkCell(imageName: "leminlimez", url: "https://github.com/leminlimez", title: "LeminLimez", contribution: NSLocalizedString("Main Developer", comment: "leminlimez's contribution"), circle: true)
@@ -116,12 +155,18 @@ struct SettingsView: View {
         dateLocale = UserDefaults.standard.string(forKey: "dateLocale", forPath: USER_DEFAULTS_PATH) ?? Locale.current.languageCode!
         hideSaveConfirmation = UserDefaults.standard.bool(forKey: "hideSaveConfirmation", forPath: USER_DEFAULTS_PATH)
         debugBorder = UserDefaults.standard.bool(forKey: "debugBorder", forPath: USER_DEFAULTS_PATH)
+        weatherService = UserDefaults.standard.integer(forKey: "weatherService", forPath: USER_DEFAULTS_PATH)
+        weatherApiKey = UserDefaults.standard.string(forKey: "weatherApiKey", forPath: USER_DEFAULTS_PATH) ?? ""
+        freeSub = UserDefaults.standard.bool(forKey: "freeSub", forPath: USER_DEFAULTS_PATH)
     }
 
     func saveChanges() {
         UserDefaults.standard.setValue(dateLocale, forKey: "dateLocale", forPath: USER_DEFAULTS_PATH)
         UserDefaults.standard.setValue(hideSaveConfirmation, forKey: "hideSaveConfirmation", forPath: USER_DEFAULTS_PATH)
         UserDefaults.standard.setValue(debugBorder, forKey: "debugBorder", forPath: USER_DEFAULTS_PATH)
+        UserDefaults.standard.setValue(freeSub, forKey: "freeSub", forPath: USER_DEFAULTS_PATH)
+        UserDefaults.standard.setValue(weatherService, forKey: "weatherService", forPath: USER_DEFAULTS_PATH)
+        UserDefaults.standard.setValue(weatherApiKey, forKey: "weatherApiKey", forPath: USER_DEFAULTS_PATH)
         UIApplication.shared.alert(title: NSLocalizedString("Save Changes", comment:""), body: NSLocalizedString("Settings saved successfully", comment:""))
         DarwinNotificationCenter.default.post(name: NOTIFY_RELOAD_HUD)
     }

@@ -272,6 +272,27 @@ static void ReloadHUD
     return locale ? locale : @"en_US";
 }
 
+- (NSInteger) weatherService
+{
+    [self loadUserDefaults:NO];
+    NSInteger service = getIntFromDictKey(_userDefaults, @"weatherService", 0);
+    return service;
+}
+
+- (NSString*) weatherApiKey
+{
+    [self loadUserDefaults:NO];
+    NSString *api = [_userDefaults objectForKey: @"weatherApiKey"];
+    return api ? api : @"";
+}
+
+- (BOOL) freeSub
+{
+    [self loadUserDefaults:NO];
+    NSNumber *free = [_userDefaults objectForKey: @"freeSub"];
+    return free ? [free boolValue] : NO;
+}
+
 - (NSArray*) widgetProperties
 {
     [self loadUserDefaults: NO];
@@ -395,7 +416,7 @@ static void ReloadHUD
 #if DEBUG
     os_log_debug(OS_LOG_DEFAULT, "updateLabel");
 #endif
-    NSAttributedString *attributedText = formattedAttributedString(identifiers, fontSize, label.textColor, label.font, [self dateLocale]);
+    NSAttributedString *attributedText = formattedAttributedString(identifiers, fontSize, label.textColor, label.font, [self dateLocale], [self weatherService], [self weatherApiKey], [self freeSub]);
     
     NSDictionary *blurDetails = [properties valueForKey:@"blurDetails"] ? [properties valueForKey:@"blurDetails"] : @{@"hasBlur" : @(NO)};
     BOOL hasBlur = getBoolFromDictKey(blurDetails, @"hasBlur");

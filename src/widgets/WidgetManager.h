@@ -5,4 +5,4 @@
 //  Created by lemin on 10/6/23.
 //
 
-NSAttributedString* formattedAttributedString(NSArray *identifiers, double fontSize, UIColor *textColor, UIFont *font, NSString *dateLocale);
+NSAttributedString* formattedAttributedString(NSArray *identifiers, double fontSize, UIColor *textColor, UIFont *font, NSString *dateLocale, NSInteger weatherService, NSString *weatherApiKey, BOOL freeSub);
