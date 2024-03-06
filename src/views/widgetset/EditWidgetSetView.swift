@@ -154,7 +154,7 @@ struct EditWidgetSetView: View {
                                     .bold()
                                 Spacer()
                             }
-                            BetterSlider(value: $offsetPX, bounds: -300...300)
+                            BetterSlider(value: $offsetPX, bounds: -300...300, step: 0.1)
                                 .onChange(of: offsetPX) { _ in
                                     changesMade = true
                                 }
@@ -166,7 +166,7 @@ struct EditWidgetSetView: View {
                                     .bold()
                                 Spacer()
                             }
-                            BetterSlider(value: $offsetPY, bounds: -300...300)
+                            BetterSlider(value: $offsetPY, bounds: -300...300, step: 0.1)
                                 .onChange(of: offsetPY) { _ in
                                     changesMade = true
                                 }
@@ -180,7 +180,7 @@ struct EditWidgetSetView: View {
                                     .bold()
                                 Spacer()
                             }
-                            BetterSlider(value: $offsetLX, bounds: -300...300)
+                            BetterSlider(value: $offsetLX, bounds: -300...300, step: 0.1)
                                 .onChange(of: offsetLX) { _ in
                                     changesMade = true
                                 }
@@ -192,7 +192,7 @@ struct EditWidgetSetView: View {
                                     .bold()
                                 Spacer()
                             }
-                            BetterSlider(value: $offsetLY, bounds: -300...300)
+                            BetterSlider(value: $offsetLY, bounds: -300...300, step: 0.1)
                                 .onChange(of: offsetLY) { _ in
                                     changesMade = true
                                 }
@@ -332,7 +332,7 @@ struct EditWidgetSetView: View {
                                         .bold()
                                     Spacer()
                                 }
-                                BetterSlider(value: $blurAlpha, bounds: 0.0...1.0)
+                                BetterSlider(value: $blurAlpha, bounds: 0.0...1.0, step: 0.01)
                                     .onChange(of: blurAlpha) { _ in
                                         changesMade = true
                                     }
@@ -423,7 +423,7 @@ struct EditWidgetSetView: View {
                                 .bold()
                             Spacer()
                         }
-                        BetterSlider(value: $textAlpha, bounds: 0.0...1.0)
+                        BetterSlider(value: $textAlpha, bounds: 0.0...1.0, step: 0.01)
                             .onChange(of: textAlpha) { _ in
                                 changesMade = true
                             }
