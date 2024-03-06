@@ -18,6 +18,7 @@
 	if (self != nil) {
 		self.useFahrenheit = NO;
 		self.useMetric = YES;
+        self.freeSub = YES;
 	}
 	return self;
 }
@@ -255,6 +256,8 @@
                 weatherImage = [UIImage systemImageNamed:@"exclamationmark.triangle.fill" withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
                 break;
         }
+    } else {
+        weatherImage = [UIImage systemImageNamed:@"exclamationmark.triangle.fill" withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
     }
     
     return weatherImage;

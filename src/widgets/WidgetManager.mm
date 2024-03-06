@@ -419,6 +419,7 @@ void formatParsedInfo(NSDictionary *parsedInfo, NSInteger parsedID, NSMutableAtt
                     qweather.useFahrenheit = [parsedInfo valueForKey:@"useFahrenheit"] ? [[parsedInfo valueForKey:@"useFahrenheit"] boolValue] : NO;
                     qweather.apiKey = apiKey;
                     qweather.locale = dateLocale;
+                    qweather.freeSub = freeSub;
                     [qweather updateWeather:location];
                     NSDictionary *weatherData = [qweather getWeatherData:fontSize];
                     NSLog(@"boom :%@", weatherData);
