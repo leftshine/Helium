@@ -51,8 +51,12 @@ struct BetterSlider: View {
         HStack {
             if step == nil {
                 Slider(value: $value, in: bounds)
+                Stepper("", value: $value, in: bounds)
+                    .labelsHidden()
             } else {
                 Slider(value: $value, in: bounds, step: step!)
+                Stepper("", value: $value, in: bounds, step: step!)
+                    .labelsHidden()
             }
             Spacer()
             Button(action: {

@@ -610,6 +610,6 @@ struct EditWidgetSetView: View {
             }
         }
 
-        return hasWeather ? updateInterval >= 5 * 60 ? true : false : true
+        return hasWeather ? updateInterval >= 30 * 60 ? true : false : true
     }
 }
