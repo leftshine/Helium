@@ -15,7 +15,6 @@
 @property (nonatomic) NSString *lastLocation;
 
 + (instancetype)sharedInstance;
-- (NSString *)getWeatherIcon:(NSString *)text;
 - (NSDictionary *)fetchNowWeatherForLocation:(NSString *)location;
 - (NSDictionary *)fetchTodayWeatherForLocation:(NSString *)location;
 - (NSDictionary *)fetch24HoursWeatherForLocation:(NSString *)location;
