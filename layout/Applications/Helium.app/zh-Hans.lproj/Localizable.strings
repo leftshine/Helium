@@ -25,7 +25,7 @@
 "UNKNOWN" = "未知";
 "Release" = "发布";
 "Locale" = "地区";
-"Weather Service" = "天气服务";
+"Weather Provider" = "天气服务商";
 "System Weather" = "系统自带";
 "QWeather" = "和风天气";
 "Gaode" = "高德地图";

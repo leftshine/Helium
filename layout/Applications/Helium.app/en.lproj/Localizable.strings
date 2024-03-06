@@ -25,7 +25,7 @@
 "UNKNOWN" = "UNKNOWN";
 "Release" = "Release";
 "Locale" = "Locale";
-"Weather Service" = "Weather Service";
+"Weather Provider" = "Weather Provider";
 "System Weather" = "System";
 "QWeather" = "QWeather";
 "Gaode" = "Gaode";

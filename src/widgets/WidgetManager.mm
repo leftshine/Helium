@@ -318,7 +318,7 @@ static NSMutableAttributedString* replaceWeatherImage(NSString* formattedText, N
  TODO:
  - Music Visualizer
  */
-void formatParsedInfo(NSDictionary *parsedInfo, NSInteger parsedID, NSMutableAttributedString *mutableString, double fontSize, UIColor *textColor, UIFont *font, NSString *dateLocale, NSInteger weatherService, NSString *apiKey, BOOL freeSub)
+void formatParsedInfo(NSDictionary *parsedInfo, NSInteger parsedID, NSMutableAttributedString *mutableString, double fontSize, UIColor *textColor, UIFont *font, NSString *dateLocale, NSInteger weatherProvider, NSString *apiKey, BOOL freeSub)
 {
     NSString *widgetString;
     NSString *sfSymbolName;
@@ -388,7 +388,7 @@ void formatParsedInfo(NSDictionary *parsedInfo, NSInteger parsedID, NSMutableAtt
                 // Weather
                 NSString *format = [parsedInfo valueForKey:@"format"] ?: @"{i}{n}{lt}°~{ht}°({t}°,{bt}°)💧{h}%";
 
-                if (weatherService == 0) {
+                if (weatherProvider == 0) {
                     HWeatherController *weatherController = [HWeatherController sharedInstance];
                     weatherController.locale = [[NSLocale alloc] initWithLocaleIdentifier:dateLocale];
                     [weatherController updateModel];
@@ -412,7 +412,7 @@ void formatParsedInfo(NSDictionary *parsedInfo, NSInteger parsedID, NSMutableAtt
                     } else {
                         widgetString = format;
                     }
-                } else if (weatherService == 1) {
+                } else if (weatherProvider == 1) {
                     NSString *location = [parsedInfo valueForKey:@"location"];
                     QWeather *qweather = [QWeather sharedInstance];
                     qweather.useMetric = [parsedInfo valueForKey:@"useMetric"] ? [[parsedInfo valueForKey:@"useMetric"] boolValue] : NO;
@@ -482,7 +482,7 @@ void formatParsedInfo(NSDictionary *parsedInfo, NSInteger parsedID, NSMutableAtt
     }
 }
 
-NSAttributedString* formattedAttributedString(NSArray *identifiers, double fontSize, UIColor *textColor, UIFont *font, NSString *dateLocale, NSInteger weatherService, NSString *weatherApiKey, BOOL freeSub)
+NSAttributedString* formattedAttributedString(NSArray *identifiers, double fontSize, UIColor *textColor, UIFont *font, NSString *dateLocale, NSInteger weatherProvider, NSString *weatherApiKey, BOOL freeSub)
 {
     @autoreleasepool {
         NSMutableAttributedString* mutableString = [[NSMutableAttributedString alloc] init];
@@ -493,7 +493,7 @@ NSAttributedString* formattedAttributedString(NSArray *identifiers, double fontS
                 dispatch_sync(concurrentQueue, ^{
                     NSDictionary *parsedInfo = idInfo;
                     NSInteger parsedID = [parsedInfo valueForKey:@"widgetID"] ? [[parsedInfo valueForKey:@"widgetID"] integerValue] : 0;
-                    formatParsedInfo(parsedInfo, parsedID, mutableString, fontSize, textColor, font, dateLocale, weatherService, weatherApiKey, freeSub);
+                    formatParsedInfo(parsedInfo, parsedID, mutableString, fontSize, textColor, font, dateLocale, weatherProvider, weatherApiKey, freeSub);
                 });
             }
         } else {

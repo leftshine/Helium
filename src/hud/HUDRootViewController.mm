@@ -272,11 +272,11 @@ static void ReloadHUD
     return locale ? locale : @"en_US";
 }
 
-- (NSInteger) weatherService
+- (NSInteger) weatherProvider
 {
     [self loadUserDefaults:NO];
-    NSInteger service = getIntFromDictKey(_userDefaults, @"weatherService", 0);
-    return service;
+    NSInteger provider = getIntFromDictKey(_userDefaults, @"weatherProvider", 0);
+    return provider;
 }
 
 - (NSString*) weatherApiKey
@@ -416,7 +416,7 @@ static void ReloadHUD
 #if DEBUG
     os_log_debug(OS_LOG_DEFAULT, "updateLabel");
 #endif
-    NSAttributedString *attributedText = formattedAttributedString(identifiers, fontSize, label.textColor, label.font, [self dateLocale], [self weatherService], [self weatherApiKey], [self freeSub]);
+    NSAttributedString *attributedText = formattedAttributedString(identifiers, fontSize, label.textColor, label.font, [self dateLocale], [self weatherProvider], [self weatherApiKey], [self freeSub]);
     
     NSDictionary *blurDetails = [properties valueForKey:@"blurDetails"] ? [properties valueForKey:@"blurDetails"] : @{@"hasBlur" : @(NO)};
     BOOL hasBlur = getBoolFromDictKey(blurDetails, @"hasBlur");

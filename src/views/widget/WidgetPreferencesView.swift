@@ -15,7 +15,7 @@ struct WidgetPreferencesView: View {
     
     @State var text: String = ""
     @State var weatherFormat: String = ""
-    @State var weatherService: Int = 0
+    @State var weatherProvider: Int = 0
     @State var intSelection: Int = 0
     @State var intSelection2: Int = 0
     @State var intSelection3: Int = 1
@@ -302,7 +302,7 @@ struct WidgetPreferencesView: View {
                             }
                         }
 
-                        if weatherService == 0 {
+                        if weatherProvider == 0 {
                             HStack {
                                 Text(NSLocalizedString("Weather Format System", comment:""))
                                     .multilineTextAlignment(.leading)
@@ -310,7 +310,7 @@ struct WidgetPreferencesView: View {
                                     .foregroundColor(.secondary)
                                 Spacer()
                             }
-                        } else if weatherService != 0 {
+                        } else if weatherProvider != 0 {
                             HStack {
                                 Text(NSLocalizedString("Location", comment:""))
                                     .foregroundColor(.primary)
@@ -434,7 +434,7 @@ struct WidgetPreferencesView: View {
             }
         }
         .onAppear {
-            weatherService = UserDefaults.standard.integer(forKey: "weatherService", forPath: USER_DEFAULTS_PATH)
+            weatherProvider = UserDefaults.standard.integer(forKey: "weatherProvider", forPath: USER_DEFAULTS_PATH)
         }
         .onDisappear {
             if modified {
