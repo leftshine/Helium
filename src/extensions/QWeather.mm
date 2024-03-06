@@ -515,16 +515,48 @@
     return data;
 }
 
-- (void) updateWeather:(NSString *)location {
-    self.now = [self fetchNowWeatherForLocation:location];
-    self.daily = [self fetchTodayWeatherForLocation:location];
-    self.hourly = [self fetch24HoursWeatherForLocation:location];
-    NSData *data = [self fetchLocationIDForName:location];
-    NSError *erro = nil;
-    if (data!=nil) {
-        NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&erro ];
-        self.city = json;
+- (void)updateWeather:(NSString *)location {
+    long long nowTime = [self getCurrentTimestamp];
+    // NSLog(@"boom time:%lld", nowTime);
+    // NSLog(@"boom time:%lld", nowTime - self.lastUpdateTime);
+
+    // NSLog(@"boom location:%@", location);
+    // NSLog(@"boom location:%@", self.lastLocation);
+    
+    // Check if location unchanged or more than 60 seconds since last update.
+    if (![self.lastLocation isEqualToString:location] || nowTime - self.lastUpdateTime > 60) {
+        // Fetch current, daily, and hourly weather for the location.
+        self.now = [self fetchNowWeatherForLocation:location];
+        self.daily = [self fetchTodayWeatherForLocation:location];
+        self.hourly = [self fetch24HoursWeatherForLocation:location];
+        
+        // Fetch location ID JSON data.
+        NSData *data = [self fetchLocationIDForName:location];
+        NSError *error = nil;
+        
+        if (data != nil) {
+            // Parse and set city information.
+            NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
+            if (json) {
+                self.city = json;
+            } else {
+                NSLog(@"Error parsing JSON data: %@", error);
+            }
+        } else {
+            NSLog(@"Error fetching location ID data.");
+        }
+        
+        // Update last update time and location.
+        self.lastUpdateTime = nowTime;
+        self.lastLocation = location;
     }
+}
+
+- (long long)getCurrentTimestamp {
+    NSDate *now = [NSDate date];
+    NSTimeInterval timestamp = [now timeIntervalSince1970];
+    long long longTimestamp = (long long)timestamp;
+    return longTimestamp;
 }
 
 - (NSString *)getDataFrom:(NSString *)url{

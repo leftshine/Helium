@@ -7,12 +7,14 @@
 @property (nonatomic) BOOL useFahrenheit;
 @property (nonatomic) BOOL freeSub;
 @property (nonatomic) NSString *locale;
-@property (nonatomic) NSDictionary *now;
-@property (nonatomic) NSDictionary *daily;
-@property (nonatomic) NSDictionary *hourly;
-@property (nonatomic) NSDictionary *city;
+@property (nonatomic, strong) NSDictionary *now;
+@property (nonatomic, strong) NSDictionary *daily;
+@property (nonatomic, strong) NSDictionary *hourly;
+@property (nonatomic, strong) NSDictionary *city;
+@property (nonatomic) long long lastUpdateTime;
+@property (nonatomic) NSString *lastLocation;
 
-+(instancetype)sharedInstance;
++ (instancetype)sharedInstance;
 - (NSString *)getWeatherIcon:(NSString *)text;
 - (NSDictionary *)fetchNowWeatherForLocation:(NSString *)location;
 - (NSDictionary *)fetchTodayWeatherForLocation:(NSString *)location;

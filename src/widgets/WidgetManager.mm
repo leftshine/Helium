@@ -422,9 +422,9 @@ void formatParsedInfo(NSDictionary *parsedInfo, NSInteger parsedID, NSMutableAtt
                     qweather.freeSub = freeSub;
                     [qweather updateWeather:location];
                     NSDictionary *weatherData = [qweather getWeatherData:fontSize];
-                    NSLog(@"boom :%@", weatherData);
+                    // NSLog(@"boom :%@", weatherData);
                     format = [WeatherUtils formatWeatherData:weatherData format:format];
-                    NSLog(@"boom format:%@", format);
+                    // NSLog(@"boom format:%@", format);
 
                     UIImage *weatherImage = weatherData[@"conditions_image"];
                     if (weatherImage) {

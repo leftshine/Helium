@@ -7,7 +7,7 @@
 @property (nonatomic, strong) WALockscreenWidgetViewController *widgetVC;
 @property (nonatomic, strong) City *myCity;
 @property (nonatomic, strong) WATodayModel *todayModel;
-@property (nonatomic, retain) NSBundle *weatherBundle;
+@property (nonatomic, strong) NSBundle *weatherBundle;
 @property (nonatomic) BOOL useFahrenheit;
 @property (nonatomic) BOOL useMetric;
 @property (nonatomic) NSLocale *locale;
