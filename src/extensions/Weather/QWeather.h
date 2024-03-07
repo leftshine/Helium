@@ -1,5 +1,4 @@
 #import <Foundation/Foundation.h>
-#import "../helpers/private_headers/Weather/WeatherHeaders.h"
 
 @interface QWeather : NSObject
 @property (nonatomic) NSString *apiKey;

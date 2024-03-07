@@ -3,7 +3,7 @@
 // https://github.com/midnightchip/Asteroid
 // https://github.com/Tr1Fecta-7/WeatherGround
 #import "HWeatherController.h"
-#import "UsefulFunctions.h"
+#import "../UsefulFunctions.h"
 
 enum {
 	ConditionImageTypeDefault = 0,

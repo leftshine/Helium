@@ -1,5 +1,5 @@
 #import "QWeather.h"
-#import "UsefulFunctions.h"
+#import "../UsefulFunctions.h"
 
 @implementation QWeather
 

@@ -9,7 +9,7 @@
 #import "../extensions/UsefulFunctions.h"
 #import "../extensions/FontUtils.h"
 #import "../extensions/EZTimer.h"
-#import "../extensions/WeatherUtils.h"
+#import "../extensions/Weather/WeatherUtils.h"
 
 #import "../helpers/private_headers/FBSOrientationUpdate.h"
 #import "../helpers/private_headers/FBSOrientationObserver.h"

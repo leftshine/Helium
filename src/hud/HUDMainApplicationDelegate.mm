@@ -5,7 +5,7 @@
 #import "HUDRootViewController.h"
 
 #import "../extensions/FontUtils.h"
-#import "../extensions/HWeatherController.h"
+#import "../extensions/Weather/HWeatherController.h"
 
 #import "../helpers/private_headers/SBSAccessibilityWindowHostingController.h"
 #import "../helpers/private_headers/UIWindow+Private.h"

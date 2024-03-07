@@ -1,5 +1,5 @@
 // https://github.com/DGh0st/HSWidgets
-#import "../helpers/private_headers/Weather/WeatherHeaders.h"
+#import "../../helpers/private_headers/Weather/WeatherHeaders.h"
 
 @class City, WATodayModel;
 
