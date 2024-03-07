@@ -124,62 +124,86 @@
     return temperatureString;
 }
 
--(NSString *)conditionsEmoji {
+- (NSString *)conditionsEmoji {
     NSString *weatherEmoji = @"";
-
+    
     if (self.now && [self.now[@"code"] isEqualToString:@"200"]) {
         int weatherCode = getIntFromDictKey(self.now[@"now"], @"icon");
         int hour = [[NSCalendar currentCalendar] component:NSCalendarUnitHour fromDate:[NSDate date]];
-        BOOL isDayTime = (hour >= 6 && hour < 18);
+        BOOL isDayTime = (hour >= 6 && hour < 18); // Assuming day time is between 6 AM and 6 PM
         
         switch (weatherCode) {
             case 100:
             case 150:
-                weatherEmoji = isDayTime ? @"🌞" : @"🌜";
+                weatherEmoji = isDayTime ? @"☀️" : @"🌙";
                 break;
             case 101 ... 103:
             case 151 ... 153:
-                weatherEmoji = @"🌥️";
+                weatherEmoji = isDayTime ? @"⛅️" : @"🌥️";
                 break;
             case 104:
                 weatherEmoji = @"☁️";
                 break;
-            case 300 ... 318:
-                weatherEmoji = @"⛈️";
+            case 300:
+            case 305:
+            case 309:
+            case 314:
+            case 350:
+                weatherEmoji = @"🌦️";
                 break;
-            case 350 ... 351:
-                weatherEmoji = @"⛈️";
-                break;
+            case 301:
+            case 306:
+            case 315:
+            case 351:
             case 399:
                 weatherEmoji = @"🌧️";
                 break;
-            case 400 ... 410:
-            case 456:
+            case 304:
+            case 313:
+                weatherEmoji = @"⛈️";
+                break;
+            case 302 ... 303:
+                weatherEmoji = @"🌩️";
+                break;
+            case 307 ... 308:
+            case 310 ... 312:
+            case 316 ... 318:
+                weatherEmoji = @"⛈️";
+                break;
+            case 400 ... 403:
+            case 407 ... 410:
             case 457:
             case 499:
-                weatherEmoji = @"❄️";
+                weatherEmoji = @"🌨️";
                 break;
-            case 500 ... 504:
+            case 404 ... 406:
+            case 456:
+                weatherEmoji = @"🌨️";
+                break;
+            case 500 ... 501:
+            case 509 ... 510:
+            case 514 ... 515:
                 weatherEmoji = @"🌫️";
                 break;
             case 507 ... 508:
                 weatherEmoji = @"🌪️";
                 break;
-            case 509 ... 515:
-                weatherEmoji = @"🌫️";
+            case 502 ... 504:
+            case 511 ... 513:
+                weatherEmoji = @"🌬️";
                 break;
             case 900:
-                weatherEmoji = @"🌡️";
+                weatherEmoji = @"🔥";
                 break;
             case 901:
                 weatherEmoji = @"❄️";
                 break;
             default:
-                weatherEmoji = @"❔";
+                weatherEmoji = @"❓";
                 break;
         }
     }
-
+    
     return weatherEmoji;
 }
 
@@ -203,33 +227,53 @@
             case 104:
                 weatherImage = [UIImage systemImageNamed:@"cloud.fill" withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
                 break;
-            case 300 ... 301:
+            case 300:
+            case 305:
+            case 309:
+            case 314:
+            case 350:
                 weatherImage = [UIImage systemImageNamed:@"cloud.drizzle.fill" withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
-            case 302 ... 304:
-                weatherImage = [UIImage systemImageNamed:@"cloud.bolt.rain.fill" withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
-            case 305 ... 318:
-                weatherImage = isDayTime ? [UIImage systemImageNamed:@"cloud.sun.rain.fill" withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]] : [UIImage systemImageNamed:@"cloud.moon.rain.fill" withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
                 break;
-            case 350 ... 351:
-                weatherImage = [UIImage systemImageNamed:@"cloud.heavyrain.fill" withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
-                break;
+            case 301:
+            case 306:
+            case 315:
+            case 351:
             case 399:
                 weatherImage = [UIImage systemImageNamed:@"cloud.rain.fill" withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
                 break;
-            case 400 ... 410:
-            case 456:
+            case 304:
+            case 313:
+                weatherImage = [UIImage systemImageNamed:@"cloud.hail.fill" withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
+                break;
+            case 302 ... 303:
+                weatherImage = [UIImage systemImageNamed:@"cloud.bolt.rain.fill" withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
+                break;
+            case 307 ... 308:
+            case 310 ... 312:
+            case 316 ... 318:
+                weatherImage = [UIImage systemImageNamed:@"cloud.heavyrain.fill" withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
+                break;
+            case 400 ... 403:
+            case 407 ... 410:
             case 457:
             case 499:
                 weatherImage = [UIImage systemImageNamed:@"cloud.snow.fill" withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
                 break;
-            case 500 ... 504:
+            case 404 ... 406:
+            case 456:
+                weatherImage = [UIImage systemImageNamed:@"cloud.sleet.fill" withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
+                break;
+            case 500 ... 501:
+            case 509 ... 510:
+            case 514 ... 515:
                 weatherImage = [UIImage systemImageNamed:@"cloud.fog.fill" withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
                 break;
             case 507 ... 508:
                 weatherImage = [UIImage systemImageNamed:@"smoke.fill" withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
                 break;
-            case 509 ... 515:
-                weatherImage = [UIImage systemImageNamed:@"cloud.fog.fill" withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
+            case 502 ... 504:
+            case 511 ... 513:
+                weatherImage = isDayTime ? [UIImage systemImageNamed:@"sun.dust.fill" withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]] : [UIImage systemImageNamed:@"moon.dust.fill" withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
                 break;
             case 900:
                 weatherImage = [UIImage systemImageNamed:@"thermometer.sun.fill" withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
@@ -238,12 +282,13 @@
                 weatherImage = [UIImage systemImageNamed:@"thermometer.snowflake" withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
                 break;
             default:
-                weatherImage = [UIImage systemImageNamed:@"exclamationmark.triangle.fill" withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
+                weatherImage = [UIImage systemImageNamed:@"questionmark.circle.fill" withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
                 break;
         }
-    } 
+    }
+    
     if (!weatherImage) {
-        weatherImage = [UIImage systemImageNamed:@"exclamationmark.triangle.fill" withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
+        weatherImage = [UIImage systemImageNamed:@"questionmark.circle.fill" withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
     }
     
     return weatherImage;
