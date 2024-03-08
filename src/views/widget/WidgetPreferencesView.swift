@@ -280,7 +280,7 @@ struct WidgetPreferencesView: View {
                                     isPresented = true
                                 }
                                 .sheet(isPresented: $isPresented) {
-                                    WeatherLocationView(location: self.$location)
+                                    WeatherLocationView(location: self.$location, modified: self.$modified)
                                 }
                             }
 
@@ -541,6 +541,7 @@ struct Location: Identifiable {
 struct WeatherLocationView: View {
     @State var searchString = ""
     @Binding var location: String
+    @Binding var modified: Bool
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
 
     @State var locations: [Location] = []
@@ -563,16 +564,18 @@ struct WeatherLocationView: View {
                     }
                     Button(NSLocalizedString("Search", comment:"")) {
                         search()
+                        hideKeyboard()
                     }
                 }
                 .padding()
                 Spacer()
-                List(locations) {location in
-                    ListCell(item: location)
+                List(locations) {item in
+                    ListCell(item: item)
                         .contentShape(Rectangle())
                         .onTapGesture {
-                            let loc = location.location!
+                            let loc = item.location!
                             self.location = "\(loc.coordinate.longitude),\(loc.coordinate.latitude)"
+                            modified = true
                             presentationMode.wrappedValue.dismiss()
                         }
                 }
@@ -617,7 +620,7 @@ struct ListCell: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             HStack {
-                Text("\(item.name!),\(item.city!)")
+                Text("\(item.name ?? "--"),\(item.city ?? "--"),\(item.province ?? "--"),\(item.country ?? "--")")
                     .font(.system(size: 18, weight: .bold))
                     .foregroundColor(.primary)
                 Spacer()
@@ -632,3 +635,11 @@ struct ListCell: View {
         }
     }
 }
+
+#if canImport(UIKit)
+extension View {
+    func hideKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
+}
+#endif
