@@ -230,10 +230,10 @@ typedef NSUInteger ConditionImageType;
             weatherImage = [UIImage systemImageNamed:@"cloud.sun.fill"
                         withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
         else if (currentCode <= 32 && (hour >= 18 || hour <= 6))
-            weatherImage = [UIImage systemImageNamed:@"thermometer.sun.fill"
+            weatherImage = [UIImage systemImageNamed:@"moon.fill"
                         withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
         else if (currentCode <= 32)
-            weatherImage = [UIImage systemImageNamed:@"moon.fill"
+            weatherImage = [UIImage systemImageNamed:@"sun.max.fill"
                         withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
         else if (currentCode <= 34)
             weatherImage = [UIImage systemImageNamed:@"cloud.sun.fill"
@@ -257,7 +257,7 @@ typedef NSUInteger ConditionImageType;
             weatherImage = [UIImage systemImageNamed:@"cloud.snow.fill"
                         withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
     } else {
-        weatherImage = [UIImage systemImageNamed:@"exclamationmark.triangle.fill"
+        weatherImage = [UIImage systemImageNamed:@"questionmark.circle.fill"
                         withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
     }
     
@@ -430,8 +430,8 @@ typedef NSUInteger ConditionImageType;
 -(NSDictionary *)weatherData:(double) fontSize {
 	NSMutableDictionary *data = [NSMutableDictionary dictionary];
 	[data setObject:self.conditionsDescription forKey:@"conditions"];
-	[data setObject:self.conditionsImage forKey:@"conditions_image"];
-	[data setObject:[self conditionsImage2:fontSize] forKey:@"conditions_image2"];
+	[data setObject:self.conditionsImage forKey:@"conditions_image2"];
+	[data setObject:[self conditionsImage2:fontSize] forKey:@"conditions_image"];
 	[data setObject:self.conditionsEmoji forKey:@"conditions_emoji"];
 	[data setObject:self.locationName forKey:@"location"];
 	[data setObject:self.UVIndex forKey:@"uv_index"];
@@ -520,7 +520,7 @@ typedef NSUInteger ConditionImageType;
 			        [autoUpdatingModel updateLocationTrackingStatus];
                 }
             }
-           
+
             [self.widgetVC.todayModel executeModelUpdateWithCompletion:nil];
         }
         if ([self.widgetVC respondsToSelector:@selector(todayModelWantsUpdate:)] && self.widgetVC.todayModel) {

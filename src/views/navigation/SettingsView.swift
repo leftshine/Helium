@@ -98,12 +98,12 @@ struct SettingsView: View {
                             return [
                                 DropdownItem(NSLocalizedString("System Weather", comment:""), tag: 0),
                                 DropdownItem(NSLocalizedString("QWeather", comment:""), tag: 1),
-                                // DropdownItem(NSLocalizedString("Gaode", comment:""), tag: 2)
+                                DropdownItem(NSLocalizedString("ColorfulClouds", comment:""), tag: 2)
                             ]
                         }
                     }
 
-                    if weatherProvider == 1 {
+                    if weatherProvider == 1 || weatherProvider == 2{
                         HStack {
                             Text(NSLocalizedString("Weather API Key", comment:""))
                                 .bold()
@@ -111,12 +111,13 @@ struct SettingsView: View {
                             TextField("", text: $weatherApiKey)
                                 .textFieldStyle(RoundedBorderTextFieldStyle())
                         }
-
-                        HStack {
-                            Toggle(isOn: $freeSub) {
-                                Text(NSLocalizedString("Free Subscription API", comment:""))
-                                    .bold()
-                                    .minimumScaleFactor(0.5)
+                        if weatherProvider == 1 {
+                            HStack {
+                                Toggle(isOn: $freeSub) {
+                                    Text(NSLocalizedString("Free Subscription API", comment:""))
+                                        .bold()
+                                        .minimumScaleFactor(0.5)
+                                }
                             }
                         }
                     }

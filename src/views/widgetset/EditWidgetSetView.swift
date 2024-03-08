@@ -53,6 +53,8 @@ struct EditWidgetSetView: View {
     @State var changesMade: Bool = false
 
     private let fonts: [String] = FontUtils.allFontNames()
+
+    private let WEATHER_INTERVAL_MIN: Double = 10 * 60
     
     var body: some View {
         VStack {
@@ -245,13 +247,15 @@ struct EditWidgetSetView: View {
                 
                 Section {
                     // MARK: Dynamic Color
-                    Toggle(isOn: $dynamicColor) {
-                        Text(NSLocalizedString("Adaptive Color", comment: ""))
-                            .bold()
-                            .minimumScaleFactor(0.5)
-                    }
-                    .onChange(of: dynamicColor) { _ in
-                        changesMade = true
+                    HStack {
+                        Toggle(isOn: $dynamicColor) {
+                            Text(NSLocalizedString("Adaptive Color", comment: ""))
+                                .bold()
+                                .minimumScaleFactor(0.5)
+                        }
+                        .onChange(of: dynamicColor) { _ in
+                            changesMade = true
+                        }
                     }
 
                     if !dynamicColor {
@@ -554,8 +558,12 @@ struct EditWidgetSetView: View {
     func saveSet(save: Bool = true) {
         changesMade = false
         if !checkWeatherUpdateInterval() {
-            UIApplication.shared.alert(title: NSLocalizedString("Weather Update Interval", comment: ""), body: NSLocalizedString("The weather update interval needs to be greater than or equal to 30 minutes.", comment: ""))
-            updateInterval = 30 * 60
+            UIApplication.shared.optionsAlert(title: NSLocalizedString("Weather Update Interval", comment: ""), body: NSLocalizedString("WEATHER_INTERVAL_WARNING", comment: ""), options: [NSLocalizedString("WEATHER_INTERVAL_DEFAULT", comment: ""), NSLocalizedString("WEATHER_INTERVAL_CONTINUE", comment: "")], onSelection: { value in
+                if value == NSLocalizedString("WEATHER_INTERVAL_DEFAULT", comment: "") {
+                    updateInterval = WEATHER_INTERVAL_MIN
+                    changesMade = false
+                }
+            })
         }
         widgetManager.editWidgetSet(widgetSet: widgetSet, newSetDetails: .init(
             isEnabled: isEnabled,
@@ -610,6 +618,6 @@ struct EditWidgetSetView: View {
             }
         }
 
-        return hasWeather ? updateInterval >= 30 * 60 ? true : false : true
+        return hasWeather ? updateInterval >= WEATHER_INTERVAL_MIN ? true : false : true
     }
 }

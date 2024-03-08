@@ -20,6 +20,7 @@
 #import "../extensions/MediaRemoteManager.h"
 #import "../extensions/Weather/WeatherUtils.h"
 #import "../extensions/Weather/QWeather.h"
+#import "../extensions/Weather/ColorfulClouds.h"
 #import "../extensions/Weather/HWeatherController.h"
 
 // Thanks to: https://github.com/lwlsw/NetworkSpeed13
@@ -387,42 +388,38 @@ void formatParsedInfo(NSDictionary *parsedInfo, NSInteger parsedID, NSMutableAtt
             {
                 // Weather
                 NSString *format = [parsedInfo valueForKey:@"format"] ?: @"{i}{n}{lt}°~{ht}°({t}°,{bt}°)💧{h}%";
+                NSDictionary *weatherData = nil;
+                BOOL useFahrenheit = [parsedInfo valueForKey:@"useFahrenheit"] ? [[parsedInfo valueForKey:@"useFahrenheit"] boolValue] : NO;
+                BOOL useMetric = [parsedInfo valueForKey:@"useMetric"] ? [[parsedInfo valueForKey:@"useMetric"] boolValue] : NO;
 
                 if (weatherProvider == 0) {
                     HWeatherController *weatherController = [HWeatherController sharedInstance];
                     weatherController.locale = [[NSLocale alloc] initWithLocaleIdentifier:dateLocale];
                     [weatherController updateModel];
-                    weatherController.useFahrenheit = [parsedInfo valueForKey:@"useFahrenheit"] ? [[parsedInfo valueForKey:@"useFahrenheit"] boolValue] : NO;
-                    weatherController.useMetric = [parsedInfo valueForKey:@"useMetric"] ? [[parsedInfo valueForKey:@"useMetric"] boolValue] : NO;
-                    NSDictionary *weatherData = [weatherController weatherData:fontSize];
-                    format = [WeatherUtils formatWeatherData:weatherData format:format];
-                    // NSLog(@"boom format:%@", format);
-
-                    UIImage *weatherImage = weatherData[@"conditions_image2"];
-                    if (weatherImage) {
-                        imageAttachment = [[NSTextAttachment alloc] init];
-                        // CGFloat imgH = font.pointSize;// * 1.4f;
-                        // CGFloat imgW = (weatherImage.size.width / weatherImage.size.height) * imgH;
-                        // [imageAttachment setBounds:CGRectMake(0, roundf(font.capHeight - imgH)/2.f, imgW, imgH)];
-                        weatherImage = [weatherImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-                        imageAttachment.image = weatherImage;
-                        format = [format stringByReplacingOccurrencesOfString:@"\\n" withString:@"\n"];
-                        format = [format stringByReplacingOccurrencesOfString:@"\\t" withString:@"\t"];
-                        [mutableString appendAttributedString:replaceWeatherImage(format, [NSAttributedString attributedStringWithAttachment:imageAttachment])];
-                    } else {
-                        widgetString = format;
-                    }
+                    weatherController.useFahrenheit = useFahrenheit;
+                    weatherController.useMetric = useMetric;
+                    weatherData = [weatherController weatherData:fontSize];
                 } else if (weatherProvider == 1) {
                     NSString *location = [parsedInfo valueForKey:@"location"];
                     QWeather *qweather = [QWeather sharedInstance];
-                    qweather.useMetric = [parsedInfo valueForKey:@"useMetric"] ? [[parsedInfo valueForKey:@"useMetric"] boolValue] : NO;
-                    qweather.useFahrenheit = [parsedInfo valueForKey:@"useFahrenheit"] ? [[parsedInfo valueForKey:@"useFahrenheit"] boolValue] : NO;
+                    qweather.useMetric = useMetric;
+                    qweather.useFahrenheit = useFahrenheit;
                     qweather.apiKey = apiKey;
                     qweather.locale = dateLocale;
                     qweather.freeSub = freeSub;
                     [qweather updateWeather:location];
-                    NSDictionary *weatherData = [qweather getWeatherData:fontSize];
-                    // NSLog(@"boom :%@", weatherData);
+                    weatherData = [qweather getWeatherData:fontSize];
+                } else if(weatherProvider == 2) {
+                    NSString *location = [parsedInfo valueForKey:@"location"];
+                    ColorfulClouds *colorfulClouds = [ColorfulClouds sharedInstance];
+                    colorfulClouds.useMetric = useMetric;
+                    colorfulClouds.useFahrenheit = useFahrenheit;
+                    colorfulClouds.apiKey = apiKey;
+                    colorfulClouds.locale = dateLocale;
+                    [colorfulClouds updateWeather:location];
+                    weatherData = [colorfulClouds getWeatherData:fontSize];
+                }
+                if(weatherData != nil) {
                     format = [WeatherUtils formatWeatherData:weatherData format:format];
                     // NSLog(@"boom format:%@", format);
 

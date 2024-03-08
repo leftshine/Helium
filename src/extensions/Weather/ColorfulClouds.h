@@ -1,22 +1,18 @@
 #import <Foundation/Foundation.h>
 
-@interface QWeather : NSObject
+@interface ColorfulClouds : NSObject
 @property (nonatomic) NSString *apiKey;
 @property (nonatomic) BOOL useMetric;
 @property (nonatomic) BOOL useFahrenheit;
-@property (nonatomic) BOOL freeSub;
 @property (nonatomic) NSString *locale;
-@property (nonatomic, strong) NSDictionary *now;
-@property (nonatomic, strong) NSDictionary *daily;
-@property (nonatomic, strong) NSDictionary *hourly;
+@property (nonatomic, strong) NSDictionary *weatherData;
 @property (nonatomic, strong) NSString *city;
 @property (nonatomic) long long lastUpdateTime;
 @property (nonatomic) NSString *lastLocation;
 
 + (instancetype)sharedInstance;
-- (NSDictionary *)fetchNowWeatherForLocation:(NSString *)location;
-- (NSDictionary *)fetchTodayWeatherForLocation:(NSString *)location;
-- (NSDictionary *)fetch24HoursWeatherForLocation:(NSString *)location;
+- (NSDictionary *)fetchWeatherForLocation:(NSString *)location;
+- (NSData *)fetchLocationIDForName:(NSString *)name;
 
 -(NSString *)locationName;
 -(NSString *)conditionsEmoji;
@@ -33,6 +29,7 @@
 -(NSString *)windSpeed;
 -(NSString *)windSpeed:(BOOL) withUnit;
 -(NSString *)windDirection;
+-(NSString *)windDirection:(BOOL) shortDescription;
 -(NSString *)humidity;
 -(NSString *)humidity:(BOOL) withSymbol;
 -(NSString *)visibility;
@@ -45,6 +42,9 @@
 -(NSString *)precipitationPercentNextHour:(BOOL) withSymbol;
 -(NSString *)precipitationPast24Hours;
 -(NSString *)precipitationPast24Hours:(BOOL) withUnit;
+
+-(NSString *)UVIndex;
+-(NSString *)airQualityIndex;
 
 - (NSDictionary *)getWeatherData:(double) fontSize;
 - (NSString *)getDataFrom:(NSString *)url;

@@ -1,5 +1,8 @@
 #import "QWeather.h"
+#import "WeatherUtils.h"
 #import "../UsefulFunctions.h"
+
+static NSString *UserAgent = @"Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_3_3 like Mac OS X; en-us) AppleWebKit/533.17.9 (KHTML, like Gecko) Version/5.0.2 Mobile/8J2 Safari/6533.18.5";
 
 @implementation QWeather
 
@@ -67,19 +70,8 @@
     return nil;
 }
 
-- (NSData *)fetchLocationIDForName:(NSString *)name{
-    NSString *res = [self getDataFrom:[NSString stringWithFormat:@"https://geoapi.qweather.com/v2/city/lookup?location=%@&key=%@&lang=%@", [self encodeURIComponent:name], self.apiKey, self.locale]];
-    NSData *data = [res dataUsingEncoding:NSUTF8StringEncoding];
-    if (data!=nil) {
-        // NSLog(@"weather location:%@", data);
-        return data;
-    }
-    return nil;
-}
-
 -(NSString *)locationName {
-	id data = [self.city[@"location"] firstObject];
-	return data ? data[@"name"] : @"No Data";
+	return self.city;
 }
 
 -(NSString *)temperature {
@@ -91,8 +83,8 @@
     if (self.now && [self.now[@"code"] isEqualToString:@"200"]) {
         NSMeasurementFormatter *formatter = [[self class] sharedNSMeasurementFormatter];
         formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:self.locale];
-        NSMeasurement *measurement = [[NSMeasurement alloc] initWithDoubleValue:getIntFromDictKey(self.now[@"now"], @"temp") unit:NSUnitTemperature.celsius];
-        measurement = [self useFahrenheit] ? [measurement measurementByConvertingToUnit:NSUnitTemperature.fahrenheit] : measurement;
+        NSMeasurement *measurement = [[NSMeasurement alloc] initWithDoubleValue:getIntFromDictKey(self.now[@"now"], @"temp") unit:[self useMetric]?NSUnitTemperature.celsius:NSUnitTemperature.fahrenheit];
+        measurement = [self useFahrenheit] ? [measurement measurementByConvertingToUnit:NSUnitTemperature.fahrenheit] : [measurement measurementByConvertingToUnit:NSUnitTemperature.celsius];
         if (withSymbol) 
             temperatureString = [formatter stringFromMeasurement:measurement];
         else
@@ -112,8 +104,8 @@
 	if (self.now && [self.now[@"code"] isEqualToString:@"200"]) {
         NSMeasurementFormatter *formatter = [[self class] sharedNSMeasurementFormatter];
         formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:self.locale];
-        NSMeasurement *measurement = [[NSMeasurement alloc] initWithDoubleValue:getIntFromDictKey(self.now[@"now"], @"feelsLike") unit:NSUnitTemperature.celsius];
-        measurement = [self useFahrenheit] ? [measurement measurementByConvertingToUnit:NSUnitTemperature.fahrenheit] : measurement;
+        NSMeasurement *measurement = [[NSMeasurement alloc] initWithDoubleValue:getIntFromDictKey(self.now[@"now"], @"feelsLike") unit:[self useMetric]?NSUnitTemperature.celsius:NSUnitTemperature.fahrenheit];
+        measurement = [self useFahrenheit] ? [measurement measurementByConvertingToUnit:NSUnitTemperature.fahrenheit] : [measurement measurementByConvertingToUnit:NSUnitTemperature.celsius];
         if (withSymbol) 
             temperatureString = [formatter stringFromMeasurement:measurement];
         else
@@ -296,9 +288,9 @@
 
 -(NSString *)conditionsDescription {
 	if (self.now && [self.now[@"code"] isEqualToString:@"200"]) {
-        return getStringFromDictKey(self.now[@"now"], @"text", @"Sun");
+        return getStringFromDictKey(self.now[@"now"], @"text", NSLocalizedString(@"UNKNOWN", comment:@""));
     }
-    return @"Sun";
+    return NSLocalizedString(@"UNKNOWN", comment:@"");
 }
 
 -(NSString *)lowDescription {
@@ -312,8 +304,8 @@
         if (dailyForecasts != nil && dailyForecasts.count > 0) {
             NSMeasurementFormatter *formatter = [[self class] sharedNSMeasurementFormatter];
             formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:self.locale];
-            NSMeasurement *measurement = [[NSMeasurement alloc] initWithDoubleValue:getIntFromDictKey([dailyForecasts firstObject], @"tempMin") unit:NSUnitTemperature.celsius];
-            measurement = [self useFahrenheit] ? [measurement measurementByConvertingToUnit:NSUnitTemperature.fahrenheit] : measurement;
+            NSMeasurement *measurement = [[NSMeasurement alloc] initWithDoubleValue:getIntFromDictKey([dailyForecasts firstObject], @"tempMin") unit:[self useMetric]?NSUnitTemperature.celsius:NSUnitTemperature.fahrenheit];
+            measurement = [self useFahrenheit] ? [measurement measurementByConvertingToUnit:NSUnitTemperature.fahrenheit] : [measurement measurementByConvertingToUnit:NSUnitTemperature.celsius];
             if (withSymbol) 
                 temperatureString = [formatter stringFromMeasurement:measurement];
             else
@@ -336,8 +328,8 @@
         if (dailyForecasts != nil && dailyForecasts.count > 0) {
             NSMeasurementFormatter *formatter = [[self class] sharedNSMeasurementFormatter];
             formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:self.locale];
-            NSMeasurement *measurement = [[NSMeasurement alloc] initWithDoubleValue:getIntFromDictKey([dailyForecasts firstObject], @"tempMax") unit:NSUnitTemperature.celsius];
-            measurement = [self useFahrenheit] ? [measurement measurementByConvertingToUnit:NSUnitTemperature.fahrenheit] : measurement;
+            NSMeasurement *measurement = [[NSMeasurement alloc] initWithDoubleValue:getIntFromDictKey([dailyForecasts firstObject], @"tempMax") unit:[self useMetric]?NSUnitTemperature.celsius:NSUnitTemperature.fahrenheit];
+            measurement = [self useFahrenheit] ? [measurement measurementByConvertingToUnit:NSUnitTemperature.fahrenheit] : [measurement measurementByConvertingToUnit:NSUnitTemperature.celsius];
             if (withSymbol) 
                 temperatureString = [formatter stringFromMeasurement:measurement];
             else
@@ -561,21 +553,7 @@
         self.daily = [self fetchTodayWeatherForLocation:location];
         self.hourly = [self fetch24HoursWeatherForLocation:location];
         
-        // Fetch location ID JSON data.
-        NSData *data = [self fetchLocationIDForName:location];
-        NSError *error = nil;
-        
-        if (data != nil) {
-            // Parse and set city information.
-            NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
-            if (json) {
-                self.city = json;
-            } else {
-                NSLog(@"Error parsing JSON data: %@", error);
-            }
-        } else {
-            NSLog(@"Error fetching location ID data.");
-        }
+        self.city = [WeatherUtils getNameByGeocode:location];
         
         // Update last update time and location.
         self.lastUpdateTime = nowTime;
@@ -595,6 +573,7 @@
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
     [request setHTTPMethod:@"GET"];
     [request setURL:[NSURL URLWithString:url]];
+    [request setValue:UserAgent forHTTPHeaderField:@"User-Agent"];
 
     NSError *error = nil;
     NSHTTPURLResponse *responseCode = nil;

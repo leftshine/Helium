@@ -5,6 +5,7 @@
 #import "HUDRootViewController.h"
 
 #import "../extensions/FontUtils.h"
+#import "../extensions/NSBundle+Language.h"
 #import "../extensions/Weather/HWeatherController.h"
 
 #import "../helpers/private_headers/SBSAccessibilityWindowHostingController.h"
@@ -35,6 +36,7 @@
         // [[NSUserDefaults standardUserDefaults] setObject:[self dateLocale] forKey:@"AppleLocale"];
 
         [[NSUserDefaults standardUserDefaults] synchronize];
+        [NSBundle setLanguage:[self dateLocale]];
 
         [HWeatherController sharedInstance];
     }
