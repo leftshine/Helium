@@ -1,4 +1,5 @@
 #import <Foundation/Foundation.h>
+@class CLPlacemark;
 
 @interface ColorfulClouds : NSObject
 @property (nonatomic) NSString *apiKey;
@@ -6,7 +7,7 @@
 @property (nonatomic) BOOL useFahrenheit;
 @property (nonatomic) NSString *locale;
 @property (nonatomic, strong) NSDictionary *weatherData;
-@property (nonatomic, strong) NSString *city;
+@property (nonatomic, strong) CLPlacemark *city;
 @property (nonatomic) long long lastUpdateTime;
 @property (nonatomic) NSString *lastLocation;
 

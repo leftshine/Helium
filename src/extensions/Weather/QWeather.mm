@@ -1,5 +1,6 @@
 #import "QWeather.h"
 #import "WeatherUtils.h"
+#import <CoreLocation/CoreLocation.h>
 #import "../UsefulFunctions.h"
 
 static NSString *UserAgent = @"Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_3_3 like Mac OS X; en-us) AppleWebKit/533.17.9 (KHTML, like Gecko) Version/5.0.2 Mobile/8J2 Safari/6533.18.5";
@@ -71,7 +72,7 @@ static NSString *UserAgent = @"Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_3_3 like 
 }
 
 -(NSString *)locationName {
-	return self.city;
+	return self.city.subLocality;
 }
 
 -(NSString *)temperature {
@@ -553,7 +554,7 @@ static NSString *UserAgent = @"Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_3_3 like 
         self.daily = [self fetchTodayWeatherForLocation:location];
         self.hourly = [self fetch24HoursWeatherForLocation:location];
         
-        self.city = [WeatherUtils getNameByGeocode:location];
+        self.city = [WeatherUtils getPlacemarkByGeocode:location];
         
         // Update last update time and location.
         self.lastUpdateTime = nowTime;

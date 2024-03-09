@@ -1,4 +1,5 @@
 #import <Foundation/Foundation.h>
+@class CLPlacemark;
 
 @interface QWeather : NSObject
 @property (nonatomic) NSString *apiKey;
@@ -9,7 +10,7 @@
 @property (nonatomic, strong) NSDictionary *now;
 @property (nonatomic, strong) NSDictionary *daily;
 @property (nonatomic, strong) NSDictionary *hourly;
-@property (nonatomic, strong) NSString *city;
+@property (nonatomic, strong) CLPlacemark *city;
 @property (nonatomic) long long lastUpdateTime;
 @property (nonatomic) NSString *lastLocation;
 

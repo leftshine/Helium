@@ -70,12 +70,12 @@
     return arr;
 }
 
-+ (NSString *)getNameByGeocode:(NSString *)geolocation {
-    __block NSString *name = @"";
++ (CLPlacemark *)getPlacemarkByGeocode:(NSString *)geolocation {
+    __block CLPlacemark *placemark = nil;
     NSString *longtitude, *latitude;
     CLGeocoder *geocoder = [[CLGeocoder alloc] init];
     if (geolocation == nil || geolocation.length == 0)
-        return name;
+        return placemark;
     else {
         NSArray *arr = [geolocation componentsSeparatedByString:@","];
         longtitude = [arr firstObject];
@@ -87,12 +87,16 @@
         NSLog(@"boom error: %@", error);
         NSLog(@"boom : %@", placemarks);
         if (placemarks != nil && [placemarks count] > 0) {
-            name = ((CLPlacemark*)[placemarks firstObject]).name;
+            placemark = ((CLPlacemark*)[placemarks firstObject]);
+            NSArray *formattedAddressLines = placemark.addressDictionary[@"FormattedAddressLines"];
+            NSString *addressString = [formattedAddressLines componentsJoinedByString:@"\n"];
+            NSLog(@"boom Address: %@", placemark.addressDictionary);
+            NSLog(@"boom : %@", addressString);
         }
         dispatch_semaphore_signal(semaphore);
     }];
     dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_SEC));
-    return name;
+    return placemark;
 }
 
 @end

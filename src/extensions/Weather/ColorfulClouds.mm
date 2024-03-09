@@ -1,5 +1,6 @@
 #import "ColorfulClouds.h"
 #import "WeatherUtils.h"
+#import <CoreLocation/CoreLocation.h>
 #import "../UsefulFunctions.h"
 #import "../../helpers/private_headers/Weather/WeatherWindSpeedFormatter.h"
 
@@ -59,7 +60,7 @@ static NSString *UserAgent = @"Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_3_3 like 
 }
 
 -(NSString *)locationName {
-	return self.city;
+	return self.city.subLocality;
 }
 
 -(NSString *)temperature {
@@ -504,7 +505,7 @@ static NSString *UserAgent = @"Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_3_3 like 
         // Fetch current, daily, and hourly weather for the location.
         self.weatherData = [self fetchWeatherForLocation:location];
         
-        self.city = [WeatherUtils getNameByGeocode:location];
+        self.city = [WeatherUtils getPlacemarkByGeocode:location];
         // Update last update time and location.
         self.lastUpdateTime = nowTime;
         self.lastLocation = location;

@@ -535,6 +535,7 @@ struct Location: Identifiable {
     var country: String?
     var province: String?
     var city: String?
+    var area: String?
     var location: CLLocation?
 }
 
@@ -606,7 +607,7 @@ struct WeatherLocationView: View {
                 if array != nil {
                     for item in array! {
                         let l = item as! CLPlacemark
-                        locations.append(Location(name: l.name, country: l.country, province: l.administrativeArea, city: l.locality, location: l.location))
+                        locations.append(Location(name: l.name, country: l.country, province: l.administrativeArea, city: l.locality, area: l.subLocality ,location: l.location))
                     }
                 }
             }
@@ -620,7 +621,7 @@ struct ListCell: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             HStack {
-                Text("\(item.name ?? "--"),\(item.city ?? "--"),\(item.province ?? "--"),\(item.country ?? "--")")
+                Text("\(item.name ?? "--"),\(item.area ?? "--"),\(item.city ?? "--"),\(item.province ?? "--"),\(item.country ?? "--")")
                     .font(.system(size: 18, weight: .bold))
                     .foregroundColor(.primary)
                 Spacer()
