@@ -13,13 +13,25 @@ struct WidgetPreferencesView: View {
     @State var widgetSet: WidgetSetStruct
     @Binding var widgetID: WidgetIDStruct
     
-    @State var text: String = ""
-    @State var weatherFormat: String = ""
+    @State var text: String = NSLocalizedString("Example", comment:"")
+    @State var dateFormat: String = NSLocalizedString("E MMM dd", comment:"")
+    @State var networkUp: Int = 0
+    @State var speedIcon: Int = 0
+    @State var minUnit: Int = 1
+    @State var hideSpeedWhenZero: Bool = false
+    @State var useFahrenheit: Int = 0
+    @State var batteryValueType: Int = 0
+    @State var timeFormat: Int = 0
+    @State var showPercentage: Bool = true
+    @State var filledSymbol: Bool = true
+    @State var weatherFormat: String = "{i}{n}{lt}°~{ht}°({t}°,{bt}°)💧{h}%"
     @State var weatherProvider: Int = 0
-    @State var intSelection: Int = 0
-    @State var intSelection2: Int = 0
-    @State var intSelection3: Int = 1
-    @State var boolSelection: Bool = false
+    @State var useMetric: Int = 0
+    @State var location: String = "116.40,39.90"
+    @State var lyricsType: Int = 0
+    @State var bluetoothType: Int = 1
+    @State var wiredType: Int = 1
+    @State var unsupported: Bool = false
     
     @State var modified: Bool = false
     @State private var isPresented = false
@@ -54,15 +66,10 @@ struct WidgetPreferencesView: View {
                         .foregroundColor(.primary)
                         .bold()
                         .frame(maxWidth: .infinity, alignment: .leading)
-                    TextField(NSLocalizedString("E MMM dd", comment:""), text: $text)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .onAppear {
-                            if let format = widgetID.config["dateFormat"] as? String {
-                                text = format
-                            } else {
-                                text = NSLocalizedString("E MMM dd", comment:"")
-                            }
-                        }
+                    TextField(NSLocalizedString("E MMM dd", comment:""), text: $dateFormat.onChange { _ in
+                        modified = true
+                    })
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
                 }
             case .network:
                 // MARK: Network Type Choice
@@ -72,18 +79,13 @@ struct WidgetPreferencesView: View {
                             .foregroundColor(.primary)
                             .bold()
                             .frame(maxWidth: .infinity, alignment: .leading)
-                        DropdownPicker(selection: $intSelection) {
+                        DropdownPicker(selection: $networkUp.onChange { _ in
+                            modified = true
+                        }) {
                             return [
                                 DropdownItem(NSLocalizedString("Download", comment:""), tag: 0),
                                 DropdownItem(NSLocalizedString("Upload", comment:""), tag: 1)
                             ]
-                        }
-                        .onAppear {
-                            if let netUp = widgetID.config["isUp"] as? Bool {
-                                intSelection = netUp ? 1 : 0
-                            } else {
-                                intSelection = 0
-                            }
                         }
                     }
                     // MARK: Speed Icon Choice
@@ -92,18 +94,13 @@ struct WidgetPreferencesView: View {
                             .foregroundColor(.primary)
                             .bold()
                             .frame(maxWidth: .infinity, alignment: .leading)
-                        DropdownPicker(selection: $intSelection2) {
+                        DropdownPicker(selection: $speedIcon.onChange { _ in
+                            modified = true
+                        }) {
                             return [
-                                DropdownItem(intSelection == 0 ? "▼" : "▲", tag: 0),
-                                DropdownItem(intSelection == 0 ? "↓" : "↑", tag: 1)
+                                DropdownItem(speedIcon == 0 ? "▼" : "▲", tag: 0),
+                                DropdownItem(speedIcon == 0 ? "↓" : "↑", tag: 1)
                             ]
-                        }
-                        .onAppear {
-                            if let speedIcon = widgetID.config["speedIcon"] as? Int {
-                                intSelection2 = speedIcon
-                            } else {
-                                intSelection2 = 0
-                            }
                         }
                     }
                     // MARK: Minimum Unit Choice
@@ -112,7 +109,9 @@ struct WidgetPreferencesView: View {
                             .foregroundColor(.primary)
                             .bold()
                             .frame(maxWidth: .infinity, alignment: .leading)
-                        DropdownPicker(selection: $intSelection3) {
+                        DropdownPicker(selection: $minUnit.onChange { _ in
+                            modified = true
+                        }) {
                             return [
                                 DropdownItem("b", tag: 0),
                                 DropdownItem("Kb", tag: 1),
@@ -120,22 +119,16 @@ struct WidgetPreferencesView: View {
                                 DropdownItem("Gb", tag: 3)
                             ]
                         }
-                        .onAppear {
-                            if let minUnit = widgetID.config["minUnit"] as? Int {
-                                intSelection3 = minUnit
-                            } else {
-                                intSelection3 = 1
-                            }
-                        }
                     }
                     // MARK: Hide Speed When Zero
-                    Toggle(isOn: $boolSelection) {
-                        Text(NSLocalizedString("Hide Speed When 0", comment:""))
-                            .foregroundColor(.primary)
-                            .bold()
-                    }
-                    .onAppear {
-                        boolSelection = widgetID.config["hideSpeedWhenZero"] as? Bool ?? false
+                    HStack {
+                        Toggle(isOn: $hideSpeedWhenZero.onChange { _ in
+                            modified = true
+                        }) {
+                            Text(NSLocalizedString("Hide Speed When 0", comment:""))
+                                .foregroundColor(.primary)
+                                .bold()
+                        }
                     }
                 }
             case .temperature:
@@ -145,18 +138,13 @@ struct WidgetPreferencesView: View {
                         .foregroundColor(.primary)
                         .bold()
                         .frame(maxWidth: .infinity, alignment: .leading)
-                    DropdownPicker(selection: $intSelection) {
+                    DropdownPicker(selection: $useFahrenheit.onChange { _ in
+                        modified = true
+                    }) {
                         return [
                             DropdownItem(NSLocalizedString("Celcius", comment:""), tag: 0),
                             DropdownItem(NSLocalizedString("Fahrenheit", comment:""), tag: 1)
                         ]
-                    }
-                    .onAppear {
-                        if widgetID.config["useFahrenheit"] as? Bool ?? false == true {
-                            intSelection = 1
-                        } else {
-                            intSelection = 0
-                        }
                     }
                 }
             case .battery:
@@ -166,20 +154,15 @@ struct WidgetPreferencesView: View {
                         .foregroundColor(.primary)
                         .bold()
                         .frame(maxWidth: .infinity, alignment: .leading)
-                    DropdownPicker(selection: $intSelection) {
+                    DropdownPicker(selection: $batteryValueType.onChange { _ in
+                        modified = true
+                    }) {
                         return [
                             DropdownItem(NSLocalizedString("Watts", comment:""), tag: 0),
                             DropdownItem(NSLocalizedString("Charging Current", comment:""), tag: 1),
                             DropdownItem(NSLocalizedString("Amperage", comment:""), tag: 2),
                             DropdownItem(NSLocalizedString("Charge Cycles", comment:""), tag: 3)
                         ]
-                    }
-                    .onAppear {
-                        if let batteryType = widgetID.config["batteryValueType"] as? Int {
-                            intSelection = batteryType
-                        } else {
-                            intSelection = 0
-                        }
                     }
                 }
             case .timeWidget:
@@ -189,16 +172,11 @@ struct WidgetPreferencesView: View {
                         .foregroundColor(.primary)
                         .bold()
                         .frame(maxWidth: .infinity, alignment: .leading)
-                    DropdownPicker(selection: $intSelection) {
+                    DropdownPicker(selection: $timeFormat.onChange { _ in
+                        modified = true
+                    }) {
                         return timeFormats.indices.map { index in
                             DropdownItem("\(getFormattedDate(timeFormats[index]))\n(\(timeFormats[index]))", tag: index)
-                        }
-                    }
-                    .onAppear {
-                        if let timeFormat = widgetID.config["dateFormat"] as? String {
-                            intSelection = timeFormats.firstIndex(of: timeFormat) ?? 0
-                        } else {
-                            intSelection = 0
                         }
                     }
                 }
@@ -209,38 +187,31 @@ struct WidgetPreferencesView: View {
                         .foregroundColor(.primary)
                         .bold()
                         .frame(maxWidth: .infinity, alignment: .leading)
-                    TextField(NSLocalizedString("Example", comment:""), text: $text)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .onAppear {
-                            if let format = widgetID.config["text"] as? String {
-                                text = format
-                            } else {
-                                text = NSLocalizedString("Example", comment:"")
-                            }
-                        }
+                    TextField(NSLocalizedString("Example", comment:""), text: $text.onChange { _ in
+                        modified = true
+                    })
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
                 }
             case .currentCapacity:
                 // MARK: Current Capacity Choice
                 HStack {
-                    Toggle(isOn: $boolSelection) {
+                    Toggle(isOn: $showPercentage.onChange { _ in
+                        modified = true
+                    }) {
                         Text(NSLocalizedString("Show Percent (%) Symbol", comment:""))
                             .foregroundColor(.primary)
                             .bold()
-                    }
-                    .onAppear {
-                        boolSelection = widgetID.config["showPercentage"] as? Bool ?? true
                     }
                 }
             case .chargeSymbol:
                 // MARK: Charge Symbol Fill Option
                 HStack {
-                    Toggle(isOn: $boolSelection) {
+                    Toggle(isOn: $filledSymbol.onChange { _ in
+                        modified = true
+                    }) {
                         Text(NSLocalizedString("Fill Symbol", comment:""))
                             .foregroundColor(.primary)
                             .bold()
-                    }
-                    .onAppear {
-                        boolSelection = widgetID.config["filled"] as? Bool ?? true
                     }
                 }
             case .weather:
@@ -251,15 +222,10 @@ struct WidgetPreferencesView: View {
                                 .foregroundColor(.primary)
                                 .bold()
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                            TextField("{i}{n}{lt}°~{ht}°({t}°,{bt}°)💧{h}%", text: $weatherFormat)
-                                .textFieldStyle(RoundedBorderTextFieldStyle())
-                                .onAppear {
-                                    if let format = widgetID.config["format"] as? String {
-                                        weatherFormat = format
-                                    } else {
-                                        weatherFormat = "{i}{n}{lt}°~{ht}°({t}°,{bt}°)💧{h}%"
-                                    }
-                                }
+                            TextField("{i}{n}{lt}°~{ht}°({t}°,{bt}°)💧{h}%", text: $weatherFormat.onChange { _ in
+                                modified = true
+                            })
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
                         }
 
                         HStack {
@@ -267,18 +233,13 @@ struct WidgetPreferencesView: View {
                                 .foregroundColor(.primary)
                                 .bold()
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                            DropdownPicker(selection: $intSelection2) {
+                            DropdownPicker(selection: $useMetric.onChange { _ in
+                                modified = true
+                            }) {
                                 return [
                                     DropdownItem(NSLocalizedString("Metric", comment:""), tag: 0),
                                     DropdownItem(NSLocalizedString("US", comment:""), tag: 1)
                                 ]
-                            }
-                            .onAppear {
-                                if let useMetric = widgetID.config["useMetric"] as? Bool {
-                                    intSelection2 = useMetric ? 1 : 0
-                                } else {
-                                    intSelection2 = 0
-                                }
                             }
                         }
                         
@@ -287,18 +248,13 @@ struct WidgetPreferencesView: View {
                                 .foregroundColor(.primary)
                                 .bold()
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                            DropdownPicker(selection: $intSelection) {
+                            DropdownPicker(selection: $useFahrenheit.onChange { _ in
+                                modified = true
+                            }) {
                                 return [
                                     DropdownItem(NSLocalizedString("Celcius", comment:""), tag: 0),
                                     DropdownItem(NSLocalizedString("Fahrenheit", comment:""), tag: 1)
                                 ]
-                            }
-                            .onAppear {
-                                if widgetID.config["useFahrenheit"] as? Bool ?? false == true {
-                                    intSelection = 1
-                                } else {
-                                    intSelection = 0
-                                }
                             }
                         }
 
@@ -316,29 +272,34 @@ struct WidgetPreferencesView: View {
                                     .foregroundColor(.primary)
                                     .bold()
                                     .frame(maxWidth: .infinity, alignment: .leading)
-                                TextField(NSLocalizedString("Input", comment:""), text: $text)
-                                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                                    .onAppear {
-                                        if let format = widgetID.config["location"] as? String {
-                                            text = format
-                                        } else {
-                                            text = "101010100"
-                                        }
-                                    }
+                                TextField(NSLocalizedString("Input", comment:""), text: $location.onChange { _ in
+                                    modified = true
+                                })
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
                                 Button(NSLocalizedString("Get", comment:"")) {
                                     isPresented = true
                                 }
                                 .sheet(isPresented: $isPresented) {
-                                    WeatherLocationView(locationID: self.$text)
+                                    WeatherLocationView(location: self.$location, modified: self.$modified)
                                 }
                             }
 
-                            HStack {
-                                Text(NSLocalizedString("Weather Format QWeather", comment:""))
-                                    .multilineTextAlignment(.leading)
-                                    .font(.subheadline)
-                                    .foregroundColor(.secondary)
-                                Spacer()
+                            if weatherProvider == 1 {
+                                HStack {
+                                    Text(NSLocalizedString("Weather Format QWeather", comment:""))
+                                        .multilineTextAlignment(.leading)
+                                        .font(.subheadline)
+                                        .foregroundColor(.secondary)
+                                    Spacer()
+                                }
+                            } else if weatherProvider == 2 {
+                                HStack {
+                                    Text(NSLocalizedString("Weather Format ColorfulClouds", comment:""))
+                                        .multilineTextAlignment(.leading)
+                                        .font(.subheadline)
+                                        .foregroundColor(.secondary)
+                                    Spacer()
+                                }
                             }
                         }
                     }
@@ -346,10 +307,17 @@ struct WidgetPreferencesView: View {
             case .lyrics:
                 // MARK: Battery Value Type
                 VStack {
-                    Toggle(isOn: $boolSelection) {
-                        Text(NSLocalizedString("Unsupported Apps Are Displayed", comment:""))
-                            .foregroundColor(.primary)
-                            .bold()
+                    HStack {
+                        Toggle(isOn: $unsupported.onChange { value in
+                            if value && lyricsType == 0 {
+                                lyricsType = 1
+                            }
+                            modified = true
+                        }) {
+                            Text(NSLocalizedString("Unsupported Apps Are Displayed", comment:""))
+                                .foregroundColor(.primary)
+                                .bold()
+                        }
                     }
 
                     HStack {
@@ -357,7 +325,9 @@ struct WidgetPreferencesView: View {
                             .foregroundColor(.primary)
                             .bold()
                             .frame(maxWidth: .infinity, alignment: .leading)
-                        DropdownPicker(selection: $intSelection) {
+                        DropdownPicker(selection: $lyricsType.onChange { _ in
+                            modified = true
+                        }) {
                             return [
                                 DropdownItem(NSLocalizedString("Auto Detection", comment:""), tag: 0),
                                 DropdownItem(NSLocalizedString("Title", comment:""), tag: 1),
@@ -367,13 +337,15 @@ struct WidgetPreferencesView: View {
                         }
                     }
 
-                    if boolSelection || intSelection != 0 {
+                    if unsupported || lyricsType != 0 {
                         HStack{
                             Text(NSLocalizedString("Bluetooth Headset Option", comment:""))
                                 .foregroundColor(.primary)
                                 .bold()
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                            DropdownPicker(selection: $intSelection2) {
+                            DropdownPicker(selection: $bluetoothType.onChange { _ in
+                                modified = true
+                            }) {
                                 return [
                                     DropdownItem(NSLocalizedString("Title", comment:""), tag: 1),
                                     DropdownItem(NSLocalizedString("Artist", comment:""), tag: 2),
@@ -387,7 +359,9 @@ struct WidgetPreferencesView: View {
                                 .foregroundColor(.primary)
                                 .bold()
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                            DropdownPicker(selection: $intSelection3) {
+                            DropdownPicker(selection: $wiredType.onChange { _ in
+                                modified = true
+                            }) {
                                 return [
                                     DropdownItem(NSLocalizedString("Title", comment:""), tag: 1),
                                     DropdownItem(NSLocalizedString("Artist", comment:""), tag: 2),
@@ -395,24 +369,6 @@ struct WidgetPreferencesView: View {
                                 ]
                             }
                         }
-                    }
-                }
-                .onAppear {
-                    boolSelection = widgetID.config["unsupported"] as? Bool ?? false
-                    if let lyricsType = widgetID.config["lyricsType"] as? Int {
-                        intSelection = lyricsType
-                    } else {
-                        intSelection = boolSelection ? 1 : 0
-                    }
-                    if let bluetoothType = widgetID.config["bluetoothType"] as? Int {
-                        intSelection2 = bluetoothType
-                    } else {
-                        intSelection2 = 1
-                    }
-                    if let wiredType = widgetID.config["wiredType"] as? Int {
-                        intSelection3 = wiredType
-                    } else {
-                        intSelection3 = 1
                     }
                 }
             default:
@@ -435,6 +391,53 @@ struct WidgetPreferencesView: View {
         }
         .onAppear {
             weatherProvider = UserDefaults.standard.integer(forKey: "weatherProvider", forPath: USER_DEFAULTS_PATH)
+
+            if let format = widgetID.config["dateFormat"] as? String {
+                dateFormat = format
+            }
+            if let netUp = widgetID.config["isUp"] as? Bool {
+                networkUp = netUp ? 1 : 0
+            }
+            if let icon = widgetID.config["speedIcon"] as? Int {
+                speedIcon = icon
+            }
+            if let unit = widgetID.config["minUnit"] as? Int {
+                minUnit = unit
+            }
+            hideSpeedWhenZero = widgetID.config["hideSpeedWhenZero"] as? Bool ?? false
+            if widgetID.config["useFahrenheit"] as? Bool ?? false == true {
+                useFahrenheit = 1
+            }
+            if let batteryType = widgetID.config["batteryValueType"] as? Int {
+                batteryValueType = batteryType
+            }
+            if let format = widgetID.config["dateFormat"] as? String {
+                timeFormat = timeFormats.firstIndex(of: format) ?? 0
+            }
+            if let format = widgetID.config["text"] as? String {
+                text = format
+            }
+            showPercentage = widgetID.config["showPercentage"] as? Bool ?? true
+            filledSymbol = widgetID.config["filled"] as? Bool ?? true
+            if let format = widgetID.config["format"] as? String {
+                weatherFormat = format
+            }
+            if let use = widgetID.config["useMetric"] as? Bool {
+                useMetric = use ? 0 : 1
+            }
+            if let format = widgetID.config["location"] as? String {
+                location = format
+            }
+            unsupported = widgetID.config["unsupported"] as? Bool ?? false
+            if let ltype = widgetID.config["lyricsType"] as? Int {
+                lyricsType = ltype
+            }
+            if let btype = widgetID.config["bluetoothType"] as? Int {
+                bluetoothType = btype
+            }
+            if let wtype = widgetID.config["wiredType"] as? Int {
+                wiredType = wtype
+            }
         }
         .onDisappear {
             if modified {
@@ -442,24 +445,6 @@ struct WidgetPreferencesView: View {
                     saveChanges()
                 }, noCancel: false)
             }
-        }
-        .onChange(of: text) { _ in
-            modified = true
-        }
-        .onChange(of: weatherFormat) { _ in
-            modified = true
-        }
-        .onChange(of: intSelection) { _ in
-            modified = true
-        }
-        .onChange(of: intSelection2) { _ in
-            modified = true
-        }
-        .onChange(of: intSelection3) { _ in
-            modified = true
-        }
-        .onChange(of: boolSelection) { _ in
-            modified = true
         }
     }
     
@@ -478,10 +463,10 @@ struct WidgetPreferencesView: View {
         // MARK: Changing Text
         case .dateWidget:
             // MARK: Date Format Handling
-            if text == "" {
+            if dateFormat == "" {
                 widgetStruct.config["dateFormat"] = nil
             } else {
-                widgetStruct.config["dateFormat"] = text
+                widgetStruct.config["dateFormat"] = dateFormat
             }
         case .textWidget:
             // MARK: Custom Text Handling
@@ -494,46 +479,46 @@ struct WidgetPreferencesView: View {
         // MARK: Changing Integer
         case .network:
             // MARK: Network Choices Handling
-            widgetStruct.config["isUp"] = intSelection == 1 ? true : false
-            widgetStruct.config["speedIcon"] = intSelection2
-            widgetStruct.config["minUnit"] = intSelection3
-            widgetStruct.config["hideSpeedWhenZero"] = boolSelection
+            widgetStruct.config["isUp"] = networkUp == 1 ? true : false
+            widgetStruct.config["speedIcon"] = speedIcon
+            widgetStruct.config["minUnit"] = minUnit
+            widgetStruct.config["hideSpeedWhenZero"] = hideSpeedWhenZero
         case .temperature:
             // MARK: Temperature Unit Handling
-            widgetStruct.config["useFahrenheit"] = intSelection == 1 ? true : false
+            widgetStruct.config["useFahrenheit"] = useFahrenheit == 1 ? true : false
         case .battery:
             // MARK: Battery Value Type Handling
-            widgetStruct.config["batteryValueType"] = intSelection
+            widgetStruct.config["batteryValueType"] = batteryValueType
         case .timeWidget:
             // MARK: Time Format Handling
-            widgetStruct.config["dateFormat"] = timeFormats[intSelection]
+            widgetStruct.config["dateFormat"] = timeFormats[timeFormat]
         // MARK: Changing Boolean
         case .currentCapacity:
             // MARK: Current Capacity Handling
-            widgetStruct.config["showPercentage"] = boolSelection
+            widgetStruct.config["showPercentage"] = showPercentage
         case .chargeSymbol:
             // MARK: Charge Symbol Fill Handling
-            widgetStruct.config["filled"] = boolSelection
+            widgetStruct.config["filled"] = filledSymbol
         case .weather:
             // MARK: Weather Handling
-            widgetStruct.config["useFahrenheit"] = intSelection == 1 ? true : false
-            widgetStruct.config["useMetric"] = intSelection2 == 0 ? true : false
+            widgetStruct.config["useFahrenheit"] = useFahrenheit == 1 ? true : false
+            widgetStruct.config["useMetric"] = useMetric == 0 ? true : false
             if weatherFormat == "" {
                 widgetStruct.config["format"] = nil
             } else {
                 widgetStruct.config["format"] = weatherFormat
             }
-            if text == "" {
+            if location == "" {
                 widgetStruct.config["location"] = nil
             } else {
-                widgetStruct.config["location"] = text
+                widgetStruct.config["location"] = location
             }
         case .lyrics:
             // MARK: Weather Handling
-            widgetStruct.config["unsupported"] = boolSelection
-            widgetStruct.config["lyricsType"] = (boolSelection && intSelection == 0) ? 1 : intSelection
-            widgetStruct.config["bluetoothType"] = intSelection2
-            widgetStruct.config["wiredType"] = intSelection3
+            widgetStruct.config["unsupported"] = unsupported
+            widgetStruct.config["lyricsType"] = (unsupported && lyricsType == 0) ? 1 : lyricsType
+            widgetStruct.config["bluetoothType"] = bluetoothType
+            widgetStruct.config["wiredType"] = wiredType
         default:
             return;
         }
@@ -545,18 +530,19 @@ struct WidgetPreferencesView: View {
 }
 
 struct Location: Identifiable {
-    var id: String
-    var name: String
-    var country: String
-    var adm1: String
-    var adm2: String
-    var lat: String
-    var lon: String
+    var id = UUID()
+    var name: String?
+    var country: String?
+    var province: String?
+    var city: String?
+    var area: String?
+    var location: CLLocation?
 }
 
 struct WeatherLocationView: View {
     @State var searchString = ""
-    @Binding var locationID: String
+    @Binding var location: String
+    @Binding var modified: Bool
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
 
     @State var locations: [Location] = []
@@ -579,15 +565,18 @@ struct WeatherLocationView: View {
                     }
                     Button(NSLocalizedString("Search", comment:"")) {
                         search()
+                        hideKeyboard()
                     }
                 }
                 .padding()
                 Spacer()
-                List(locations) {location in
-                    ListCell(item: location)
+                List(locations) {item in
+                    ListCell(item: item)
                         .contentShape(Rectangle())
                         .onTapGesture {
-                            locationID = location.id
+                            let loc = item.location!
+                            self.location = "\(loc.coordinate.longitude),\(loc.coordinate.latitude)"
+                            modified = true
                             presentationMode.wrappedValue.dismiss()
                         }
                 }
@@ -600,22 +589,26 @@ struct WeatherLocationView: View {
 
     func search() {
         if !searchString.isEmpty {
-            let qweather = QWeather.sharedInstance()
-            qweather!.locale = UserDefaults.standard.string(forKey: "dateLocale", forPath: USER_DEFAULTS_PATH) ?? "en"
-            qweather!.apiKey = UserDefaults.standard.string(forKey: "weatherApiKey", forPath: USER_DEFAULTS_PATH) ?? ""
-            let data = qweather!.fetchLocationID(forName:searchString)
-            let json = try! JSONSerialization.jsonObject(with: data!, options: []) as! Dictionary<String, Any>
-            if json["code"] as? String == "200" {
-                let array = json["location"] as! [Dictionary<String, Any>]
-                for item in array {
-                    let name = item["name"] as! String
-                    let id = item["id"] as! String
-                    let country = item["country"] as! String
-                    let adm1 = item["adm1"] as! String
-                    let adm2 = item["adm2"] as! String
-                    let lat = item["lat"] as! String
-                    let lon = item["lon"] as! String
-                    locations.append(Location(id: id, name: name, country: country, adm1: adm1, adm2: adm2, lat: lat, lon: lon))
+            DispatchQueue.global().async {
+                locations.removeAll()
+                let array = WeatherUtils.getGeocodeByName(searchString)
+                // let json = try! JSONSerialization.jsonObject(with: data!, options: []) as! Dictionary<String, Any>
+                // if json["status"] as? String == "1" {
+                //     let array = json["geocodes"] as! [Dictionary<String, Any>]
+                //     for item in array {
+                //         let name = item["formatted_address"] as! String
+                //         let country = item["country"] as! String
+                //         let province = item["province"] as! String
+                //         let city = item["city"] as! String
+                //         let location = item["location"] as! String
+                //         locations.append(Location(name: name, country: country, province: province, city: city, location: location))
+                //     }
+                // }
+                if array != nil {
+                    for item in array! {
+                        let l = item as! CLPlacemark
+                        locations.append(Location(name: l.name, country: l.country, province: l.administrativeArea, city: l.locality, area: l.subLocality ,location: l.location))
+                    }
                 }
             }
         }
@@ -628,13 +621,13 @@ struct ListCell: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             HStack {
-                Text("\(item.id),\(item.name)")
+                Text("\(item.name ?? "--"),\(item.area ?? "--"),\(item.city ?? "--"),\(item.province ?? "--"),\(item.country ?? "--")")
                     .font(.system(size: 18, weight: .bold))
                     .foregroundColor(.primary)
                 Spacer()
             }
             HStack {
-                Text("\(item.adm1),\(item.adm2)")
+                Text("\(item.location!.coordinate.longitude),\(item.location!.coordinate.latitude)")
                     .lineLimit(1)
                     .font(.system(size: 15))
                     .foregroundColor(.secondary)
@@ -643,3 +636,11 @@ struct ListCell: View {
         }
     }
 }
+
+#if canImport(UIKit)
+extension View {
+    func hideKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
+}
+#endif

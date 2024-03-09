@@ -3,7 +3,7 @@
 #import "Helium-Swift.h"
 
 #import "../extensions/FontUtils.h"
-#import "../extensions/HWeatherController.h"
+#import "../extensions/Weather/HWeatherController.h"
 
 @implementation MainApplicationDelegate
 

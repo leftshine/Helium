@@ -1,22 +1,23 @@
-// https://github.com/DGh0st/HSWidgets
-#import "../helpers/private_headers/Weather/WeatherHeaders.h"
+#import <Foundation/Foundation.h>
+@class CLPlacemark;
 
-@class City, WATodayModel;
-
-@interface HWeatherController : NSObject
-@property (nonatomic, strong) WALockscreenWidgetViewController *widgetVC;
-@property (nonatomic, strong) City *myCity;
-@property (nonatomic, strong) WATodayModel *todayModel;
-@property (nonatomic, strong) NSBundle *weatherBundle;
-@property (nonatomic) BOOL useFahrenheit;
+@interface ColorfulClouds : NSObject
+@property (nonatomic) NSString *apiKey;
 @property (nonatomic) BOOL useMetric;
-@property (nonatomic) NSLocale *locale;
+@property (nonatomic) BOOL useFahrenheit;
+@property (nonatomic) NSString *locale;
+@property (nonatomic, strong) NSDictionary *weatherData;
+@property (nonatomic, strong) CLPlacemark *city;
+@property (nonatomic) long long lastUpdateTime;
+@property (nonatomic) NSString *lastLocation;
 
-+(instancetype)sharedInstance;
++ (instancetype)sharedInstance;
+- (NSDictionary *)fetchWeatherForLocation:(NSString *)location;
+- (NSData *)fetchLocationIDForName:(NSString *)name;
+
 -(NSString *)locationName;
--(UIImage *)conditionsImage;
--(UIImage *)conditionsImage2:(double) fontSize;
--(NSString *)conditionsImageName;
+-(NSString *)conditionsEmoji;
+-(UIImage *)conditionsImage:(double) fontSize;
 -(NSString *)conditionsDescription;
 -(NSString *)temperature;
 -(NSString *)temperature:(BOOL) withSymbol;
@@ -36,13 +37,17 @@
 -(NSString *)visibility:(BOOL) withUnit;
 -(NSString *)pressure;
 -(NSString *)pressure:(BOOL) withUnit;
--(NSString *)UVIndex;
 -(NSString *)precipitationNextHour;
 -(NSString *)precipitationNextHour:(BOOL) withSymbol;
+-(NSString *)precipitationPercentNextHour;
+-(NSString *)precipitationPercentNextHour:(BOOL) withSymbol;
 -(NSString *)precipitationPast24Hours;
 -(NSString *)precipitationPast24Hours:(BOOL) withUnit;
--(NSString *)airQualityIndex;
--(NSDictionary *)weatherData:(double) fontSize;
 
--(void)updateModel;
+-(NSString *)UVIndex;
+-(NSString *)airQualityIndex;
+
+- (NSDictionary *)getWeatherData:(double) fontSize;
+- (NSString *)getDataFrom:(NSString *)url;
+- (void)updateWeather:(NSString *)location;
 @end

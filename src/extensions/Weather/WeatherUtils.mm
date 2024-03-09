@@ -1,4 +1,5 @@
 #import "WeatherUtils.h"
+#import <CoreLocation/CoreLocation.h>
 
 @implementation WeatherUtils
 + (NSString*)formatWeatherData:(NSDictionary *)data format:(NSString *)format {
@@ -54,6 +55,48 @@
         format = NSLocalizedString(@"error", comment:@"");
     }
     return format;
+}
+
++ (NSArray *)getGeocodeByName:(NSString *)name {
+    __block NSArray *arr = nil;
+    CLGeocoder *geocoder = [[CLGeocoder alloc] init];
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    [geocoder geocodeAddressString:name completionHandler:^(NSArray *placemarks, NSError *error) {
+        NSLog(@"boom error: %@", error);
+        arr = placemarks;
+        dispatch_semaphore_signal(semaphore);
+    }];
+    dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_SEC));
+    return arr;
+}
+
++ (CLPlacemark *)getPlacemarkByGeocode:(NSString *)geolocation {
+    __block CLPlacemark *placemark = nil;
+    NSString *longtitude, *latitude;
+    CLGeocoder *geocoder = [[CLGeocoder alloc] init];
+    if (geolocation == nil || geolocation.length == 0)
+        return placemark;
+    else {
+        NSArray *arr = [geolocation componentsSeparatedByString:@","];
+        longtitude = [arr firstObject];
+        latitude = [arr lastObject];
+    }
+    CLLocation *location = [[CLLocation alloc] initWithLatitude:[latitude doubleValue] longitude:[longtitude doubleValue]];
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    [geocoder reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *error) {
+        NSLog(@"boom error: %@", error);
+        NSLog(@"boom : %@", placemarks);
+        if (placemarks != nil && [placemarks count] > 0) {
+            placemark = ((CLPlacemark*)[placemarks firstObject]);
+            NSArray *formattedAddressLines = placemark.addressDictionary[@"FormattedAddressLines"];
+            NSString *addressString = [formattedAddressLines componentsJoinedByString:@"\n"];
+            NSLog(@"boom Address: %@", placemark.addressDictionary);
+            NSLog(@"boom : %@", addressString);
+        }
+        dispatch_semaphore_signal(semaphore);
+    }];
+    dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_SEC));
+    return placemark;
 }
 
 @end

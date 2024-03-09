@@ -1,5 +1,5 @@
 #import <Foundation/Foundation.h>
-#import "../helpers/private_headers/Weather/WeatherHeaders.h"
+@class CLPlacemark;
 
 @interface QWeather : NSObject
 @property (nonatomic) NSString *apiKey;
@@ -10,7 +10,7 @@
 @property (nonatomic, strong) NSDictionary *now;
 @property (nonatomic, strong) NSDictionary *daily;
 @property (nonatomic, strong) NSDictionary *hourly;
-@property (nonatomic, strong) NSDictionary *city;
+@property (nonatomic, strong) CLPlacemark *city;
 @property (nonatomic) long long lastUpdateTime;
 @property (nonatomic) NSString *lastLocation;
 
@@ -18,8 +18,6 @@
 - (NSDictionary *)fetchNowWeatherForLocation:(NSString *)location;
 - (NSDictionary *)fetchTodayWeatherForLocation:(NSString *)location;
 - (NSDictionary *)fetch24HoursWeatherForLocation:(NSString *)location;
-- (NSData *)fetchLocationIDForName:(NSString *)name;
-
 
 -(NSString *)locationName;
 -(NSString *)conditionsEmoji;
