@@ -72,7 +72,7 @@ static NSString *UserAgent = @"Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_3_3 like 
 }
 
 -(NSString *)locationName {
-	return self.city.subLocality;
+	return self.city.subLocality ?: @"--";
 }
 
 -(NSString *)temperature {
