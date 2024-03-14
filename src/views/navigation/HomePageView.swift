@@ -74,28 +74,14 @@ struct HomePageView: View {
       .onAppear {
         #if !targetEnvironment(simulator)
           isNowEnabled = IsHUDEnabledBridger()
+          NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main) { _ in
+              isNowEnabled = IsHUDEnabledBridger()
+          }
         #endif
         if UserDefaults.standard.string(forKey: "dateLocale", forPath: USER_DEFAULTS_PATH) == nil {
             UserDefaults.standard.setValue(Locale.current.languageCode!, forKey: "dateLocale", forPath: USER_DEFAULTS_PATH)
         }
       }
-      .onOpenURL(perform: { url in
-        let _ = FileManager.default
-        // MARK: URL Schemes
-        if url.absoluteString == "helium://toggle" {
-          #if !targetEnvironment(simulator)
-            toggleHUD(!isNowEnabled)
-          #endif
-        } else if url.absoluteString == "helium://on" {
-          #if !targetEnvironment(simulator)
-            toggleHUD(true)
-          #endif
-        } else if url.absoluteString == "helium://off" {
-          #if !targetEnvironment(simulator)
-            toggleHUD(false)
-          #endif
-        }
-      })
       .navigationTitle(Text(NSLocalizedString("Helium", comment: "")))
     }
     .navigationViewStyle(StackNavigationViewStyle())

@@ -44,14 +44,23 @@
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
 			<key>CFBundleURLName</key>
 			<string>com.leemin.helium</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>helium</string>
 			</array>
+		</dict>
+	</array>
+	<key>UIApplicationShortcutItems</key>
+	<array>
+		<dict>
+			<key>UIApplicationShortcutItemIconSymbolName</key>
+			<string>switch.2</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Toggle HUD</string>
+			<key>UIApplicationShortcutItemType</key>
+			<string>com.leemin.helium.shortcut.toggle-hud</string>
 		</dict>
 	</array>
 	<key>LSApplicationCategoryType</key>
