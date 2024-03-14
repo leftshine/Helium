@@ -46,15 +46,14 @@
         if ([url.host isEqualToString:@"toggle"]) {
             SetHUDEnabled(!IsHUDEnabled());
             [[UIApplication sharedApplication] suspend];
-            return YES;
-        } else if ([url.host isEqualToString:@"on"]) {
+        } else if ([url.host isEqualToString:@"on"] && !IsHUDEnabled()) {
             SetHUDEnabled(true);
             [[UIApplication sharedApplication] suspend];
-            return YES;
-        } else if ([url.host isEqualToString:@"off"]) {
+        } else if ([url.host isEqualToString:@"off"] && IsHUDEnabled()) {
             SetHUDEnabled(false);
             [[UIApplication sharedApplication] suspend];
-            return YES;
+        } else {
+            [[UIApplication sharedApplication] suspend];
         }
     }
     return NO;
