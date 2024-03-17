@@ -95,6 +95,8 @@ struct WidgetPreviewsView: View {
             image = widget.config["filled"] as? Bool ?? true ? Image(systemName: "bolt.fill") : Image(systemName: "bolt")
         case .lyrics:
             text = NSLocalizedString("Lyrics", comment:"")
+        case .cpumen:
+            text = "CPU:20% MEM:10MB"
         }
         widget.modified = false
     }

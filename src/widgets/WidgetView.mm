@@ -203,6 +203,7 @@
     8 = Charging Symbol
     9 = Weather
     10 = Lyrics
+    11 = CPU&MEM
  */
 - (void)updateWidget:(NSDictionary *) config callback:(CallbackBlock) callback {
     NSInteger parsedID = [config valueForKey:@"widgetID"] ? [[config valueForKey:@"widgetID"] integerValue] : 0;
@@ -331,6 +332,17 @@
                     wiredType: getIntFromDictKey(config, @"wiredType", 1)
                     unsupported: getBoolFromDictKey(config, @"unsupported", NO)
                     callback: ^(NSMutableAttributedString *attributedString) {
+                        weakSelf.fetchingData = false;
+                        callback(attributedString);
+                    }
+                ];
+            }
+            break;
+        case 11:
+            // CPU&MEM
+            {
+                [[WidgetUtils sharedInstance] formattedCPUMEM:
+                    ^(NSMutableAttributedString *attributedString) {
                         weakSelf.fetchingData = false;
                         callback(attributedString);
                     }
