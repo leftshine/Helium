@@ -1,6 +1,9 @@
 #import <Foundation/Foundation.h>
 @class CLPlacemark;
 
+typedef void (^CCWeatherDataCallbackBlock)(NSDictionary *weatherData);
+typedef void (^CCWeatherLocationCallbackBlock)(NSString *location);
+
 @interface ColorfulClouds : NSObject
 @property (nonatomic) NSString *apiKey;
 @property (nonatomic) BOOL useMetric;
@@ -9,7 +12,10 @@
 @property (nonatomic, strong) NSDictionary *weatherData;
 @property (nonatomic, strong) CLPlacemark *city;
 @property (nonatomic) long long lastUpdateTime;
-@property (nonatomic) NSString *lastLocation;
+@property (nonatomic, strong) NSString *lastLocation;
+@property (nonatomic, strong) NSString *location;
+@property (nonatomic) double fontSize;
+@property (nonatomic) BOOL useCurrentLocation;
 
 + (instancetype)sharedInstance;
 - (NSDictionary *)fetchWeatherForLocation:(NSString *)location;
@@ -47,7 +53,7 @@
 -(NSString *)UVIndex;
 -(NSString *)airQualityIndex;
 
-- (NSDictionary *)getWeatherData:(double) fontSize;
+- (NSDictionary *)getWeatherData;
 - (NSString *)getDataFrom:(NSString *)url;
-- (void)updateWeather:(NSString *)location;
+- (void)updateWeather:(CCWeatherDataCallbackBlock) dataCallback;
 @end

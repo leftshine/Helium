@@ -3,10 +3,10 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface HUDRootViewController: UIViewController
-- (void)resetLoopTimer;
 - (void)pauseLoopTimer;
 - (void)resumeLoopTimer;
 - (void)reloadUserDefaults;
+- (void)reloadWidgets;
 @end
 
 NS_ASSUME_NONNULL_END

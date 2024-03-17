@@ -1,6 +1,9 @@
 #import <Foundation/Foundation.h>
 @class CLPlacemark;
 
+typedef void (^QWeatherDataCallbackBlock)(NSDictionary *weatherData);
+typedef void (^QWeatherLocationCallbackBlock)(NSString *location);
+
 @interface QWeather : NSObject
 @property (nonatomic) NSString *apiKey;
 @property (nonatomic) BOOL useMetric;
@@ -12,7 +15,10 @@
 @property (nonatomic, strong) NSDictionary *hourly;
 @property (nonatomic, strong) CLPlacemark *city;
 @property (nonatomic) long long lastUpdateTime;
-@property (nonatomic) NSString *lastLocation;
+@property (nonatomic, strong) NSString *lastLocation;
+@property (nonatomic, strong) NSString *location;
+@property (nonatomic) double fontSize;
+@property (nonatomic) BOOL useCurrentLocation;
 
 + (instancetype)sharedInstance;
 - (NSDictionary *)fetchNowWeatherForLocation:(NSString *)location;
@@ -47,7 +53,7 @@
 -(NSString *)precipitationPast24Hours;
 -(NSString *)precipitationPast24Hours:(BOOL) withUnit;
 
-- (NSDictionary *)getWeatherData:(double) fontSize;
+- (NSDictionary *)getWeatherData;
 - (NSString *)getDataFrom:(NSString *)url;
-- (void)updateWeather:(NSString *)location;
+- (void)updateWeather:(QWeatherDataCallbackBlock) dataCallback;
 @end

@@ -26,6 +26,7 @@ struct WidgetPreferencesView: View {
     @State var filledSymbol: Bool = true
     @State var weatherFormat: String = "{i}{n}{lt}°~{ht}°({t}°,{bt}°)💧{h}%"
     @State var weatherProvider: Int = 0
+    @State var useCurrentLocation: Bool = false
     @State var useMetric: Int = 0
     @State var location: String = "116.40,39.90"
     @State var lyricsType: Int = 0
@@ -268,19 +269,31 @@ struct WidgetPreferencesView: View {
                             }
                         } else if weatherProvider != 0 {
                             HStack {
-                                Text(NSLocalizedString("Location", comment:""))
-                                    .foregroundColor(.primary)
-                                    .bold()
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                TextField(NSLocalizedString("Input", comment:""), text: $location.onChange { _ in
+                                Toggle(isOn: $useCurrentLocation.onChange { _ in
                                     modified = true
-                                })
-                                .textFieldStyle(RoundedBorderTextFieldStyle())
-                                Button(NSLocalizedString("Get", comment:"")) {
-                                    isPresented = true
-                                }
-                                .sheet(isPresented: $isPresented) {
-                                    WeatherLocationView(location: self.$location, modified: self.$modified)
+                                }) {
+                                    Text(NSLocalizedString("Use Current Location", comment:""))
+                                        .foregroundColor(.primary)
+                                        .bold()
+                                }.padding(.trailing, 4)
+                            }
+
+                            if !useCurrentLocation {
+                                HStack {
+                                    Text(NSLocalizedString("Location", comment:""))
+                                        .foregroundColor(.primary)
+                                        .bold()
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                    TextField(NSLocalizedString("Input", comment:""), text: $location.onChange { _ in
+                                        modified = true
+                                    })
+                                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                                    Button(NSLocalizedString("Get", comment:"")) {
+                                        isPresented = true
+                                    }
+                                    .sheet(isPresented: $isPresented) {
+                                        WeatherLocationView(location: self.$location, modified: self.$modified)
+                                    }
                                 }
                             }
 
@@ -428,6 +441,7 @@ struct WidgetPreferencesView: View {
             if let format = widgetID.config["location"] as? String {
                 location = format
             }
+            useCurrentLocation = widgetID.config["useCurrentLocation"] as? Bool ?? false
             unsupported = widgetID.config["unsupported"] as? Bool ?? false
             if let ltype = widgetID.config["lyricsType"] as? Int {
                 lyricsType = ltype
@@ -457,7 +471,7 @@ struct WidgetPreferencesView: View {
     }
     
     func saveChanges() {
-        var widgetStruct: WidgetIDStruct = .init(module: widgetID.module, config: widgetID.config)
+        var widgetStruct: WidgetIDStruct = .init(id: widgetID.id, module: widgetID.module, config: widgetID.config)
         
         switch(widgetStruct.module) {
         // MARK: Changing Text
@@ -513,6 +527,7 @@ struct WidgetPreferencesView: View {
             } else {
                 widgetStruct.config["location"] = location
             }
+            widgetStruct.config["useCurrentLocation"] = useCurrentLocation
         case .lyrics:
             // MARK: Weather Handling
             widgetStruct.config["unsupported"] = unsupported

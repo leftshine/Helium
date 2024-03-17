@@ -29,7 +29,7 @@ struct WidgetIDStruct: Identifiable, Equatable {
         return (lhs.id == rhs.id)
     }
     
-    var id = UUID()
+    var id: String
     
     var module: WidgetModule
     var config: [String: Any]
@@ -41,7 +41,7 @@ struct BlurDetailsStruct: Identifiable, Equatable {
         return (lhs.id == rhs.id)
     }
     
-    var id = UUID()
+    var id: String
     
     var hasBlur: Bool
     var cornerRadius: Double // Int when saving, Double for runtime convenience
@@ -54,7 +54,7 @@ struct ColorDetailsStruct: Identifiable, Equatable {
         return (lhs.id == rhs.id)
     }
     
-    var id = UUID()
+    var id: String
     
     var usesCustomColor: Bool = false
     var color: UIColor = .white
@@ -65,7 +65,7 @@ struct WidgetSetStruct: Identifiable, Equatable {
         return (lhs.id == rhs.id)
     }
     
-    var id = UUID()
+    var id: String
     
     var isEnabled: Bool
     var orientationMode: Int
@@ -88,7 +88,7 @@ struct WidgetSetStruct: Identifiable, Equatable {
     var blurDetails: BlurDetailsStruct
     
     var dynamicColor: Bool
-    var colorDetails: ColorDetailsStruct = .init()
+    var colorDetails: ColorDetailsStruct = .init(id: UUID().uuidString)
     
     var fontName: String
     var textBold: Bool
@@ -122,11 +122,14 @@ class WidgetManager: ObservableObject {
                 var widgetIDs: [WidgetIDStruct] = []
                 if let ids = s["widgetIDs"] as? [[String: Any]] {
                     for w in ids {
+                        var id: String = UUID().uuidString
                         var widgetID: Int = 0
                         var config: [String: Any] = [:]
                         for k in w.keys {
                             if k == "widgetID" {
                                 widgetID = w[k] as? Int ?? 0
+                            } else if k == "id" {
+                                id = w[k] as? String ?? UUID().uuidString
                             } else {
                                 config[k] = w[k]
                             }
@@ -139,12 +142,13 @@ class WidgetManager: ObservableObject {
                             }
                         }
                         if let module = module {
-                            widgetIDs.append(.init(module: module, config: config))
+                            widgetIDs.append(.init(id: id, module: module, config: config))
                         }
                     }
                 }
                 let blurDetails: [String: Any] = s["blurDetails"] as? [String: Any] ?? [:]
                 let blurDetailsStruct: BlurDetailsStruct = .init(
+                    id: blurDetails["id"] as? String ?? UUID().uuidString,
                     hasBlur: blurDetails["hasBlur"] as? Bool ?? false,
                     cornerRadius: blurDetails["cornerRadius"] as? Double ?? 4,
                     styleDark: blurDetails["styleDark"] as? Bool ?? true,
@@ -153,11 +157,13 @@ class WidgetManager: ObservableObject {
                 let colorDetails: [String: Any] = s["colorDetails"] as? [String: Any] ?? [:]
                 let selectedColor: UIColor = UIColor.getColorFromData(data: colorDetails["color"] as? Data) ?? UIColor.white
                 let colorDetailsStruct: ColorDetailsStruct = .init(
+                    id: colorDetails["id"] as? String ?? UUID().uuidString,
                     usesCustomColor: colorDetails["usesCustomColor"] as? Bool ?? false,
                     color: selectedColor
                 )
                 // create the object
                 var widgetSet: WidgetSetStruct = .init(
+                    id: s["id"] as? String ?? UUID().uuidString,
                     isEnabled: s["isEnabled"] as? Bool ?? true,
                     orientationMode: s["orientationMode"] as? Int ?? 0,
                     title: s["title"] as? String ?? NSLocalizedString("Untitled", comment: ""),
@@ -200,6 +206,7 @@ class WidgetManager: ObservableObject {
         
         for s in widgetSets {
             var wSet: [String: Any] = [:]
+            wSet["id"] = s.id
             wSet["isEnabled"] = s.isEnabled
             wSet["orientationMode"] = s.orientationMode
             wSet["title"] = s.title
@@ -220,6 +227,7 @@ class WidgetManager: ObservableObject {
             for w in s.widgetIDs {
                 var widget: [String: Any] = [:]
                 widget["widgetID"] = w.module.rawValue
+                widget["id"] = w.id
                 for c in w.config.keys {
                     widget[c] = w.config[c]
                 }
@@ -228,6 +236,7 @@ class WidgetManager: ObservableObject {
             wSet["widgetIDs"] = widgetIDs
             
             let blurDetails: [String: Any] = [
+                "id": s.blurDetails.id,
                 "hasBlur": s.blurDetails.hasBlur,
                 "cornerRadius": Int(s.blurDetails.cornerRadius),
                 "styleDark": s.blurDetails.styleDark,
@@ -237,6 +246,7 @@ class WidgetManager: ObservableObject {
             
             wSet["dynamicColor"] = s.dynamicColor
             let colorDetails: [String: Any] = [
+                "id": s.colorDetails.id,
                 "usesCustomColor": s.colorDetails.usesCustomColor,
                 "color": s.colorDetails.color.data as Any
             ]
@@ -266,7 +276,7 @@ class WidgetManager: ObservableObject {
     // MARK: Widget Modification Management
     // adding widgets
     public func addWidget(widgetSet: WidgetSetStruct, module: WidgetModule, config: [String: Any], save: Bool = true) -> WidgetIDStruct {
-        let newWidget: WidgetIDStruct = .init(module: module, config: config)
+        let newWidget: WidgetIDStruct = .init(id:UUID().uuidString, module: module, config: config)
         for (i, wSet) in widgetSets.enumerated() {
             if wSet == widgetSet {
                 widgetSets[i].widgetIDs.append(newWidget)
@@ -349,6 +359,7 @@ class WidgetManager: ObservableObject {
     public func createWidgetSet(title: String, anchor: Int = 0, save: Bool = true) {
         // create a widget set with the default values
         addWidgetSet(widgetSet: .init(
+            id: UUID().uuidString,
             isEnabled: true,
             orientationMode: 0,
             title: title,
@@ -368,6 +379,7 @@ class WidgetManager: ObservableObject {
             widgetIDs: [],
             
             blurDetails: .init(
+                id: UUID().uuidString,
                 hasBlur: false,
                 cornerRadius: 4,
                 styleDark: true,

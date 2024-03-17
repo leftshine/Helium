@@ -1,9 +1,10 @@
 // https://github.com/DGh0st/HSWidgets
 #import "../../helpers/private_headers/Weather/WeatherHeaders.h"
-
 @class City, WATodayModel;
 
-@interface HWeatherController : NSObject
+typedef void (^TWCWeatherDataCallbackBlock)(NSDictionary *weatherData);
+
+@interface TWCWeather : NSObject
 @property (nonatomic, strong) WALockscreenWidgetViewController *widgetVC;
 @property (nonatomic, strong) City *myCity;
 @property (nonatomic, strong) WATodayModel *todayModel;
@@ -11,6 +12,7 @@
 @property (nonatomic) BOOL useFahrenheit;
 @property (nonatomic) BOOL useMetric;
 @property (nonatomic) NSLocale *locale;
+@property (nonatomic) double fontSize;
 
 +(instancetype)sharedInstance;
 -(NSString *)locationName;
@@ -42,7 +44,7 @@
 -(NSString *)precipitationPast24Hours;
 -(NSString *)precipitationPast24Hours:(BOOL) withUnit;
 -(NSString *)airQualityIndex;
--(NSDictionary *)weatherData:(double) fontSize;
 
--(void)updateModel;
+-(NSDictionary *)getWeatherData;
+-(void)updateModel:(TWCWeatherDataCallbackBlock) dataCallback;
 @end

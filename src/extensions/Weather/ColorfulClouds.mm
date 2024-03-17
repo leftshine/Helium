@@ -2,6 +2,7 @@
 #import "WeatherUtils.h"
 #import <CoreLocation/CoreLocation.h>
 #import "../UsefulFunctions.h"
+#import "../LocationUtils.h"
 #import "../../helpers/private_headers/Weather/WeatherWindSpeedFormatter.h"
 
 static NSString *UserAgent = @"Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_3_3 like Mac OS X; en-us) AppleWebKit/533.17.9 (KHTML, like Gecko) Version/5.0.2 Mobile/8J2 Safari/6533.18.5";
@@ -444,10 +445,10 @@ static NSString *UserAgent = @"Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_3_3 like 
 	return airQualityIndexString ?: @"--";
 }
 
-- (NSDictionary *)getWeatherData:(double) fontSize {
+- (NSDictionary *)getWeatherData {
 	NSMutableDictionary *data = [NSMutableDictionary dictionary];
     [data setObject:self.conditionsDescription forKey:@"conditions"];
-    [data setObject:[self conditionsImage:fontSize] forKey:@"conditions_image"];
+    [data setObject:[self conditionsImage:self.fontSize] forKey:@"conditions_image"];
     [data setObject:self.conditionsEmoji forKey:@"conditions_emoji"];
     [data setObject:self.locationName forKey:@"location"];
 
@@ -492,24 +493,55 @@ static NSString *UserAgent = @"Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_3_3 like 
     return data;
 }
 
-- (void)updateWeather:(NSString *)location {
+- (void)updateWeather:(CCWeatherDataCallbackBlock) dataCallback {
+    __weak typeof(self) weakSelf = self;
     long long nowTime = [self getCurrentTimestamp];
-    // NSLog(@"boom time:%lld", nowTime);
-    // NSLog(@"boom time:%lld", nowTime - self.lastUpdateTime);
-
-    // NSLog(@"boom location:%@", location);
-    // NSLog(@"boom location:%@", self.lastLocation);
-    
-    // Check if location unchanged or more than 60 seconds since last update.
-    if (![self.lastLocation isEqualToString:location] || nowTime - self.lastUpdateTime > 60) {
-        // Fetch current, daily, and hourly weather for the location.
-        self.weatherData = [self fetchWeatherForLocation:location];
-        
-        self.city = [WeatherUtils getPlacemarkByGeocode:location];
-        // Update last update time and location.
-        self.lastUpdateTime = nowTime;
-        self.lastLocation = location;
+    dispatch_queue_t concurrentQueue = dispatch_queue_create("weatherQueue", DISPATCH_QUEUE_SERIAL);
+    if (self.useCurrentLocation) {
+        [self updateLocation:^(NSString *location) {
+            dispatch_async(concurrentQueue, ^{
+                // NSLog(@"boom location %@", location);
+                if (location != nil && [location length] > 0 && (nowTime - weakSelf.lastUpdateTime > 60)) {
+                    // Fetch current, daily, and hourly weather for the location.
+                    weakSelf.weatherData = [weakSelf fetchWeatherForLocation:location];
+                    
+                    weakSelf.city = [WeatherUtils getPlacemarkByGeocode:location];
+                    // NSLog(@"boom city %@", weakSelf.city);
+                    
+                    // Update last update time and location.
+                    weakSelf.lastUpdateTime = nowTime;
+                }
+                dataCallback([weakSelf getWeatherData]);
+            });
+        }];
+    } else {
+        // Check if location unchanged or more than 60 seconds since last update.
+        if ((self.location != nil && [self.location length] > 0) && (![self.lastLocation isEqualToString:self.location] || nowTime - self.lastUpdateTime > 60)) {
+            // Fetch current, daily, and hourly weather for the location.
+            self.weatherData = [self fetchWeatherForLocation:self.location];
+            
+            self.city = [WeatherUtils getPlacemarkByGeocode:self.location];
+            
+            // Update last update time and location.
+            self.lastUpdateTime = nowTime;
+            self.lastLocation = self.location;
+        }
+        dataCallback([self getWeatherData]);
     }
+}
+
+- (void)updateLocation:(CCWeatherLocationCallbackBlock) locationCallback {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[LocationUtils sharedInstance] getCurrentLocation: ^(NSError *error, NSString *location) {
+            if (!error) {
+                // NSLog(@"boom %@", location);
+                locationCallback(location);
+            } else {
+                // NSLog(@"boom error:%@", error);
+                locationCallback(nil);
+            }
+        }];
+    });
 }
 
 - (long long)getCurrentTimestamp {

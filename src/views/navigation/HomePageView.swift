@@ -81,6 +81,12 @@ struct HomePageView: View {
         if UserDefaults.standard.string(forKey: "dateLocale", forPath: USER_DEFAULTS_PATH) == nil {
             UserDefaults.standard.setValue(Locale.current.languageCode!, forKey: "dateLocale", forPath: USER_DEFAULTS_PATH)
         }
+
+        let version = UserDefaults.standard.integer(forKey: "configVersion", forPath: USER_DEFAULTS_PATH)
+        if !firstRun && version < configVersion {
+            UIApplication.shared.alert(title: NSLocalizedString("Configuration File Update", comment: ""), body: NSLocalizedString("Please add a widget for configuration file update, you can delete it when it's done, otherwise you may crash!", comment: ""))
+        }
+        UserDefaults.standard.setValue(configVersion, forKey: "configVersion", forPath: USER_DEFAULTS_PATH)
       }
       .navigationTitle(Text(NSLocalizedString("Helium", comment: "")))
     }

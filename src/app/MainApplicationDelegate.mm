@@ -4,7 +4,7 @@
 
 #import "../hud/HUDHelper.h"
 #import "../extensions/FontUtils.h"
-#import "../extensions/Weather/HWeatherController.h"
+#import "../extensions/Weather/TWCWeather.h"
 #import "../helpers/private_headers/UIApplication+Private.h"
 
 @implementation MainApplicationDelegate
@@ -25,7 +25,7 @@
     [FontUtils loadFontsFromFolder:[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject]];
     [FontUtils loadAllFonts];
 
-    [HWeatherController sharedInstance];
+    [TWCWeather sharedInstance];
 
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     [self.window setRootViewController:[[[ContentInterface alloc] init] createUI]];

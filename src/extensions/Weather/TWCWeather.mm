@@ -2,7 +2,7 @@
 // https://github.com/CreatureSurvive/CSWeather
 // https://github.com/midnightchip/Asteroid
 // https://github.com/Tr1Fecta-7/WeatherGround
-#import "HWeatherController.h"
+#import "TWCWeather.h"
 #import "../UsefulFunctions.h"
 
 enum {
@@ -12,23 +12,14 @@ enum {
 };
 typedef NSUInteger ConditionImageType;
 
-@implementation HWeatherController
+@implementation TWCWeather
 +(instancetype)sharedInstance {
-	static HWeatherController *_sharedController = nil;
+	static TWCWeather *_sharedController = nil;
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
 		_sharedController = [[self alloc] init];
 	});
 	return _sharedController;
-}
-
-+(WFTemperatureFormatter *)sharedTemperatureFormatter {
-	static WFTemperatureFormatter *_temperatureFormatter = nil;
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		_temperatureFormatter = [[WFTemperatureFormatter alloc] init];
-	});
-	return _temperatureFormatter;
 }
 
 +(NSMeasurementFormatter *)sharedNSMeasurementFormatter {
@@ -48,7 +39,7 @@ typedef NSUInteger ConditionImageType;
 	if (self != nil) {
 		self.useFahrenheit = NO;
 		self.useMetric = YES;
-		[self updateModel];
+		[self updateModel:nil];
 	}
 	return self;
 }
@@ -65,13 +56,15 @@ typedef NSUInteger ConditionImageType;
 }
 
 -(NSString *)temperature:(BOOL) withSymbol {
-	WFTemperatureFormatter *temperatureFormatter = [[self class] sharedTemperatureFormatter];
-	[temperatureFormatter setOutputUnit:[self useFahrenheit] ? 1 : 2];
-	if ([temperatureFormatter respondsToSelector:@selector(setIncludeDegreeSymbol:)])
-		[temperatureFormatter setIncludeDegreeSymbol:withSymbol];
-
-	NSString *temperatureString = nil;
-	temperatureString = [temperatureFormatter stringForObjectValue:self.todayModel.forecastModel.currentConditions.temperature];
+    NSString *temperatureString = nil;
+	NSMeasurementFormatter *formatter = [[self class] sharedNSMeasurementFormatter];
+	formatter.locale = self.locale;
+	NSMeasurement *measurement = [[NSMeasurement alloc] initWithDoubleValue:self.todayModel.forecastModel.currentConditions.temperature.celsius unit:NSUnitTemperature.celsius];
+	measurement = [self useFahrenheit] ? [measurement measurementByConvertingToUnit:NSUnitTemperature.fahrenheit] : [measurement measurementByConvertingToUnit:NSUnitTemperature.celsius];
+	if (withSymbol) 
+		temperatureString = [formatter stringFromMeasurement:measurement];
+	else
+		temperatureString = [self formatFloat:measurement.doubleValue];
 	return temperatureString ?: @"--";
 }
 
@@ -80,13 +73,15 @@ typedef NSUInteger ConditionImageType;
 }
 
 -(NSString *)feelsLike:(BOOL) withSymbol {
-	WFTemperatureFormatter *temperatureFormatter = [[self class] sharedTemperatureFormatter];
-	[temperatureFormatter setOutputUnit:[self useFahrenheit] ? 1 : 2];
-	if ([temperatureFormatter respondsToSelector:@selector(setIncludeDegreeSymbol:)])
-		[temperatureFormatter setIncludeDegreeSymbol:withSymbol];
-
 	NSString *temperatureString = nil;
-	temperatureString = [temperatureFormatter stringForObjectValue:self.todayModel.forecastModel.currentConditions.feelsLike];
+	NSMeasurementFormatter *formatter = [[self class] sharedNSMeasurementFormatter];
+	formatter.locale = self.locale;
+	NSMeasurement *measurement = [[NSMeasurement alloc] initWithDoubleValue:self.todayModel.forecastModel.currentConditions.feelsLike.celsius unit:NSUnitTemperature.celsius];
+	measurement = [self useFahrenheit] ? [measurement measurementByConvertingToUnit:NSUnitTemperature.fahrenheit] : [measurement measurementByConvertingToUnit:NSUnitTemperature.celsius];
+	if (withSymbol) 
+		temperatureString = [formatter stringFromMeasurement:measurement];
+	else
+		temperatureString = [self formatFloat:measurement.doubleValue];
 	return temperatureString ?: @"--";
 }
 
@@ -275,20 +270,22 @@ typedef NSUInteger ConditionImageType;
 }
 
 -(NSString *)lowDescription:(BOOL) withSymbol {
-	WFTemperatureFormatter *temperatureFormatter = [[self class] sharedTemperatureFormatter];
-	[temperatureFormatter setOutputUnit:[self useFahrenheit] ? 1 : 2];
-	if ([temperatureFormatter respondsToSelector:@selector(setIncludeDegreeSymbol:)])
-		[temperatureFormatter setIncludeDegreeSymbol:withSymbol];
-
-	NSString *lowTemperature = @"--";
+    NSString *temperatureString = nil;
+	NSMeasurementFormatter *formatter = [[self class] sharedNSMeasurementFormatter];
+	formatter.locale = self.locale;
 
 	NSArray *dailyForecasts = self.todayModel.forecastModel.dailyForecasts;
 	if (dailyForecasts != nil && dailyForecasts.count > 0) {
 		WADayForecast *todayForecast = dailyForecasts.firstObject;
-		lowTemperature = [temperatureFormatter stringForObjectValue:todayForecast.low];
-	}
+		NSMeasurement *measurement = [[NSMeasurement alloc] initWithDoubleValue:todayForecast.low.celsius unit:NSUnitTemperature.celsius];
+		measurement = [self useFahrenheit] ? [measurement measurementByConvertingToUnit:NSUnitTemperature.fahrenheit] : [measurement measurementByConvertingToUnit:NSUnitTemperature.celsius];
 
-	return lowTemperature;
+		if (withSymbol) 
+			temperatureString = [formatter stringFromMeasurement:measurement];
+		else
+			temperatureString = [self formatFloat:measurement.doubleValue];
+	}
+	return temperatureString ?: @"--";
 }
 
 -(NSString *)highDescription {
@@ -296,20 +293,22 @@ typedef NSUInteger ConditionImageType;
 }
 
 -(NSString *)highDescription:(BOOL) withSymbol {
-	WFTemperatureFormatter *temperatureFormatter = [[self class] sharedTemperatureFormatter];
-	[temperatureFormatter setOutputUnit:[self useFahrenheit] ? 1 : 2];
-	if ([temperatureFormatter respondsToSelector:@selector(setIncludeDegreeSymbol:)])
-		[temperatureFormatter setIncludeDegreeSymbol:withSymbol];
-
-	NSString *highTemperature = @"--";
+	NSString *temperatureString = nil;
+	NSMeasurementFormatter *formatter = [[self class] sharedNSMeasurementFormatter];
+	formatter.locale = self.locale;
 
 	NSArray *dailyForecasts = self.todayModel.forecastModel.dailyForecasts;
 	if (dailyForecasts != nil && dailyForecasts.count > 0) {
 		WADayForecast *todayForecast = dailyForecasts.firstObject;
-		highTemperature = [temperatureFormatter stringForObjectValue:todayForecast.high];
-	}
+		NSMeasurement *measurement = [[NSMeasurement alloc] initWithDoubleValue:todayForecast.high.celsius unit:NSUnitTemperature.celsius];
+		measurement = [self useFahrenheit] ? [measurement measurementByConvertingToUnit:NSUnitTemperature.fahrenheit] : [measurement measurementByConvertingToUnit:NSUnitTemperature.celsius];
 
-	return highTemperature;
+		if (withSymbol) 
+			temperatureString = [formatter stringFromMeasurement:measurement];
+		else
+			temperatureString = [self formatFloat:measurement.doubleValue];
+	}
+	return temperatureString ?: @"--";
 }
 
 -(NSString *)windSpeed {
@@ -427,11 +426,11 @@ typedef NSUInteger ConditionImageType;
 	return @"--";
 }
 
--(NSDictionary *)weatherData:(double) fontSize {
+-(NSDictionary *)getWeatherData {
 	NSMutableDictionary *data = [NSMutableDictionary dictionary];
 	[data setObject:self.conditionsDescription forKey:@"conditions"];
 	[data setObject:self.conditionsImage forKey:@"conditions_image2"];
-	[data setObject:[self conditionsImage2:fontSize] forKey:@"conditions_image"];
+	[data setObject:[self conditionsImage2:self.fontSize] forKey:@"conditions_image"];
 	[data setObject:self.conditionsEmoji forKey:@"conditions_emoji"];
 	[data setObject:self.locationName forKey:@"location"];
 	[data setObject:self.UVIndex forKey:@"uv_index"];
@@ -461,8 +460,8 @@ typedef NSUInteger ConditionImageType;
 	[data setObject:self.visibility forKey:@"visibility"];
 	[data setObject:[self visibility:YES] forKey:@"visibility_with_unit"];
 
-	[data setObject:self.precipitationNextHour forKey:@"precipitation_next_hour"];
-	[data setObject:[self precipitationNextHour:YES] forKey:@"precipitation_next_hour_with_symbol"];
+	[data setObject:self.precipitationNextHour forKey:@"precipitation_percent_next_hour"];
+	[data setObject:[self precipitationNextHour:YES] forKey:@"precipitation_percent_next_hour_with_symbol"];
 
 	[data setObject:self.precipitationPast24Hours forKey:@"precipitation_24h"];
 	[data setObject:[self precipitationPast24Hours:YES] forKey:@"precipitation_24h_with_unit"];
@@ -497,7 +496,7 @@ typedef NSUInteger ConditionImageType;
     }
 }
 
--(void)updateModel {
+-(void)updateModel:(TWCWeatherDataCallbackBlock) dataCallback {
 	if (!self.widgetVC) {
         self.widgetVC = [[WALockscreenWidgetViewController alloc] init];
 
@@ -552,6 +551,8 @@ typedef NSUInteger ConditionImageType;
 	if (self.widgetVC.todayModel.forecastModel.city) {
         self.todayModel = self.widgetVC.todayModel;
     }
+
+	if (dataCallback != nil) dataCallback([self getWeatherData]);
 }
 
 @end

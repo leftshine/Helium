@@ -15,6 +15,7 @@ struct EditWidgetSetView: View {
     
     @State var showingAddView: Bool = false
 
+    @State var id: String = UUID().uuidString
     @State var isEnabled: Bool = true
     @State var orientationMode: Int = 0
     @State var nameInput: String = ""
@@ -34,11 +35,13 @@ struct EditWidgetSetView: View {
     @State var widgetIDs: [WidgetIDStruct] = []
     @State var updatedWidgetIDs: Bool = false
     
+    @State var blurID: String = UUID().uuidString
     @State var hasBlur: Bool = false
     @State var cornerRadius: Double = 4
     @State var blurStyle: Int = 1
     @State var blurAlpha: Double = 1.0
     
+    @State var colorID: String = UUID().uuidString
     @State var usesCustomColor: Bool = false
     @State var customColor: Color = .white
     @State var dynamicColor: Bool = true
@@ -324,7 +327,7 @@ struct EditWidgetSetView: View {
                                         .bold()
                                     Spacer()
                                 }
-                                BetterSlider(value: $cornerRadius, bounds: 0...30, step: 1)
+                                BetterSlider(value: $cornerRadius, bounds: 0...10, step: 1)
                                     .onChange(of: cornerRadius) { _ in
                                         changesMade = true
                                     }
@@ -489,6 +492,7 @@ struct EditWidgetSetView: View {
                     return
                 }
                 currentWidgetSet = widgetSet
+                id = widgetSet.id
                 isEnabled = widgetSet.isEnabled
                 orientationMode = widgetSet.orientationMode
                 nameInput = widgetSet.title
@@ -510,11 +514,13 @@ struct EditWidgetSetView: View {
                     updatedWidgetIDs = true
                 }
                 
+                blurID = widgetSet.blurDetails.id
                 hasBlur = widgetSet.blurDetails.hasBlur
                 cornerRadius = widgetSet.blurDetails.cornerRadius
                 blurStyle = widgetSet.blurDetails.styleDark ? 1 : 0
                 blurAlpha = widgetSet.blurDetails.alpha
                 
+                colorID = widgetSet.colorDetails.id
                 dynamicColor = widgetSet.dynamicColor
                 usesCustomColor = widgetSet.colorDetails.usesCustomColor
                 customColor = Color(widgetSet.colorDetails.color)
@@ -566,6 +572,7 @@ struct EditWidgetSetView: View {
             })
         }
         widgetManager.editWidgetSet(widgetSet: widgetSet, newSetDetails: .init(
+            id: id,
             isEnabled: isEnabled,
             orientationMode: orientationMode,
             title: nameInput,
@@ -585,6 +592,7 @@ struct EditWidgetSetView: View {
             widgetIDs: [],
             
             blurDetails: .init(
+                id: blurID,
                 hasBlur: hasBlur,
                 cornerRadius: cornerRadius,
                 styleDark: blurStyle == 1 ? true : false,
@@ -593,6 +601,7 @@ struct EditWidgetSetView: View {
             
             dynamicColor: dynamicColor,
             colorDetails: .init(
+                id: colorID,
                 usesCustomColor: usesCustomColor,
                 color: UIColor(customColor)
             ),

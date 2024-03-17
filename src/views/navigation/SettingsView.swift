@@ -9,16 +9,13 @@ import Foundation
 import SwiftUI
 
 let buildNumber: Int = 0
+let configVersion: Int = 1
 let DEBUG_MODE_ENABLED = false
 let USER_DEFAULTS_PATH = "/var/mobile/Library/Preferences/com.leemin.helium.plist"
 
 // MARK: Settings View
 // TODO: This
 struct SettingsView: View {
-    // Debug Variables
-    @State var sideWidgetSize: Int = 100
-    @State var centerWidgetSize: Int = 100
-    
     // Preference Variables
     @State var apiKey: String = ""
     @State var dateLocale: String = Locale.current.languageCode!

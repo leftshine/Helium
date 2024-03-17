@@ -1,4 +1,5 @@
 #import "WeatherUtils.h"
+#import "../LocationUtils.h"
 #import <CoreLocation/CoreLocation.h>
 
 @implementation WeatherUtils
@@ -85,13 +86,13 @@
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
     [geocoder reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *error) {
         NSLog(@"boom error: %@", error);
-        NSLog(@"boom : %@", placemarks);
+        // NSLog(@"boom : %@", placemarks);
         if (placemarks != nil && [placemarks count] > 0) {
             placemark = ((CLPlacemark*)[placemarks firstObject]);
-            NSArray *formattedAddressLines = placemark.addressDictionary[@"FormattedAddressLines"];
-            NSString *addressString = [formattedAddressLines componentsJoinedByString:@"\n"];
-            NSLog(@"boom Address: %@", placemark.addressDictionary);
-            NSLog(@"boom : %@", addressString);
+            // NSArray *formattedAddressLines = placemark.addressDictionary[@"FormattedAddressLines"];
+            // NSString *addressString = [formattedAddressLines componentsJoinedByString:@"\n"];
+            // NSLog(@"boom Address: %@", placemark.addressDictionary);
+            // NSLog(@"boom : %@", addressString);
         }
         dispatch_semaphore_signal(semaphore);
     }];

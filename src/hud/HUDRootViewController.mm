@@ -2,14 +2,10 @@
 #import <objc/runtime.h>
 
 #import "HUDRootViewController.h"
-#import "AnyBackdropView.h"
 #import "Helium-Swift.h"
 
-#import "../widgets/WidgetManager.h"
+#import "../widgets/WidgetsContainerView.h"
 #import "../extensions/UsefulFunctions.h"
-#import "../extensions/FontUtils.h"
-#import "../extensions/EZTimer.h"
-#import "../extensions/Weather/WeatherUtils.h"
 
 #import "../helpers/private_headers/FBSOrientationUpdate.h"
 #import "../helpers/private_headers/FBSOrientationObserver.h"
@@ -90,9 +86,8 @@ static void ReloadHUD
 {
     // NSLog(@"boom ReloadHUD");
     HUDRootViewController *rootViewController = (__bridge HUDRootViewController *)observer;
-    // [rootViewController createWidgetSets];
     [rootViewController reloadUserDefaults];
-    [rootViewController resetLoopTimer];
+    [rootViewController reloadWidgets];
     [rootViewController updateViewConstraints];
 }
 
@@ -103,14 +98,10 @@ static void ReloadHUD
     NSMutableArray <NSLayoutConstraint *> *_constraints;
     FBSOrientationObserver *_orientationObserver;
     // view object arrays
-    NSMutableArray <UIVisualEffectView *> *_blurViews;
-    NSMutableArray <UILabel *> *_labelViews;
+    NSMutableArray <WidgetsContainerView *> *_containerViews;
     
-    NSMutableArray <AnyBackdropView *> *_backdropViews;
-    NSMutableArray <UILabel *> *_maskLabelViews;
-
     UIView *_contentView;
-    
+
     UIInterfaceOrientation _orientation;
 
     UIView *_horizontalLine;
@@ -122,7 +113,7 @@ static void ReloadHUD
     int token;
     notify_register_dispatch(NOTIFY_RELOAD_HUD, &token, dispatch_get_main_queue(), ^(int token) {
         [self reloadUserDefaults];
-        [self resetLoopTimer];
+        [self reloadWidgets];
         [self updateViewConstraints];
     });
 
@@ -178,84 +169,6 @@ static void ReloadHUD
         [_horizontalLine setHidden:YES];
         [_verticalLine setHidden:YES];
     }
-
-    NSArray *widgetProps = [self widgetProperties];
-    for (int i = 0; i < [widgetProps count]; i++) {
-        UIVisualEffectView *blurView = [_blurViews objectAtIndex:i];
-        UILabel *labelView = [_labelViews objectAtIndex:i];
-        AnyBackdropView *backdropView = [_backdropViews objectAtIndex: i];
-        UILabel *maskLabelView = [_maskLabelViews objectAtIndex:i];
-
-        NSDictionary *properties = [widgetProps objectAtIndex:i];
-        NSInteger orientationMode = getIntFromDictKey(properties, @"orientationMode", 0);
-        NSDictionary *blurDetails = [properties valueForKey:@"blurDetails"] ? [properties valueForKey:@"blurDetails"] : @{@"hasBlur" : @(NO)};
-        UIBlurEffect *blurEffect = [
-            UIBlurEffect effectWithStyle: getBoolFromDictKey(blurDetails, @"styleDark", true) ? UIBlurEffectStyleSystemMaterialDark : UIBlurEffectStyleSystemMaterialLight
-        ];
-        BOOL hasBlur = getBoolFromDictKey(blurDetails, @"hasBlur");
-        NSInteger blurCornerRadius = getIntFromDictKey(blurDetails, @"cornerRadius", 4);
-        double blurAlpha = getDoubleFromDictKey(blurDetails, @"alpha", 1.0);
-        NSInteger textAlign = getIntFromDictKey(properties, @"textAlignment", 1);
-        NSDictionary *colorDetails = [properties valueForKey:@"colorDetails"] ? [properties valueForKey:@"colorDetails"] : @{@"usesCustomColor" : @(NO)};
-        BOOL usesCustomColor = getBoolFromDictKey(colorDetails, @"usesCustomColor");
-        UIColor *textColor = [UIColor whiteColor];
-        if (usesCustomColor && [colorDetails valueForKey:@"color"]) {
-            NSData *customColorData = [colorDetails valueForKey:@"color"];
-            textColor = [NSKeyedUnarchiver unarchiveObjectWithData:customColorData];
-        }
-        NSString *fontName = getStringFromDictKey(properties, @"fontName", @"System Font");
-        UIFont *textFont = [FontUtils loadFontWithName:fontName size: getDoubleFromDictKey(properties, @"fontSize", 10) bold: getBoolFromDictKey(properties, @"textBold") italic: getBoolFromDictKey(properties, @"textItalic")];
-        double textAlpha = getDoubleFromDictKey(properties, @"textAlpha", 1.0);
-        BOOL dynamicColor = getBoolFromDictKey(properties, @"dynamicColor", true);
-        
-        labelView.textAlignment = textAlign;
-        labelView.font = textFont;
-        maskLabelView.textAlignment = textAlign;
-        maskLabelView.font = textFont;
-        maskLabelView.textColor = [UIColor whiteColor];
-
-        if (dynamicColor) {
-            [blurView setEffect:nil];
-            [blurView setHidden:YES];
-            [labelView setHidden:YES];
-            [backdropView setHidden:NO];
-            [maskLabelView setHidden:NO];
-            maskLabelView.alpha = textAlpha;
-        } else {
-            labelView.textColor = textColor;
-            labelView.alpha = textAlpha;
-            [labelView setHidden:NO];
-            [backdropView setHidden:YES];
-            [maskLabelView setHidden:YES];
-            if (hasBlur) {
-                [blurView setEffect:blurEffect];
-                [blurView setHidden:NO];
-                blurView.layer.cornerRadius = blurCornerRadius;
-                blurView.alpha = blurAlpha;
-            } else {
-                [blurView setEffect:nil];
-                [blurView setHidden:YES];
-            }
-        }
-
-        if ((orientationMode == 1 && [self isLandscapeOrientation])
-            || (orientationMode == 2 && ![self isLandscapeOrientation])) {
-            [blurView setHidden:YES];
-            [labelView setHidden:YES];
-            [backdropView setHidden:YES];
-            [maskLabelView setHidden:YES];
-        }
-
-        if ([self debugBorder]) {
-            labelView.layer.borderWidth = 1.0;
-            // backdropView.layer.borderWidth = 1.0;
-            maskLabelView.layer.borderWidth = 1.0;
-        } else {
-            labelView.layer.borderWidth = 0.0;
-            // backdropView.layer.borderWidth = 0.0;
-            maskLabelView.layer.borderWidth = 0.0;
-        }
-    }
 }
 
 - (BOOL) debugBorder
@@ -263,34 +176,6 @@ static void ReloadHUD
     [self loadUserDefaults:NO];
     NSNumber *mode = [_userDefaults objectForKey: @"debugBorder"];
     return mode ? [mode boolValue] : NO;
-}
-
-- (NSString*) dateLocale
-{
-    [self loadUserDefaults:NO];
-    NSString *locale = [_userDefaults objectForKey: @"dateLocale"];
-    return locale ? locale : @"en_US";
-}
-
-- (NSInteger) weatherProvider
-{
-    [self loadUserDefaults:NO];
-    NSInteger provider = getIntFromDictKey(_userDefaults, @"weatherProvider", 0);
-    return provider;
-}
-
-- (NSString*) weatherApiKey
-{
-    [self loadUserDefaults:NO];
-    NSString *api = [_userDefaults objectForKey: @"weatherApiKey"];
-    return api ? api : @"";
-}
-
-- (BOOL) freeSub
-{
-    [self loadUserDefaults:NO];
-    NSNumber *free = [_userDefaults objectForKey: @"freeSub"];
-    return free ? [free boolValue] : NO;
 }
 
 - (NSArray*) widgetProperties
@@ -318,10 +203,7 @@ static void ReloadHUD
     self = [super init];
     if (self) {
         _constraints = [NSMutableArray array];
-        _blurViews = [NSMutableArray array];
-        _labelViews = [NSMutableArray array];
-        _backdropViews = [NSMutableArray array];
-        _maskLabelViews = [NSMutableArray array];
+        _containerViews = [NSMutableArray array];
         _orientationObserver = [[objc_getClass("FBSOrientationObserver") alloc] init];
         __weak HUDRootViewController *weakSelf = self;
         [_orientationObserver setHandler:^(FBSOrientationUpdate *orientationUpdate) {
@@ -365,7 +247,7 @@ static void ReloadHUD
     [_verticalLine setHidden:YES];
     [_contentView addSubview:_verticalLine];
 
-    [self createWidgetSetsView];
+    [self reloadWidgets];
     notify_post(NOTIFY_RELOAD_HUD);
 }
 
@@ -376,101 +258,17 @@ static void ReloadHUD
 }
 
 #pragma mark - Timer and View Updating
-
-- (void)resetLoopTimer
-{
-    NSArray *widgetProps = [self widgetProperties];
-    for (int i = 0; i < [widgetProps count]; i++) {
-        UIVisualEffectView *blurView = [_blurViews objectAtIndex:i];
-        UILabel *labelView = [_labelViews objectAtIndex:i];
-        AnyBackdropView *backdropView = [_backdropViews objectAtIndex: i];
-        UILabel *maskLabelView = [_maskLabelViews objectAtIndex:i];
-
-        NSDictionary *properties = [widgetProps objectAtIndex:i];
-        if (!labelView || !maskLabelView || !properties)
-            break;
-        NSArray *identifiers = [properties objectForKey: @"widgetIDs"] ? [properties objectForKey: @"widgetIDs"] : @[];
-        double fontSize = [properties objectForKey: @"fontSize"] ? [[properties objectForKey: @"fontSize"] doubleValue] : 10.0;
-        double updateInterval = getDoubleFromDictKey(properties, @"updateInterval", 1.0);
-        BOOL isEnabled = getBoolFromDictKey(properties, @"isEnabled");
-        BOOL autoResizes = getBoolFromDictKey(properties, @"autoResizes");
-        float width = getDoubleFromDictKey(properties, @"scale", 50.0);
-        float height = getDoubleFromDictKey(properties, @"scaleY", 12.0);
-        if (isEnabled) {
-            [[EZTimer shareInstance] timer:[NSString stringWithFormat:@"labelview%d", i] timerInterval:updateInterval leeway:0.1 resumeType:EZTimerResumeTypeNow queue:EZTimerQueueTypeConcurrent queueName:@"update" repeats:YES action:^(NSString *timerName) {
-                [self updateLabel: labelView updateMaskLabel: maskLabelView backdropView: backdropView blurView: blurView identifiers: identifiers fontSize: fontSize autoResizes: autoResizes width: width height: height properties: properties];
-            }];
-        } else {
-            [blurView setEffect:nil];
-            [blurView setHidden:YES];
-            [labelView setHidden:YES];
-            [backdropView setHidden:YES];
-            [maskLabelView setHidden:YES];
-            [[EZTimer shareInstance] cancel:[NSString stringWithFormat:@"labelview%d", i]];
-        }
-    }
-}
-
-- (void) updateLabel:(UILabel *) label updateMaskLabel:(UILabel *) maskLabel backdropView:(AnyBackdropView *) backdropView blurView:(UIVisualEffectView *) blurView identifiers:(NSArray *) identifiers fontSize:(double) fontSize autoResizes:(BOOL) autoResizes width:(CGFloat) width height:(CGFloat) height properties:(NSDictionary *) properties
-{
-#if DEBUG
-    os_log_debug(OS_LOG_DEFAULT, "updateLabel");
-#endif
-    NSAttributedString *attributedText = formattedAttributedString(identifiers, fontSize, label.textColor, label.font, [self dateLocale], [self weatherProvider], [self weatherApiKey], [self freeSub]);
-    
-    NSDictionary *blurDetails = [properties valueForKey:@"blurDetails"] ? [properties valueForKey:@"blurDetails"] : @{@"hasBlur" : @(NO)};
-    BOOL hasBlur = getBoolFromDictKey(blurDetails, @"hasBlur");
-    BOOL dynamicColor = getBoolFromDictKey(properties, @"dynamicColor", true);
-    NSInteger orientationMode = getIntFromDictKey(properties, @"orientationMode", 0);
-
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if (attributedText) {
-            [label setAttributedText: attributedText];
-            [maskLabel setAttributedText: attributedText];
-            if (dynamicColor || attributedText.length == 0) {
-                [blurView setHidden: YES];
-            } else if (hasBlur && !((orientationMode == 1 && [self isLandscapeOrientation])
-                    || (orientationMode == 2 && ![self isLandscapeOrientation]))) {
-                [blurView setHidden:NO];
-            }
-            if (autoResizes) {
-                [self useSizeThatFitsZeroWithLabel:maskLabel];
-            } else {
-                [self useSizeThatFitsCustomWithLabel:maskLabel width: width height: height];
-            }
-        }
-    });
-}
-
-- (void) useSizeThatFitsZeroWithLabel:(UILabel *)label{
-    CGSize size = [label sizeThatFits:CGSizeZero];
-    label.frame = CGRectMake(label.frame.origin.x, label.frame.origin.y, size.width, size.height);
-}
-
-- (void) useSizeThatFitsCustomWithLabel:(UILabel *)label width:(CGFloat) width height:(CGFloat) height{
-    // CGSize size = [label sizeThatFits:CGSizeMake(width, height)];
-    label.frame = CGRectMake(label.frame.origin.x, label.frame.origin.y, width, height);
-}
-
 - (void)pauseLoopTimer
 {
-    NSArray *widgetProps = [self widgetProperties];
-    for (int i = 0; i < [widgetProps count]; i++) {
-        NSDictionary *properties = [widgetProps objectAtIndex:i];
-        if (!getBoolFromDictKey(properties, @"isEnabled"))
-            continue;
-        [[EZTimer shareInstance] pause:[NSString stringWithFormat:@"labelview%d", i]];
+    for (WidgetsContainerView *containerView in _containerViews) {
+        [containerView pauseTimer];
     }
 }
 
 - (void)resumeLoopTimer
 {
-    NSArray *widgetProps = [self widgetProperties];
-    for (int i = 0; i < [widgetProps count]; i++) {
-        NSDictionary *properties = [widgetProps objectAtIndex:i];
-        if (!getBoolFromDictKey(properties, @"isEnabled"))
-            continue;
-        [[EZTimer shareInstance] resume:[NSString stringWithFormat:@"labelview%d", i]];
+    for (WidgetsContainerView *containerView in _containerViews) {
+        [containerView resumeTimer];
     }
 }
 
@@ -480,48 +278,21 @@ static void ReloadHUD
     [self updateViewConstraints];
 }
 
-- (void)createWidgetSetsView
-{
-    // MARK: Create the Widgets
-    // MIGHT NEED OPTIMIZATION
+- (void)reloadWidgets {
+    for (WidgetsContainerView *widgetsContainerView in _containerViews) {
+        [widgetsContainerView removeFromSuperview];
+        [widgetsContainerView cancleTimer];
+    }
+    [_containerViews removeAllObjects];
+
     for (NSDictionary *properties in [self widgetProperties]) {
-        // create the blur
-        NSDictionary *blurDetails = [properties valueForKey:@"blurDetails"] ? [properties valueForKey:@"blurDetails"] : @{@"hasBlur" : @(NO)};
-        UIBlurEffect *blurEffect = [
-            UIBlurEffect effectWithStyle: getBoolFromDictKey(blurDetails, @"styleDark", true) ? UIBlurEffectStyleSystemMaterialDark : UIBlurEffectStyleSystemMaterialLight
-        ];
-        UIVisualEffectView *blurView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
-        blurView.layer.masksToBounds = YES;
-        blurView.translatesAutoresizingMaskIntoConstraints = NO;
-        [_contentView addSubview:blurView];
-        [_blurViews addObject:blurView];
-        // create the label
-        UILabel *labelView = [[UILabel alloc] initWithFrame: CGRectZero];
-        labelView.numberOfLines = 0;
-        labelView.lineBreakMode = NSLineBreakByWordWrapping;
-        labelView.translatesAutoresizingMaskIntoConstraints = NO;
-        labelView.layer.borderColor = [UIColor redColor].CGColor;
-        [labelView setContentHuggingPriority:UILayoutPriorityDefaultHigh forAxis:UILayoutConstraintAxisVertical];
-        [_contentView addSubview:labelView];
-        [_labelViews addObject:labelView];
-
-        // MARK: Adaptive Color Backdrop
-        // create backdrop view
-        AnyBackdropView *backdropView = [[AnyBackdropView alloc] init];
-        backdropView.translatesAutoresizingMaskIntoConstraints = NO;
-        backdropView.layer.borderColor = [UIColor redColor].CGColor;
-        [_contentView addSubview:backdropView];
-        [_backdropViews addObject:backdropView];
-
-        // create the mask label
-        UILabel *maskLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-        maskLabel.numberOfLines = 0;
-        maskLabel.lineBreakMode = NSLineBreakByWordWrapping;
-        maskLabel.translatesAutoresizingMaskIntoConstraints = NO;
-        maskLabel.layer.borderColor = [UIColor redColor].CGColor;
-        [maskLabel setContentHuggingPriority:UILayoutPriorityDefaultHigh forAxis:UILayoutConstraintAxisVertical];
-        [backdropView setMaskView:maskLabel];
-        [_maskLabelViews addObject:maskLabel];
+        WidgetsContainerView *containerView = [[WidgetsContainerView alloc] initWithFrame: CGRectZero];
+        containerView.viewID = getStringFromDictKey(properties, @"id");
+        [containerView reloadConfig];
+        [containerView reloadWidgets];
+        [containerView setLandscape:[self isLandscapeOrientation]];
+        [_containerViews addObject:containerView];
+        [_contentView addSubview:containerView];
     }
 }
 
@@ -605,15 +376,10 @@ static void ReloadHUD
     NSArray *widgetProps = [self widgetProperties];
     // DEFINITELY NEEDS OPTIMIZATION
     for (int i = 0; i < [widgetProps count]; i++) {
-        UIVisualEffectView *blurView = [_blurViews objectAtIndex:i];
-        UILabel *labelView = [_labelViews objectAtIndex:i];
-        AnyBackdropView *backdropView = [_backdropViews objectAtIndex:i];
-        // UILabel *maskLabelView = [_maskLabelViews objectAtIndex:i];
+        WidgetsContainerView *widgetsContainerView = [_containerViews objectAtIndex:i];
         NSDictionary *properties = [widgetProps objectAtIndex:i];
-        if (!blurView || !labelView || !properties)
+        if (!widgetsContainerView || !properties)
             break;
-        if (!getBoolFromDictKey(properties, @"isEnabled"))
-            continue;
         double offsetPX = getDoubleFromDictKey(properties, @"offsetPX");
         double offsetPY = getDoubleFromDictKey(properties, @"offsetPY");
         double offsetLX = getDoubleFromDictKey(properties, @"offsetLX");
@@ -623,40 +389,26 @@ static void ReloadHUD
 
         // set the vertical anchor
         if (anchorYSide == 1) {
-            [_constraints addObject:[labelView.centerYAnchor constraintEqualToAnchor:_contentView.centerYAnchor constant: ([self isLandscapeOrientation] ? offsetLY : offsetPY)]];
+            [_constraints addObject:[widgetsContainerView.centerYAnchor constraintEqualToAnchor:_contentView.centerYAnchor constant: ([self isLandscapeOrientation] ? offsetLY : offsetPY)]];
         } else if (anchorYSide == 0) {
-            [_constraints addObject:[labelView.topAnchor constraintEqualToAnchor:_contentView.topAnchor constant: ([self isLandscapeOrientation] ? offsetLY : offsetPY)]];
+            [_constraints addObject:[widgetsContainerView.topAnchor constraintEqualToAnchor:_contentView.topAnchor constant: ([self isLandscapeOrientation] ? offsetLY : offsetPY)]];
         } else {
-            [_constraints addObject:[labelView.bottomAnchor constraintEqualToAnchor:_contentView.bottomAnchor constant: ([self isLandscapeOrientation] ? offsetLY : offsetPY)]];
+            [_constraints addObject:[widgetsContainerView.bottomAnchor constraintEqualToAnchor:_contentView.bottomAnchor constant: ([self isLandscapeOrientation] ? offsetLY : offsetPY)]];
         }
         // set the horizontal anchor
         if (anchorSide == 1) {
-            [_constraints addObject:[labelView.centerXAnchor constraintEqualToAnchor:_contentView.centerXAnchor constant: ([self isLandscapeOrientation] ? offsetLX : offsetPX)]];
+            [_constraints addObject:[widgetsContainerView.centerXAnchor constraintEqualToAnchor:_contentView.centerXAnchor constant: ([self isLandscapeOrientation] ? offsetLX : offsetPX)]];
         } else if (anchorSide == 0) {
-            [_constraints addObject:[labelView.leadingAnchor constraintEqualToAnchor:_contentView.leadingAnchor constant: ([self isLandscapeOrientation] ? offsetLX : offsetPX)]];
+            [_constraints addObject:[widgetsContainerView.leadingAnchor constraintEqualToAnchor:_contentView.leadingAnchor constant: ([self isLandscapeOrientation] ? offsetLX : offsetPX)]];
         } else {
-            [_constraints addObject:[labelView.trailingAnchor constraintEqualToAnchor:_contentView.trailingAnchor constant: ([self isLandscapeOrientation] ? -offsetLX : -offsetPX)]];
+            [_constraints addObject:[widgetsContainerView.trailingAnchor constraintEqualToAnchor:_contentView.trailingAnchor constant: ([self isLandscapeOrientation] ? -offsetLX : -offsetPX)]];
         }
 
         // set the width
         if (!getBoolFromDictKey(properties, @"autoResizes")) {
-            [_constraints addObject:[labelView.widthAnchor constraintEqualToConstant:getDoubleFromDictKey(properties, @"scale", 50.0)]];
-            [_constraints addObject:[labelView.heightAnchor constraintEqualToConstant:getDoubleFromDictKey(properties, @"scaleY", 12.0)]];
+            [_constraints addObject:[widgetsContainerView.widthAnchor constraintEqualToConstant:getDoubleFromDictKey(properties, @"scale", 50.0)]];
+            [_constraints addObject:[widgetsContainerView.heightAnchor constraintEqualToConstant:getDoubleFromDictKey(properties, @"scaleY", 12.0)]];
         }
-        
-        [_constraints addObjectsFromArray:@[
-            [blurView.topAnchor constraintEqualToAnchor:backdropView.topAnchor constant:-2],
-            [blurView.leadingAnchor constraintEqualToAnchor:backdropView.leadingAnchor constant:-4],
-            [blurView.trailingAnchor constraintEqualToAnchor:backdropView.trailingAnchor constant:4],
-            [blurView.bottomAnchor constraintEqualToAnchor:backdropView.bottomAnchor constant:2],
-        ]];
-        
-        [_constraints addObjectsFromArray:@[
-            [blurView.topAnchor constraintEqualToAnchor:labelView.topAnchor constant:-2],
-            [blurView.leadingAnchor constraintEqualToAnchor:labelView.leadingAnchor constant:-4],
-            [blurView.trailingAnchor constraintEqualToAnchor:labelView.trailingAnchor constant:4],
-            [blurView.bottomAnchor constraintEqualToAnchor:labelView.bottomAnchor constant:2],
-        ]];
     }
 
     [_constraints addObjectsFromArray:@[
@@ -670,7 +422,7 @@ static void ReloadHUD
         [_verticalLine.widthAnchor constraintEqualToConstant:1],
         [_verticalLine.heightAnchor constraintEqualToAnchor:_contentView.heightAnchor]
     ]];
-    
+
     [NSLayoutConstraint activateConstraints:_constraints];
     [super updateViewConstraints];
 }
@@ -702,63 +454,18 @@ static inline CGRect orientationBounds(UIInterfaceOrientation orientation, CGRec
 
 - (void)updateOrientation:(UIInterfaceOrientation)orientation animateWithDuration:(NSTimeInterval)duration
 {
-    __weak typeof(self) weakSelf = self;
-    NSArray *widgetProps = [weakSelf widgetProperties];
-    for (int i = 0; i < [widgetProps count]; i++) {
-        UIVisualEffectView *blurView = [_blurViews objectAtIndex:i];
-        UILabel *labelView = [_labelViews objectAtIndex:i];
-        AnyBackdropView *backdropView = [_backdropViews objectAtIndex: i];
-        UILabel *maskLabelView = [_maskLabelViews objectAtIndex:i];
-
-        NSDictionary *properties = [widgetProps objectAtIndex:i];
-        NSInteger orientationMode = getIntFromDictKey(properties, @"orientationMode", 0);
-        BOOL isEnabled = getBoolFromDictKey(properties, @"isEnabled");
-        BOOL dynamicColor = getBoolFromDictKey(properties, @"dynamicColor", true);
-        if (isEnabled) {
-            switch (orientationMode) {
-                // Portrait
-                case 1: {
-                    if (UIInterfaceOrientationIsLandscape(orientation)) {
-                        [blurView setHidden:YES];
-                        [labelView setHidden:YES];
-                        [backdropView setHidden:YES];
-                        [maskLabelView setHidden:YES];
-                    } else {
-                        if (dynamicColor) {
-                            [backdropView setHidden:NO];
-                            [maskLabelView setHidden:NO];
-                        } else {
-                            [blurView setHidden:NO];
-                            [labelView setHidden:NO];
-                        }
-                    }
-                }break;
-                // Landscape
-                case 2: {
-                    if (UIInterfaceOrientationIsLandscape(orientation)) {
-                        if (dynamicColor) {
-                            [backdropView setHidden:NO];
-                            [maskLabelView setHidden:NO];
-                        } else {
-                            [blurView setHidden:NO];
-                            [labelView setHidden:NO];
-                        }
-                    } else {
-                        [blurView setHidden:YES];
-                        [labelView setHidden:YES];
-                        [backdropView setHidden:YES];
-                        [maskLabelView setHidden:YES];
-                    }
-                }break;
-            }
-        }
-    }
-
     if (orientation == _orientation) {
         return;
     }
 
     _orientation = orientation;
+
+    __weak typeof(self) weakSelf = self;
+    NSArray *widgetProps = [weakSelf widgetProperties];
+    for (int i = 0; i < [widgetProps count]; i++) {
+        WidgetsContainerView *widgetsContainerView = [_containerViews objectAtIndex:i];
+        [widgetsContainerView setLandscape:[self isLandscapeOrientation]];
+    }
 
     CGRect bounds = orientationBounds(orientation, [UIScreen mainScreen].bounds);
     [self.view setNeedsUpdateConstraints];

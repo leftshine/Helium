@@ -8,6 +8,8 @@
 import Foundation
 import SwiftUI
 
+var firstRun = true
+
 // MARK: Root View
 struct RootView: View {
     var body: some View {
@@ -47,6 +49,7 @@ struct RootView: View {
                         UserDefaults.standard.setValue(true, forKey: "hasWarnedOfDevMode", forPath: USER_DEFAULTS_PATH)
                     }, noCancel: true)
                 }
+                firstRun = UserDefaults.standard.loadUserDefaults(forPath: USER_DEFAULTS_PATH).count == 0
                 return
             } catch {
                 UIApplication.shared.alert(title: NSLocalizedString("Not Supported", comment: ""), body: NSLocalizedString("This app must be installed with TrollStore.", comment: ""))
