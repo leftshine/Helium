@@ -117,6 +117,12 @@
 "Wired Headset Option" = "Wired Headset Option";
 "Bluetooth Headset Option" = "Bluetooth Headset Option";
 "Unsupported Apps Are Displayed" = "Unsupported Apps Are Displayed";
+"Display Type" = "Display Type";
+"System CPU Usage" = "System CPU Usage";
+"System Memory Total" = "System Memory Total";
+"System Memory Usage" = "System Memory Usage";
+"Application CPU Usage" = "Application CPU Usage";
+"Application Memory Usage" = "Application Memory Usage";
 
 /* WidgetPreviewsView.swift */
 "ERROR" = "ERROR";

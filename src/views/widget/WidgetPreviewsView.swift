@@ -96,7 +96,19 @@ struct WidgetPreviewsView: View {
         case .lyrics:
             text = NSLocalizedString("Lyrics", comment:"")
         case .cpumen:
-            text = "CPU:20% MEM:10MB"
+            let displayType: Int = widget.config["displayType"] as? Int ?? 0
+            switch (displayType) {
+            case 0:
+                text = "23%"
+            case 1:
+                text = "100MB"
+            case 2:
+                text = "200MB"
+            case 3:
+                text = "25%"
+            default:
+                text = "233MB"
+            }
         }
         widget.modified = false
     }

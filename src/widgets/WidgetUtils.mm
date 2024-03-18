@@ -353,6 +353,8 @@
                     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithAttributedString:[self formattedWeatherData:weatherData format:format textColor:textColor]];
                     attributedString = [self formatString:attributedString];
                     callback([attributedString copy]);
+                } else {
+                    callback(nil);
                 }
             }];
         } else if (weatherProvider == 1) {
@@ -370,6 +372,8 @@
                     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithAttributedString:[self formattedWeatherData:weatherData format:format textColor:textColor]];
                     attributedString = [self formatString:attributedString];
                     callback([attributedString copy]);
+                } else {
+                    callback(nil);
                 }
             }];
         } else if(weatherProvider == 2) {
@@ -386,6 +390,8 @@
                     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithAttributedString:[self formattedWeatherData:weatherData format:format textColor:textColor]];
                     attributedString = [self formatString:attributedString];
                     callback([attributedString copy]);
+                } else {
+                    callback(nil);
                 }
             }];
         } else {
@@ -404,9 +410,14 @@
                     NSString *lyricsKey = [MusicPlayerUtils getLyricsKeyByBundleIdentifier:bundleIdentifier lyricsType:lyricsType bluetoothType:bluetoothType wiredType:wiredType unsupported:unsupported];
                     [manager getNowPlayingInfoWithCompletion:^(NSDictionary *info) {
                         if (info) {
-                            NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:info[lyricsKey]];
-                            attributedString = [self formatString:attributedString];
-                            callback([attributedString copy]);
+                            NSString *lyricsString = info[lyricsKey];
+                            if (lyricsString) {
+                                NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:lyricsString];
+                                attributedString = [self formatString:attributedString];
+                                callback([attributedString copy]);
+                            } else {
+                                callback(nil);
+                            }
                         } else {
                             callback(nil);
                         }
@@ -420,7 +431,7 @@
 }
 
 #pragma mark - CPU MEM Widget
-- (float)getCpuUsage {
+- (double)applicationCPU {
     kern_return_t kr;
     task_info_data_t tinfo;
     mach_msg_type_number_t task_info_count;
@@ -456,7 +467,7 @@
     float tot_cpu = 0;
     int j;
     
-    for (j = 0; j < thread_count; j++)
+    for (j = 0; j < (int)thread_count; j++)
     {
         thread_info_count = THREAD_INFO_MAX;
         kr = thread_info(thread_list[j], THREAD_BASIC_INFO,
@@ -469,7 +480,7 @@
         
         if (!(basic_info_th->flags & TH_FLAGS_IDLE)) {
             tot_sec = tot_sec + basic_info_th->user_time.seconds + basic_info_th->system_time.seconds;
-            tot_usec = tot_usec + basic_info_th->system_time.microseconds + basic_info_th->system_time.microseconds;
+            tot_usec = tot_usec + basic_info_th->user_time.microseconds + basic_info_th->system_time.microseconds;
             tot_cpu = tot_cpu + basic_info_th->cpu_usage / (float)TH_USAGE_SCALE * 100.0;
         }
         
@@ -480,23 +491,76 @@
     
     return tot_cpu;
 }
-
-- (float)getCurrentTaskUsedMemory {
-    task_basic_info_data_t taskInfo;
-    mach_msg_type_number_t infoCount = TASK_BASIC_INFO_COUNT;
-    kern_return_t kernReturn = task_info(mach_task_self(),
-                                         TASK_BASIC_INFO, (task_info_t)&taskInfo, &infoCount);
+ 
+- (double)applicationMemory {
+    struct mach_task_basic_info info;
+    mach_msg_type_number_t count = sizeof(info) / sizeof(integer_t);
+    if (task_info(mach_task_self(), MACH_TASK_BASIC_INFO, (task_info_t)&info, &count) == KERN_SUCCESS) {
+        return info.resident_size / NBYTE_PER_MB;
+    }
+    return 0;
+}
+ 
+- (double)systemCPU {
     
-    if(kernReturn != KERN_SUCCESS) {
+    kern_return_t kr;
+    mach_msg_type_number_t count;
+    static host_cpu_load_info_data_t previous_info = {0, 0, 0, 0};
+    host_cpu_load_info_data_t info;
+    
+    count = HOST_CPU_LOAD_INFO_COUNT;
+    
+    kr = host_statistics(mach_host_self(), HOST_CPU_LOAD_INFO, (host_info_t)&info, &count);
+    if (kr != KERN_SUCCESS) {
         return 0;
     }
     
-    return taskInfo.resident_size / 1024.0 / 1024.0;
+    natural_t user   = info.cpu_ticks[CPU_STATE_USER] - previous_info.cpu_ticks[CPU_STATE_USER];
+    natural_t nice   = info.cpu_ticks[CPU_STATE_NICE] - previous_info.cpu_ticks[CPU_STATE_NICE];
+    natural_t system = info.cpu_ticks[CPU_STATE_SYSTEM] - previous_info.cpu_ticks[CPU_STATE_SYSTEM];
+    natural_t idle   = info.cpu_ticks[CPU_STATE_IDLE] - previous_info.cpu_ticks[CPU_STATE_IDLE];
+    natural_t total  = user + nice + system + idle;
+    previous_info    = info;
+    
+    return (user + nice + system) * 100.0 / total;
+}
+ 
+- (double)systemMemoryUsage {
+    vm_statistics64_data_t vmstat;
+    natural_t size = HOST_VM_INFO64_COUNT;
+    if (host_statistics64(mach_host_self(), HOST_VM_INFO64, (host_info64_t)&vmstat, &size) == KERN_SUCCESS) {
+        double free = vmstat.free_count * PAGE_SIZE / NBYTE_PER_MB;
+        // double wired = vmstat.wire_count * PAGE_SIZE / NBYTE_PER_MB;
+        // double active = vmstat.active_count * PAGE_SIZE / NBYTE_PER_MB;
+        double inactive = vmstat.inactive_count * PAGE_SIZE / NBYTE_PER_MB;
+        // double compressed = vmstat.compressor_page_count * PAGE_SIZE / NBYTE_PER_MB;
+        // double total = [NSProcessInfo processInfo].physicalMemory / NBYTE_PER_MB;
+        
+        return free + inactive;
+    }
+    return 0;
 }
 
-- (void)formattedCPUMEM:(CallbackBlock) callback {
+- (double)systemMemoryTotal {
+    return [NSProcessInfo processInfo].physicalMemory / NBYTE_PER_MB;
+}
+
+- (void)formattedCPUMEM:(NSInteger)type callback:(CallbackBlock) callback {
     @autoreleasepool {
-        NSString *result = [NSString stringWithFormat: @"CPU:%.0f%% MEM:%.0fMB", [self getCpuUsage], [self getCurrentTaskUsedMemory]];
+        NSString *result = nil;
+        if (type == 0) { //System CPU Usage
+            result = [NSString stringWithFormat: @"%.0f%%", [self systemCPU]];
+        } else if (type == 1) { // System Memory Total
+            result = [NSString stringWithFormat: @"%.0fMB", [self systemMemoryTotal]];
+        } else if (type == 2) { // System Memory Usage
+            result = [NSString stringWithFormat: @"%.0fMB", [self systemMemoryUsage]];
+        } else if (type == 3) { // Application CPU Usage
+            result = [NSString stringWithFormat: @"%.0f%%", [self applicationCPU]];
+        } else if (type == 4) { // Application Memory Usage
+            result = [NSString stringWithFormat: @"%.0fMB", [self applicationMemory]];
+        } else {
+            result = @"??";
+        }
         NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:result];
         attributedString = [self formatString:attributedString];
         callback([attributedString copy]);

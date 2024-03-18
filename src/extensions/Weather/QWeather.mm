@@ -548,16 +548,17 @@ static NSString *UserAgent = @"Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_3_3 like 
         [self updateLocation:^(NSString *location) {
             dispatch_async(concurrentQueue, ^{
                 // NSLog(@"boom location %@", location);
-                if (location != nil && [location length] > 0 && (nowTime - weakSelf.lastUpdateTime > 60)) {
+                if (nowTime - weakSelf.lastUpdateTime > 60) {
                     // Fetch current, daily, and hourly weather for the location.
-                    weakSelf.now = [weakSelf fetchNowWeatherForLocation:location];
-                    weakSelf.daily = [weakSelf fetchTodayWeatherForLocation:location];
-                    weakSelf.hourly = [weakSelf fetch24HoursWeatherForLocation:location];
+                    weakSelf.now = [weakSelf fetchNowWeatherForLocation:location!=nil?location:weakSelf.lastLocation];
+                    weakSelf.daily = [weakSelf fetchTodayWeatherForLocation:location!=nil?location:weakSelf.lastLocation];
+                    weakSelf.hourly = [weakSelf fetch24HoursWeatherForLocation:location!=nil?location:weakSelf.lastLocation];
                     
-                    weakSelf.city = [WeatherUtils getPlacemarkByGeocode:location];
+                    weakSelf.city = [WeatherUtils getPlacemarkByGeocode:location!=nil?location:weakSelf.lastLocation];
                     // NSLog(@"boom city %@", weakSelf.city);
                     
                     // Update last update time and location.
+                    weakSelf.lastLocation = location!=nil?location:weakSelf.lastLocation;
                     weakSelf.lastUpdateTime = nowTime;
                 }
                 dataCallback([weakSelf getWeatherData]);

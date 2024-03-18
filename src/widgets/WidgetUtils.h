@@ -16,6 +16,8 @@ static uint8_t DATAUNIT = 0;
 #define MEGABYTES (1 << 20)
 #define GIGABYTES (1 << 30)
 
+#define NBYTE_PER_MB (1024 * 1024)
+
 @interface WidgetUtils : NSObject {
     NSDateFormatter *formatter;
 
@@ -35,7 +37,7 @@ static uint8_t DATAUNIT = 0;
 -(void)formattedChargingSymbolImage:(BOOL)filled fontSize:(double)  fontSize textColor:(UIColor *) textColor callback:(CallbackBlock) callback;
 - (void)formattedWeatherString:(NSString *)location format:(NSString *) format useCurrentLocation:(BOOL) useCurrentLocation useMetric:(BOOL) useMetric useFahrenheit:(BOOL) useFahrenheit locale:(NSString *) locale fontSize:(double) fontSize textColor:(UIColor *) textColor weatherProvider:(NSInteger) weatherProvider weatherApiKey:(NSString *) weatherApiKey freeSub:(BOOL) freeSub callback:(CallbackBlock) callback;
 - (void)formattedLyricsString:(NSInteger)lyricsType bluetoothType:(NSInteger) bluetoothType wiredType:(NSInteger) wiredType unsupported:(BOOL) unsupported callback:(CallbackBlock) callback;
-- (void)formattedCPUMEM:(CallbackBlock) callback;
+- (void)formattedCPUMEM:(NSInteger)type callback:(CallbackBlock) callback;
 
 - (NSMutableAttributedString *)formatString:(NSMutableAttributedString *) attributedString;
 @end

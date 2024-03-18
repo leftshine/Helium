@@ -475,7 +475,7 @@ class WidgetDetails {
         case .lyrics:
             return (NSLocalizedString("Lyrics", comment: ""), NSLocalizedString("Lyrics", comment: ""))
         case .cpumen:
-            return (NSLocalizedString("CPU&MEM", comment: ""), "CPU:20% MEM:100")
+            return (NSLocalizedString("CPU&MEM", comment: ""), "20%")
         }
     }
     

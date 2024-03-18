@@ -118,6 +118,12 @@
 "Wired Headset Option" = "戴有线耳机时显示选项";
 "Bluetooth Headset Option" = "戴蓝牙耳机时显示选项";
 "Unsupported Apps Are Displayed" = "不支持的App是否显示";
+"Display Type" = "显示类型";
+"System CPU Usage" = "系统CPU使用率";
+"System Memory Total" = "系统内存总量";
+"System Memory Usage" = "系统内存使用量";
+"Application CPU Usage" = "应用CPU使用率";
+"Application Memory Usage" = "应用内存使用量";
 
 /* WidgetPreviewsView.swift */
 "ERROR" = "错误";

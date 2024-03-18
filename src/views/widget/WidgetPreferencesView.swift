@@ -33,6 +33,7 @@ struct WidgetPreferencesView: View {
     @State var bluetoothType: Int = 1
     @State var wiredType: Int = 1
     @State var unsupported: Bool = false
+    @State var displayType: Int = 0
     
     @State var modified: Bool = false
     @State private var isPresented = false
@@ -318,7 +319,6 @@ struct WidgetPreferencesView: View {
                     }
                 }
             case .lyrics:
-                // MARK: Battery Value Type
                 VStack {
                     HStack {
                         Toggle(isOn: $unsupported.onChange { value in
@@ -382,6 +382,24 @@ struct WidgetPreferencesView: View {
                                 ]
                             }
                         }
+                    }
+                }
+            case .cpumen:
+                HStack {
+                    Text(NSLocalizedString("Display Type", comment:""))
+                        .foregroundColor(.primary)
+                        .bold()
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    DropdownPicker(selection: $displayType.onChange { _ in
+                        modified = true
+                    }) {
+                        return [
+                            DropdownItem(NSLocalizedString("System CPU Usage", comment:""), tag: 0),
+                            DropdownItem(NSLocalizedString("System Memory Total", comment:""), tag: 1),
+                            DropdownItem(NSLocalizedString("System Memory Usage", comment:""), tag: 2),
+                            DropdownItem(NSLocalizedString("Application CPU Usage", comment:""), tag: 3),
+                            DropdownItem(NSLocalizedString("Application Memory Usage", comment:""), tag: 4)
+                        ]
                     }
                 }
             default:
@@ -451,6 +469,9 @@ struct WidgetPreferencesView: View {
             }
             if let wtype = widgetID.config["wiredType"] as? Int {
                 wiredType = wtype
+            }
+            if let dtype = widgetID.config["displayType"] as? Int {
+                displayType = dtype
             }
         }
         .onDisappear {
@@ -529,11 +550,14 @@ struct WidgetPreferencesView: View {
             }
             widgetStruct.config["useCurrentLocation"] = useCurrentLocation
         case .lyrics:
-            // MARK: Weather Handling
+            // MARK: Lyrics Handling
             widgetStruct.config["unsupported"] = unsupported
             widgetStruct.config["lyricsType"] = (unsupported && lyricsType == 0) ? 1 : lyricsType
             widgetStruct.config["bluetoothType"] = bluetoothType
             widgetStruct.config["wiredType"] = wiredType
+        case .cpumen:
+            // MARK: CPU&MEM Handling
+            widgetStruct.config["displayType"] = displayType
         default:
             return;
         }

@@ -28,6 +28,12 @@
 	<true/>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Helium would like to use your current location to give you local weather information.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Helium would like to use your current location to give you local weather information.</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>location</string>
+	</array>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationLandscapeLeft</string>

@@ -342,7 +342,8 @@
             // CPU&MEM
             {
                 [[WidgetUtils sharedInstance] formattedCPUMEM:
-                    ^(NSMutableAttributedString *attributedString) {
+                    getIntFromDictKey(config, @"displayType", 0)
+                    callback: ^(NSMutableAttributedString *attributedString) {
                         weakSelf.fetchingData = false;
                         callback(attributedString);
                     }

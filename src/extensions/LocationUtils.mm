@@ -19,6 +19,8 @@
         // self.semaphore = dispatch_semaphore_create(0);
 		self.locationManager = [[CLLocationManager alloc] init];
         self.locationManager.delegate = self;
+        self.locationManager.allowsBackgroundLocationUpdates = YES;
+        self.locationManager.showsBackgroundLocationIndicator = NO;
         [self.locationManager requestWhenInUseAuthorization];
 	}
 	return self;

@@ -1,2 +1,3 @@
 "NSLocationWhenInUseUsageDescription" = "Helium would like to use your current location to give you local weather information.";
+"NSLocationAlwaysAndWhenInUseUsageDescription" = "Helium would like to use your current location to give you local weather information."; 
 "Toggle HUD" = "Toggle HUD";
