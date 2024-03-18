@@ -74,28 +74,20 @@ struct HomePageView: View {
       .onAppear {
         #if !targetEnvironment(simulator)
           isNowEnabled = IsHUDEnabledBridger()
+          NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main) { _ in
+              isNowEnabled = IsHUDEnabledBridger()
+          }
         #endif
         if UserDefaults.standard.string(forKey: "dateLocale", forPath: USER_DEFAULTS_PATH) == nil {
             UserDefaults.standard.setValue(Locale.current.languageCode!, forKey: "dateLocale", forPath: USER_DEFAULTS_PATH)
         }
-      }
-      .onOpenURL(perform: { url in
-        let _ = FileManager.default
-        // MARK: URL Schemes
-        if url.absoluteString == "helium://toggle" {
-          #if !targetEnvironment(simulator)
-            toggleHUD(!isNowEnabled)
-          #endif
-        } else if url.absoluteString == "helium://on" {
-          #if !targetEnvironment(simulator)
-            toggleHUD(true)
-          #endif
-        } else if url.absoluteString == "helium://off" {
-          #if !targetEnvironment(simulator)
-            toggleHUD(false)
-          #endif
+
+        let version = UserDefaults.standard.integer(forKey: "configVersion", forPath: USER_DEFAULTS_PATH)
+        if !firstRun && version < configVersion {
+            UIApplication.shared.alert(title: NSLocalizedString("Configuration File Update", comment: ""), body: NSLocalizedString("Please add a widget for configuration file update, you can delete it when it's done, otherwise you may crash!", comment: ""))
         }
-      })
+        UserDefaults.standard.setValue(configVersion, forKey: "configVersion", forPath: USER_DEFAULTS_PATH)
+      }
       .navigationTitle(Text(NSLocalizedString("Helium", comment: "")))
     }
     .navigationViewStyle(StackNavigationViewStyle())

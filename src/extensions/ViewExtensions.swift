@@ -51,8 +51,12 @@ struct BetterSlider: View {
         HStack {
             if step == nil {
                 Slider(value: $value, in: bounds)
+                Stepper("", value: $value, in: bounds)
+                    .labelsHidden()
             } else {
                 Slider(value: $value, in: bounds, step: step!)
+                Stepper("", value: $value, in: bounds, step: step!)
+                    .labelsHidden()
             }
             Spacer()
             Button(action: {
@@ -74,5 +78,17 @@ struct BetterSlider: View {
                 Text(String(format: "%.2f", value))
             }
         }
+    }
+}
+
+extension Binding {
+    func onChange(_ handler: @escaping (Value) -> Void) -> Binding<Value> {
+        Binding(
+            get: { self.wrappedValue },
+            set: { newValue in
+                self.wrappedValue = newValue
+                handler(newValue)
+            }
+        )
     }
 }

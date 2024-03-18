@@ -15,6 +15,7 @@ struct EditWidgetSetView: View {
     
     @State var showingAddView: Bool = false
 
+    @State var id: String = UUID().uuidString
     @State var isEnabled: Bool = true
     @State var orientationMode: Int = 0
     @State var nameInput: String = ""
@@ -34,11 +35,13 @@ struct EditWidgetSetView: View {
     @State var widgetIDs: [WidgetIDStruct] = []
     @State var updatedWidgetIDs: Bool = false
     
+    @State var blurID: String = UUID().uuidString
     @State var hasBlur: Bool = false
     @State var cornerRadius: Double = 4
     @State var blurStyle: Int = 1
     @State var blurAlpha: Double = 1.0
     
+    @State var colorID: String = UUID().uuidString
     @State var usesCustomColor: Bool = false
     @State var customColor: Color = .white
     @State var dynamicColor: Bool = true
@@ -53,6 +56,8 @@ struct EditWidgetSetView: View {
     @State var changesMade: Bool = false
 
     private let fonts: [String] = FontUtils.allFontNames()
+
+    private let WEATHER_INTERVAL_MIN: Double = 10 * 60
     
     var body: some View {
         VStack {
@@ -154,7 +159,7 @@ struct EditWidgetSetView: View {
                                     .bold()
                                 Spacer()
                             }
-                            BetterSlider(value: $offsetPX, bounds: -300...300)
+                            BetterSlider(value: $offsetPX, bounds: -300...300, step: 0.1)
                                 .onChange(of: offsetPX) { _ in
                                     changesMade = true
                                 }
@@ -166,7 +171,7 @@ struct EditWidgetSetView: View {
                                     .bold()
                                 Spacer()
                             }
-                            BetterSlider(value: $offsetPY, bounds: -300...300)
+                            BetterSlider(value: $offsetPY, bounds: -300...300, step: 0.1)
                                 .onChange(of: offsetPY) { _ in
                                     changesMade = true
                                 }
@@ -180,7 +185,7 @@ struct EditWidgetSetView: View {
                                     .bold()
                                 Spacer()
                             }
-                            BetterSlider(value: $offsetLX, bounds: -300...300)
+                            BetterSlider(value: $offsetLX, bounds: -300...300, step: 0.1)
                                 .onChange(of: offsetLX) { _ in
                                     changesMade = true
                                 }
@@ -192,7 +197,7 @@ struct EditWidgetSetView: View {
                                     .bold()
                                 Spacer()
                             }
-                            BetterSlider(value: $offsetLY, bounds: -300...300)
+                            BetterSlider(value: $offsetLY, bounds: -300...300, step: 0.1)
                                 .onChange(of: offsetLY) { _ in
                                     changesMade = true
                                 }
@@ -245,13 +250,15 @@ struct EditWidgetSetView: View {
                 
                 Section {
                     // MARK: Dynamic Color
-                    Toggle(isOn: $dynamicColor) {
-                        Text(NSLocalizedString("Adaptive Color", comment: ""))
-                            .bold()
-                            .minimumScaleFactor(0.5)
-                    }
-                    .onChange(of: dynamicColor) { _ in
-                        changesMade = true
+                    HStack {
+                        Toggle(isOn: $dynamicColor) {
+                            Text(NSLocalizedString("Adaptive Color", comment: ""))
+                                .bold()
+                                .minimumScaleFactor(0.5)
+                        }
+                        .onChange(of: dynamicColor) { _ in
+                            changesMade = true
+                        }
                     }
 
                     if !dynamicColor {
@@ -320,7 +327,7 @@ struct EditWidgetSetView: View {
                                         .bold()
                                     Spacer()
                                 }
-                                BetterSlider(value: $cornerRadius, bounds: 0...30, step: 1)
+                                BetterSlider(value: $cornerRadius, bounds: 0...10, step: 1)
                                     .onChange(of: cornerRadius) { _ in
                                         changesMade = true
                                     }
@@ -332,7 +339,7 @@ struct EditWidgetSetView: View {
                                         .bold()
                                     Spacer()
                                 }
-                                BetterSlider(value: $blurAlpha, bounds: 0.0...1.0)
+                                BetterSlider(value: $blurAlpha, bounds: 0.0...1.0, step: 0.01)
                                     .onChange(of: blurAlpha) { _ in
                                         changesMade = true
                                     }
@@ -423,7 +430,7 @@ struct EditWidgetSetView: View {
                                 .bold()
                             Spacer()
                         }
-                        BetterSlider(value: $textAlpha, bounds: 0.0...1.0)
+                        BetterSlider(value: $textAlpha, bounds: 0.0...1.0, step: 0.01)
                             .onChange(of: textAlpha) { _ in
                                 changesMade = true
                             }
@@ -485,6 +492,7 @@ struct EditWidgetSetView: View {
                     return
                 }
                 currentWidgetSet = widgetSet
+                id = widgetSet.id
                 isEnabled = widgetSet.isEnabled
                 orientationMode = widgetSet.orientationMode
                 nameInput = widgetSet.title
@@ -506,11 +514,13 @@ struct EditWidgetSetView: View {
                     updatedWidgetIDs = true
                 }
                 
+                blurID = widgetSet.blurDetails.id
                 hasBlur = widgetSet.blurDetails.hasBlur
                 cornerRadius = widgetSet.blurDetails.cornerRadius
                 blurStyle = widgetSet.blurDetails.styleDark ? 1 : 0
                 blurAlpha = widgetSet.blurDetails.alpha
                 
+                colorID = widgetSet.colorDetails.id
                 dynamicColor = widgetSet.dynamicColor
                 usesCustomColor = widgetSet.colorDetails.usesCustomColor
                 customColor = Color(widgetSet.colorDetails.color)
@@ -553,7 +563,16 @@ struct EditWidgetSetView: View {
     
     func saveSet(save: Bool = true) {
         changesMade = false
+        if !checkWeatherUpdateInterval() {
+            UIApplication.shared.optionsAlert(title: NSLocalizedString("Weather Update Interval", comment: ""), body: NSLocalizedString("WEATHER_INTERVAL_WARNING", comment: ""), options: [NSLocalizedString("WEATHER_INTERVAL_DEFAULT", comment: ""), NSLocalizedString("WEATHER_INTERVAL_CONTINUE", comment: "")], onSelection: { value in
+                if value == NSLocalizedString("WEATHER_INTERVAL_DEFAULT", comment: "") {
+                    updateInterval = WEATHER_INTERVAL_MIN
+                    changesMade = false
+                }
+            })
+        }
         widgetManager.editWidgetSet(widgetSet: widgetSet, newSetDetails: .init(
+            id: id,
             isEnabled: isEnabled,
             orientationMode: orientationMode,
             title: nameInput,
@@ -573,6 +592,7 @@ struct EditWidgetSetView: View {
             widgetIDs: [],
             
             blurDetails: .init(
+                id: blurID,
                 hasBlur: hasBlur,
                 cornerRadius: cornerRadius,
                 styleDark: blurStyle == 1 ? true : false,
@@ -581,6 +601,7 @@ struct EditWidgetSetView: View {
             
             dynamicColor: dynamicColor,
             colorDetails: .init(
+                id: colorID,
                 usesCustomColor: usesCustomColor,
                 color: UIColor(customColor)
             ),
@@ -596,5 +617,16 @@ struct EditWidgetSetView: View {
         if updatedSet != nil {
             widgetSet = updatedSet!
         }
+    }
+
+    func checkWeatherUpdateInterval() -> Bool {
+        var hasWeather = false
+        for item in widgetIDs {
+            if item.module == .weather {
+                hasWeather = true
+            }
+        }
+
+        return hasWeather ? updateInterval >= WEATHER_INTERVAL_MIN ? true : false : true
     }
 }

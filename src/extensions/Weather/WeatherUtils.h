@@ -1,9 +1,8 @@
 #import <Foundation/Foundation.h>
-#import <Foundation/NSBundle.h>
-#import <CoreText/CoreText.h>
-#import <UIKit/UIKit.h>
+@class CLPlacemark;
 
 @interface WeatherUtils : NSObject
-+ (NSString *)getWeatherIcon:(NSString *)text;
 + (NSString*)formatWeatherData:(NSDictionary *)data format:(NSString *)format;
++ (NSArray *)getGeocodeByName:(NSString *)name;
++ (CLPlacemark *)getPlacemarkByGeocode:(NSString *)geolocation;
 @end

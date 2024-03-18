@@ -26,7 +26,7 @@ jobs:
 
       - name: Install Homebrew dependencies
         run: |
-          HOMEBREW_NO_AUTO_UPDATE=1 brew install dpkg ldid make libplist openssl@3
+          HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=1 brew install --overwrite dpkg ldid make libplist openssl@3
           echo "/usr/local/opt/make/libexec/gnubin" >> $GITHUB_PATH
 
       - name: Checkout XXTouchNG/theos
@@ -112,5 +112,6 @@ jobs:
           tag_name: test_${{ env.msT }}
           generate_release_notes: true
           prerelease: true
+          target_commitish: ${{ github.sha }}
           files: |
             ${{ github.workspace }}/Helium/build/Helium.tipa

@@ -11,7 +11,7 @@
 	<key>CFBundleDisplayName</key>
 	<string>Helium</string>
 	<key>CFBundleVersion</key>
-	<string>3.2.5</string>
+	<string>3.2.6</string>
 	<key>CFBundleExecutable</key>
 	<string>Helium</string>
 	<key>NSPrincipalClass</key>
@@ -26,6 +26,14 @@
 	<false/>
 	<key>UIApplicationSystemWindowsSecureKey</key>
 	<true/>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Helium would like to use your current location to give you local weather information.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Helium would like to use your current location to give you local weather information.</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>location</string>
+	</array>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
@@ -44,14 +52,23 @@
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
 			<key>CFBundleURLName</key>
 			<string>com.leemin.helium</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>helium</string>
 			</array>
+		</dict>
+	</array>
+	<key>UIApplicationShortcutItems</key>
+	<array>
+		<dict>
+			<key>UIApplicationShortcutItemIconSymbolName</key>
+			<string>switch.2</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Toggle HUD</string>
+			<key>UIApplicationShortcutItemType</key>
+			<string>com.leemin.helium.shortcut.toggle-hud</string>
 		</dict>
 	</array>
 	<key>LSApplicationCategoryType</key>

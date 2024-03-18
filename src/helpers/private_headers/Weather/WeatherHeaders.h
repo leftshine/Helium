@@ -13,7 +13,6 @@
 #import "WFAQIScaleCategory.h"
 #import "WFLocation.h"
 #import "WFTemperature.h"
-#import "WFTemperatureFormatter.h"
 #import "WeatherWindSpeedFormatter.h"
 #import "WeatherVisibilityFormatter.h"
 #import "WeatherPrecipitationFormatter.h"

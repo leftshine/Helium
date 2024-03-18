@@ -18,6 +18,8 @@
 "Opening HUD" = "正在打开 HUD";
 "Status: Running" = "状态: 运行中";
 "Status: Stopped" = "状态: 已停止";
+"Configuration File Update" = "配置文件更新";
+"Please add a widget for configuration file update, you can delete it when it's done, otherwise you may crash!" = "请添加一个小组件进行配置文件更新，完成后可以删除，否则可能闪退!";
 
 /* SettingsView.swift */
 "Save" = "保存";
@@ -25,6 +27,13 @@
 "UNKNOWN" = "未知";
 "Release" = "发布";
 "Locale" = "地区";
+"Weather Provider" = "天气服务商";
+"System Weather" = "系统自带";
+"QWeather" = "和风天气";
+"Gaode" = "高德地图";
+"ColorfulClouds" = "彩云天气";
+"Weather API Key" = "天气API Key";
+"Free Subscription API" = "免费订阅API";
 "Show when Rotating" = "旋转屏幕时显示";
 "Hide Save Confirmation Popup" = "不显示保存确认弹窗";
 "Display Debug Border" = "显示调试边框";
@@ -83,7 +92,13 @@
 "Time Format" = "时间格式";
 "Label Text" = "标签文本";
 "Example" = "示例";
+"Location" = "经纬度";
 "Input" = "输入";
+"Get" = "获取";
+"Input Location Name" = "输入地区名称";
+"Get Location ID" = "获取经纬度";
+"Search" = "搜索";
+"Use Current Location" = "使用当前位置";
 "Measurement System" = "计量单位";
 "Metric" = "公制";
 "US" = "美制";
@@ -92,7 +107,9 @@
 "No Configurable Aspects" = "无可配置项";
 "Save Changes" = "保存更改";
 "Would you like to save changes to the widget?" = "是否保存对小部件的更改？";
-"Weather Format" = "天气格式说明: \n天气图标: {i}\n天气文字: {n}\n当前温度: {t} {ts}\n当前湿度: {h} {hs}\n体感温度: {bt} {bts}\n最低温度: {lt} {lts}\n最高温度: {ht} {hts}\n风速: {ws} {wsu}\n风向: {wd} {wds}\n能见度: {v} {vu}\n下一小时降水概率: {pp} {pps}\n过去24小时降水量: {pp24} {pp24u}\n气压: {ps} {psu}\n紫外线指数: {uvi}\n空气质量指数: {aqi}\n地区: {l}\n以's'结尾的表示包含符号，以'u'结尾的表示包含单位";
+"Weather Format System" = "天气格式说明: \n地区: {l}\n天气图标: {i}\n天气Emoji图标: {e}\n天气文字: {n}\n当前温度: {t} {ts}\n当前湿度: {h} {hs}\n体感温度: {bt} {bts}\n最低温度: {lt} {lts}\n最高温度: {ht} {hts}\n风速: {ws} {wsu}\n风向: {wd} {wds}\n能见度: {v} {vu}\n下一小时降水概率: {ppn} {ppns}\n过去24小时降水量: {pp24} {pp24u}\n气压: {ps} {psu}\n紫外线指数: {uvi}\n空气质量指数: {aqi}\n以's'结尾的表示包含符号，以'u'结尾的表示包含单位";
+"Weather Format QWeather" = "天气格式说明: \n地区: {l}\n天气图标: {i}\n天气Emoji图标: {e}\n天气文字: {n}\n当前温度: {t} {ts}\n当前湿度: {h} {hs}\n体感温度: {bt} {bts}\n最低温度: {lt} {lts}\n最高温度: {ht} {hts}\n风速: {ws} {wsu}\n风向: {wd}\n能见度: {v} {vu}\n下一小时降水量: {pn} {pns}\n下一小时降水概率: {ppn} {ppns}\n过去24小时降水量: {pp24} {pp24u}\n气压: {ps} {psu}\n以's'结尾的表示包含符号，以'u'结尾的表示包含单位";
+"Weather Format ColorfulClouds" = "天气格式说明: \n地区: {l}\n天气图标: {i}\n天气Emoji图标: {e}\n天气文字: {n}\n当前温度: {t} {ts}\n当前湿度: {h} {hs}\n体感温度: {bt} {bts}\n最低温度: {lt} {lts}\n最高温度: {ht} {hts}\n风速: {ws} {wsu}\n风向: {wd} {wds}\n能见度: {v} {vu}\n下一小时降水量: {pn} {pns}\n下一小时降水概率: {ppn} {ppns}\n过去24小时降水量: {pp24} {pp24u}\n气压: {ps} {psu}\n紫外线指数: {uvi}\n空气质量指数: {aqi}\n以's'结尾的表示包含符号，以'u'结尾的表示包含单位";
 "Format" = "格式";
 "Auto Detection" = "默认选择";
 "Artist" = "艺术家";
@@ -101,6 +118,12 @@
 "Wired Headset Option" = "戴有线耳机时显示选项";
 "Bluetooth Headset Option" = "戴蓝牙耳机时显示选项";
 "Unsupported Apps Are Displayed" = "不支持的App是否显示";
+"Display Type" = "显示类型";
+"System CPU Usage" = "系统CPU使用率";
+"System Memory Total" = "系统内存总量";
+"System Memory Usage" = "系统内存使用量";
+"Application CPU Usage" = "应用CPU使用率";
+"Application Memory Usage" = "应用内存使用量";
 
 /* WidgetPreviewsView.swift */
 "ERROR" = "错误";
@@ -159,6 +182,10 @@
 "Edit Widget" = "编辑小部件";
 "Save Changes" = "保存更改";
 "Would you like to save the changes to your current widget set?" = "是否保存当前小部件集的更改？";
+"Weather Update Interval" = "天气更新间隔";
+"WEATHER_INTERVAL_WARNING" = "天气更新间隔小于10分钟可能会超过api限制, 是否继续保存?";
+"WEATHER_INTERVAL_DEFAULT" = "默认值";
+"WEATHER_INTERVAL_CONTINUE" = "继续保存";
 
 /* UIApplicationViews.swift */
 "Home" = "首页";
@@ -185,3 +212,25 @@
 
 /* WeatherUtils.mm */
 "error" = "出错啦";
+
+/* ColorfulClouds */
+"CLEAR_DAY" = "晴";
+"CLEAR_NIGHT" = "晴";
+"PARTLY_CLOUDY_DAY" = "多云";
+"PARTLY_CLOUDY_NIGHT" = "多云";
+"CLOUDY" = "阴";
+"LIGHT_HAZE" = "轻度雾霾";
+"MODERATE_HAZE" = "中度雾霾";
+"HEAVY_HAZE" = "重度雾霾";
+"LIGHT_RAIN" = "小雨";
+"MODERATE_RAIN" = "中雨";
+"HEAVY_RAIN" = "大雨";
+"STORM_RAIN" = "暴雨";
+"FOG" = "雾";
+"LIGHT_SNOW" = "小雪";
+"MODERATE_SNOW" = "中雪";
+"HEAVY_SNOW" = "大雪";
+"STORM_SNOW" = "暴雪";
+"DUST" = "浮尘";
+"SAND" = "沙尘";
+"WIND" = "大风";
