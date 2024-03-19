@@ -3,6 +3,6 @@
 @interface LunarDate : NSObject
 
 + (NSCalendar *)chineseCalendar;
-+ (NSString*)getChineseCalendarWithDate:(NSDate *)date format:(NSString *)format;
++ (NSString *)getChineseCalendarWithDate:(NSDate *)date format:(NSString *)format;
 
 @end

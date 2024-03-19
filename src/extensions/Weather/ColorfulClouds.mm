@@ -503,7 +503,7 @@ static NSString *UserAgent = @"Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_3_3 like 
                 // NSLog(@"boom location %@", location);
                 if (location != nil && nowTime - weakSelf.lastUpdateTime > 60) {
                     // Fetch current, daily, and hourly weather for the location.
-                    weakSelf.weatherData = [weakSelf fetchWeatherForLocation:location!=nil?location:weakSelf.lastLocation] ?: weakSelf.weatherCode;
+                    weakSelf.weatherData = [weakSelf fetchWeatherForLocation:location!=nil?location:weakSelf.lastLocation] ?: weakSelf.weatherData;
                     
                     weakSelf.city = [WeatherUtils getPlacemarkByGeocode:location!=nil?location:weakSelf.lastLocation] ?: weakSelf.city;
                     // NSLog(@"boom city %@", weakSelf.city);
