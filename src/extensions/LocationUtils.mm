@@ -16,19 +16,20 @@
 
 	if (self != nil) {
         self.location = nil;
-        // self.semaphore = dispatch_semaphore_create(0);
 		self.locationManager = [[CLLocationManager alloc] init];
         self.locationManager.delegate = self;
         self.locationManager.allowsBackgroundLocationUpdates = YES;
         self.locationManager.showsBackgroundLocationIndicator = NO;
-        [self.locationManager requestWhenInUseAuthorization];
+        if ([self.locationManager respondsToSelector:@selector(requestWhenInUseAuthorization)]) {
+            [self.locationManager requestWhenInUseAuthorization];
+        }
 	}
 	return self;
 }
 
 - (void)getCurrentLocation:(void (^)(NSError *, NSString *))block  {
     // NSLog(@"boom %d", [CLLocationManager locationServicesEnabled]);
-    if ([CLLocationManager locationServicesEnabled]) {//定位服务开启
+    if ([CLLocationManager locationServicesEnabled]) {
         [self.locationManager startUpdatingLocation];
         self.block = block;
     }
@@ -38,16 +39,31 @@
     CLLocation *currentLocation = [locations lastObject];
     // NSLog(@"boom Latitude: %f, Longitude: %f", currentLocation.coordinate.latitude, currentLocation.coordinate.longitude);
     
-    self.block(nil,[NSString stringWithFormat:@"%f,%f", currentLocation.coordinate.longitude, currentLocation.coordinate.latitude]);
+    self.block(nil, [NSString stringWithFormat:@"%f,%f", currentLocation.coordinate.longitude, currentLocation.coordinate.latitude]);
 
-    [self.locationManager stopUpdatingLocation];
-    // dispatch_semaphore_signal(self.semaphore);
+    [manager stopUpdatingLocation];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
     // NSLog(@"boom Location manager failed with error: %@", error);
     self.block(error, nil);
-    // dispatch_semaphore_signal(self.semaphore);
+}
+
+- (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
+    switch (status) {
+        case kCLAuthorizationStatusAuthorizedWhenInUse:
+        case kCLAuthorizationStatusAuthorizedAlways:
+            [manager startUpdatingLocation];
+            break;
+        case kCLAuthorizationStatusDenied:
+            break;
+        case kCLAuthorizationStatusRestricted:
+            break;
+        case kCLAuthorizationStatusNotDetermined:
+            break;
+        default:
+            break;
+    }
 }
 
 @end

@@ -548,13 +548,13 @@ static NSString *UserAgent = @"Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_3_3 like 
         [self updateLocation:^(NSString *location) {
             dispatch_async(concurrentQueue, ^{
                 // NSLog(@"boom location %@", location);
-                if (nowTime - weakSelf.lastUpdateTime > 60) {
+                if (location != nil && nowTime - weakSelf.lastUpdateTime > 60) {
                     // Fetch current, daily, and hourly weather for the location.
-                    weakSelf.now = [weakSelf fetchNowWeatherForLocation:location!=nil?location:weakSelf.lastLocation];
-                    weakSelf.daily = [weakSelf fetchTodayWeatherForLocation:location!=nil?location:weakSelf.lastLocation];
-                    weakSelf.hourly = [weakSelf fetch24HoursWeatherForLocation:location!=nil?location:weakSelf.lastLocation];
+                    weakSelf.now = [weakSelf fetchNowWeatherForLocation:location!=nil?location:weakSelf.lastLocation] ?: weakSelf.now;
+                    weakSelf.daily = [weakSelf fetchTodayWeatherForLocation:location!=nil?location:weakSelf.lastLocation] ?: weakSelf.daily;
+                    weakSelf.hourly = [weakSelf fetch24HoursWeatherForLocation:location!=nil?location:weakSelf.lastLocation] ?: weakSelf.hourly;
                     
-                    weakSelf.city = [WeatherUtils getPlacemarkByGeocode:location!=nil?location:weakSelf.lastLocation];
+                    weakSelf.city = [WeatherUtils getPlacemarkByGeocode:location!=nil?location:weakSelf.lastLocation] ?: weakSelf.city;
                     // NSLog(@"boom city %@", weakSelf.city);
                     
                     // Update last update time and location.
@@ -568,11 +568,11 @@ static NSString *UserAgent = @"Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_3_3 like 
         // Check if location unchanged or more than 60 seconds since last update.
         if ((self.location != nil && [self.location length] > 0) && (![self.lastLocation isEqualToString:self.location] || nowTime - self.lastUpdateTime > 60)) {
             // Fetch current, daily, and hourly weather for the location.
-            self.now = [self fetchNowWeatherForLocation:self.location];
-            self.daily = [self fetchTodayWeatherForLocation:self.location];
-            self.hourly = [self fetch24HoursWeatherForLocation:self.location];
+            self.now = [self fetchNowWeatherForLocation:self.location] ?: self.now;
+            self.daily = [self fetchTodayWeatherForLocation:self.location] ?: self.daily;
+            self.hourly = [self fetch24HoursWeatherForLocation:self.location] ?: self.hourly;
             
-            self.city = [WeatherUtils getPlacemarkByGeocode:self.location];
+            self.city = [WeatherUtils getPlacemarkByGeocode:self.location] ?: self.city;
             
             // Update last update time and location.
             self.lastUpdateTime = nowTime;
