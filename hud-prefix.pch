@@ -11,6 +11,7 @@
     #import "src/helpers/private_headers/NSUserDefaults+Private.h"
     #import <UIKit/UIKit.h>
     #import <os/log.h>
+    #import "src/extensions/HMLog.h"
 #endif
 
 #define USER_DEFAULTS_PATH @"/var/mobile/Library/Preferences/com.leemin.helium.plist"
