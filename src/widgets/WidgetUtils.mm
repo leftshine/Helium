@@ -11,6 +11,7 @@
 #import "../extensions/UsefulFunctions.h"
 #import "../extensions/LunarDate.h"
 #import "../extensions/MusicPlayerUtils.h"
+#import "../extensions/LyricsUtils.h"
 #import "../extensions/MediaRemoteManager.h"
 #import "../extensions/Weather/WeatherUtils.h"
 #import "../extensions/Weather/QWeather.h"
@@ -401,23 +402,51 @@
 }
 
 #pragma mark - Lyrics Widget
-- (void)formattedLyricsString:(NSInteger)lyricsType bluetoothType:(NSInteger) bluetoothType wiredType:(NSInteger) wiredType unsupported:(BOOL) unsupported callback:(CallbackBlock) callback {
+- (void)formattedLyricsString:(NSInteger)unsupported unLyricsType:(NSInteger)unLyricsType unBluetoothType:(NSInteger) unBluetoothType unWiredType:(NSInteger) unWiredType supported:(NSInteger) supported lyricsType:(NSInteger)lyricsType bluetoothType:(NSInteger) bluetoothType wiredType:(NSInteger) wiredType callback:(CallbackBlock) callback {
     @autoreleasepool {
         MediaRemoteManager *manager = [MediaRemoteManager sharedManager];
         [manager getNowPlayingApplicationIsPlayingWithCompletion:^(BOOL isPlaying) {
             if (isPlaying) {
                 [manager getBundleIdentifierWithCompletion:^(NSString *bundleIdentifier) {
-                    NSString *lyricsKey = [MusicPlayerUtils getLyricsKeyByBundleIdentifier:bundleIdentifier lyricsType:lyricsType bluetoothType:bluetoothType wiredType:wiredType unsupported:unsupported];
+                    NSString *lyricsKey = [MusicPlayerUtils getLyricsKeyByBundleIdentifier:bundleIdentifier lyricsType:lyricsType bluetoothType:bluetoothType wiredType:wiredType unsupported:false autoDetected:supported == 0];
+
+                    NSString *unLyricsKey = [MusicPlayerUtils getLyricsKeyByBundleIdentifier:bundleIdentifier lyricsType:unLyricsType bluetoothType:unBluetoothType wiredType:unWiredType unsupported:true autoDetected:false];
+
                     [manager getNowPlayingInfoWithCompletion:^(NSDictionary *info) {
+                        NSString *currentLyric = nil;
                         if (info) {
-                            NSString *lyricsString = info[lyricsKey];
-                            if (lyricsString) {
-                                NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:lyricsString];
-                                attributedString = [self formatString:attributedString];
-                                callback([attributedString copy]);
+                            if (supported == 2 || (lyricsKey == nil && unsupported == 2)) {
+                                NSString *title = info[@"kMRMediaRemoteNowPlayingInfoTitle"];
+                                NSString *artist = info[@"kMRMediaRemoteNowPlayingInfoArtist"];
+                                NSString *album = info[@"kMRMediaRemoteNowPlayingInfoAlbum"];
+                                double duration = [(info[@"kMRMediaRemoteNowPlayingInfoDuration"] ?: @"0") doubleValue];
+
+                                CFAbsoluteTime timeStarted = CFDateGetAbsoluteTime((CFDateRef)info[@"kMRMediaRemoteNowPlayingInfoTimestamp"]);
+                                double lastStoredTime = [info[@"kMRMediaRemoteNowPlayingInfoElapsedTime"] doubleValue];
+                                double realTimeElapsed = (CFAbsoluteTimeGetCurrent() - timeStarted) + (lastStoredTime > 1 ? lastStoredTime : 0);
+
+                                LyricsUtils *lyricsUtils = [LyricsUtils sharedInstance];
+                                lyricsUtils.title = title;
+                                lyricsUtils.artist = artist;
+                                lyricsUtils.album = album;
+                                lyricsUtils.duration = duration;
+
+                                [lyricsUtils getLyric];
+
+                                currentLyric = [lyricsUtils getLyricByTime:realTimeElapsed];
+                                // HMLog(currentLyric);
                             } else {
-                                callback(nil);
+                                if (unsupported == 1) {
+                                    currentLyric = info[unLyricsKey];
+                                } else {
+                                    currentLyric = info[lyricsKey];
+                                }
                             }
+                        }
+                        if (currentLyric) {
+                            NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@", currentLyric]];
+                            attributedString = [self formatString:attributedString];
+                            callback([attributedString copy]);
                         } else {
                             callback(nil);
                         }

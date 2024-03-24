@@ -114,10 +114,16 @@
 "Auto Detection" = "默认选择";
 "Artist" = "艺术家";
 "Album" = "专辑";
+"Unsupported Option" = "不支持的APP选项";
+"Supported Option" = "适配的APP选项";
+"Not Display" = "不显示";
+"Lock Screen Lyrics" = "锁屏歌词";
+"Lock Screen Auto" = "锁屏自动";
+"Lock Screen Manual" = "锁屏手动";
+"Online Lyrics" = "在线歌词";
 "Lyrics Option" = "歌词显示选项";
 "Wired Headset Option" = "戴有线耳机时显示选项";
 "Bluetooth Headset Option" = "戴蓝牙耳机时显示选项";
-"Unsupported Apps Are Displayed" = "不支持的App是否显示";
 "Display Type" = "显示类型";
 "System CPU Usage" = "系统CPU使用率";
 "System Memory Total" = "系统内存总量";

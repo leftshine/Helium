@@ -29,10 +29,14 @@ struct WidgetPreferencesView: View {
     @State var useCurrentLocation: Bool = false
     @State var useMetric: Int = 0
     @State var location: String = "116.40,39.90"
+    @State var unsupported: Int = 0
+    @State var unLyricsType: Int = 1
+    @State var unBluetoothType: Int = 1
+    @State var unWiredType: Int = 1
+    @State var supported: Int = 0
     @State var lyricsType: Int = 0
     @State var bluetoothType: Int = 1
     @State var wiredType: Int = 1
-    @State var unsupported: Bool = false
     @State var displayType: Int = 0
     
     @State var modified: Bool = false
@@ -321,36 +325,104 @@ struct WidgetPreferencesView: View {
             case .lyrics:
                 VStack {
                     HStack {
-                        Toggle(isOn: $unsupported.onChange { value in
-                            if value && lyricsType == 0 {
-                                lyricsType = 1
-                            }
-                            modified = true
-                        }) {
-                            Text(NSLocalizedString("Unsupported Apps Are Displayed", comment:""))
-                                .foregroundColor(.primary)
-                                .bold()
-                        }
-                    }
-
-                    HStack {
-                        Text(NSLocalizedString("Lyrics Option", comment:""))
+                        Text(NSLocalizedString("Unsupported Option", comment:""))
                             .foregroundColor(.primary)
                             .bold()
                             .frame(maxWidth: .infinity, alignment: .leading)
-                        DropdownPicker(selection: $lyricsType.onChange { _ in
+                        DropdownPicker(selection: $unsupported.onChange { _ in
                             modified = true
                         }) {
                             return [
-                                DropdownItem(NSLocalizedString("Auto Detection", comment:""), tag: 0),
-                                DropdownItem(NSLocalizedString("Title", comment:""), tag: 1),
-                                DropdownItem(NSLocalizedString("Artist", comment:""), tag: 2),
-                                DropdownItem(NSLocalizedString("Album", comment:""), tag: 3)
+                                DropdownItem(NSLocalizedString("Not Display", comment:""), tag: 0),
+                                DropdownItem(NSLocalizedString("Lock Screen Lyrics", comment:""), tag: 1),
+                                DropdownItem(NSLocalizedString("Online Lyrics", comment:""), tag: 2)
                             ]
                         }
                     }
 
-                    if unsupported || lyricsType != 0 {
+                    if unsupported == 1 {
+                        HStack {
+                            Text(NSLocalizedString("Lyrics Option", comment:""))
+                                .foregroundColor(.primary)
+                                .bold()
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            DropdownPicker(selection: $unLyricsType.onChange { _ in
+                                modified = true
+                            }) {
+                                return [
+                                    DropdownItem(NSLocalizedString("Title", comment:""), tag: 1),
+                                    DropdownItem(NSLocalizedString("Artist", comment:""), tag: 2),
+                                    DropdownItem(NSLocalizedString("Album", comment:""), tag: 3)
+                                ]
+                            }
+                        }
+
+                        HStack{
+                            Text(NSLocalizedString("Bluetooth Headset Option", comment:""))
+                                .foregroundColor(.primary)
+                                .bold()
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            DropdownPicker(selection: $unBluetoothType.onChange { _ in
+                                modified = true
+                            }) {
+                                return [
+                                    DropdownItem(NSLocalizedString("Title", comment:""), tag: 1),
+                                    DropdownItem(NSLocalizedString("Artist", comment:""), tag: 2),
+                                    DropdownItem(NSLocalizedString("Album", comment:""), tag: 3)
+                                ]
+                            }
+                        }
+
+                        HStack{
+                            Text(NSLocalizedString("Wired Headset Option", comment:""))
+                                .foregroundColor(.primary)
+                                .bold()
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            DropdownPicker(selection: $unWiredType.onChange { _ in
+                                modified = true
+                            }) {
+                                return [
+                                    DropdownItem(NSLocalizedString("Title", comment:""), tag: 1),
+                                    DropdownItem(NSLocalizedString("Artist", comment:""), tag: 2),
+                                    DropdownItem(NSLocalizedString("Album", comment:""), tag: 3)
+                                ]
+                            }
+                        }
+                    }
+
+                    HStack {
+                        Text(NSLocalizedString("Supported Option", comment:""))
+                            .foregroundColor(.primary)
+                            .bold()
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        DropdownPicker(selection: $supported.onChange { _ in
+                            modified = true
+                        }) {
+                            return [
+                                DropdownItem(NSLocalizedString("Lock Screen Auto", comment:""), tag: 0),
+                                DropdownItem(NSLocalizedString("Lock Screen Manual", comment:""), tag: 1),
+                                DropdownItem(NSLocalizedString("Online Lyrics", comment:""), tag: 2)
+                            ]
+                        }
+                    }
+
+                    if supported == 1 {
+                        HStack {
+                            Text(NSLocalizedString("Lyrics Option", comment:""))
+                                .foregroundColor(.primary)
+                                .bold()
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            DropdownPicker(selection: $lyricsType.onChange { _ in
+                                modified = true
+                            }) {
+                                return [
+                                    DropdownItem(NSLocalizedString("Title", comment:""), tag: 1),
+                                    DropdownItem(NSLocalizedString("Artist", comment:""), tag: 2),
+                                    DropdownItem(NSLocalizedString("Album", comment:""), tag: 3)
+                                ]
+                            }
+                        }
+
                         HStack{
                             Text(NSLocalizedString("Bluetooth Headset Option", comment:""))
                                 .foregroundColor(.primary)
@@ -423,9 +495,12 @@ struct WidgetPreferencesView: View {
         .onAppear {
             weatherProvider = UserDefaults.standard.integer(forKey: "weatherProvider", forPath: USER_DEFAULTS_PATH)
 
+            // MARK: Date Format Handling
             if let format = widgetID.config["dateFormat"] as? String {
                 dateFormat = format
+                timeFormat = timeFormats.firstIndex(of: format) ?? 0
             }
+            // MARK: Network Choices Handling
             if let netUp = widgetID.config["isUp"] as? Bool {
                 networkUp = netUp ? 1 : 0
             }
@@ -436,20 +511,20 @@ struct WidgetPreferencesView: View {
                 minUnit = unit
             }
             hideSpeedWhenZero = widgetID.config["hideSpeedWhenZero"] as? Bool ?? false
+            // MARK: Temperature Unit Handling
             if widgetID.config["useFahrenheit"] as? Bool ?? false == true {
                 useFahrenheit = 1
             }
+            // MARK: Battery Value Type Handling
             if let batteryType = widgetID.config["batteryValueType"] as? Int {
                 batteryValueType = batteryType
-            }
-            if let format = widgetID.config["dateFormat"] as? String {
-                timeFormat = timeFormats.firstIndex(of: format) ?? 0
             }
             if let format = widgetID.config["text"] as? String {
                 text = format
             }
             showPercentage = widgetID.config["showPercentage"] as? Bool ?? true
             filledSymbol = widgetID.config["filled"] as? Bool ?? true
+            // MARK: Weather Handling
             if let format = widgetID.config["format"] as? String {
                 weatherFormat = format
             }
@@ -460,7 +535,23 @@ struct WidgetPreferencesView: View {
                 location = format
             }
             useCurrentLocation = widgetID.config["useCurrentLocation"] as? Bool ?? false
-            unsupported = widgetID.config["unsupported"] as? Bool ?? false
+            // MARK: Lyrics Handling
+            if let unsupp = widgetID.config["unsupported"] as? Int {
+                unsupported = unsupp
+            }
+            if let ltype = widgetID.config["unLyricsType"] as? Int {
+                unLyricsType = ltype
+            }
+            if let btype = widgetID.config["unBluetoothType"] as? Int {
+                unBluetoothType = btype
+            }
+            if let wtype = widgetID.config["unWiredType"] as? Int {
+                unWiredType = wtype
+            }
+
+            if let supp = widgetID.config["supported"] as? Int {
+                supported = supp
+            }
             if let ltype = widgetID.config["lyricsType"] as? Int {
                 lyricsType = ltype
             }
@@ -470,6 +561,7 @@ struct WidgetPreferencesView: View {
             if let wtype = widgetID.config["wiredType"] as? Int {
                 wiredType = wtype
             }
+            // MARK: CPU&MEM Handling
             if let dtype = widgetID.config["displayType"] as? Int {
                 displayType = dtype
             }
@@ -495,7 +587,6 @@ struct WidgetPreferencesView: View {
         var widgetStruct: WidgetIDStruct = .init(id: widgetID.id, module: widgetID.module, config: widgetID.config)
         
         switch(widgetStruct.module) {
-        // MARK: Changing Text
         case .dateWidget:
             // MARK: Date Format Handling
             if dateFormat == "" {
@@ -510,8 +601,6 @@ struct WidgetPreferencesView: View {
             } else {
                 widgetStruct.config["text"] = text
             }
-        
-        // MARK: Changing Integer
         case .network:
             // MARK: Network Choices Handling
             widgetStruct.config["isUp"] = networkUp == 1 ? true : false
@@ -527,7 +616,6 @@ struct WidgetPreferencesView: View {
         case .timeWidget:
             // MARK: Time Format Handling
             widgetStruct.config["dateFormat"] = timeFormats[timeFormat]
-        // MARK: Changing Boolean
         case .currentCapacity:
             // MARK: Current Capacity Handling
             widgetStruct.config["showPercentage"] = showPercentage
@@ -552,7 +640,12 @@ struct WidgetPreferencesView: View {
         case .lyrics:
             // MARK: Lyrics Handling
             widgetStruct.config["unsupported"] = unsupported
-            widgetStruct.config["lyricsType"] = (unsupported && lyricsType == 0) ? 1 : lyricsType
+            widgetStruct.config["unLyricsType"] = unLyricsType
+            widgetStruct.config["unBluetoothType"] = unBluetoothType
+            widgetStruct.config["unWiredType"] = unWiredType
+
+            widgetStruct.config["supported"] = supported
+            widgetStruct.config["lyricsType"] = lyricsType
             widgetStruct.config["bluetoothType"] = bluetoothType
             widgetStruct.config["wiredType"] = wiredType
         case .cpumen:

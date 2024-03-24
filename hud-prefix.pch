@@ -11,6 +11,7 @@
     #import "src/helpers/private_headers/NSUserDefaults+Private.h"
     #import <UIKit/UIKit.h>
     #import <os/log.h>
+    #define HMLogPrefix(index, valueString) [NSString stringWithFormat:@"boom - %d: %s = ", index, valueString]
     #import "src/extensions/HMLog.h"
 #endif
 

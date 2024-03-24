@@ -17,6 +17,7 @@ static NSDictionary *bundleids = [[NSDictionary alloc] initWithObjectsAndKeys:
                                 @{@"default": @1, @"bluetooth": @1, @"wired": @1}, @"com.netease.cloudmusic", //网易云音乐
                                 @{@"default": @1, @"bluetooth": @1, @"wired": @1}, @"com.kugou.kugou1002", //酷狗音乐
                                 @{@"default": @1, @"bluetooth": @1, @"wired": @1}, @"com.kugou.kgyouth", //酷狗概念版
+                                @{@"default": @1, @"bluetooth": @1, @"wired": @1}, @"com.kugou.kugoupure", //酷狗音速版
                                 @{@"default": @1, @"bluetooth": @1, @"wired": @1}, @"com.kugou.viper", //VIPER HiFi
                                 @{@"default": @1, @"bluetooth": @1, @"wired": @1}, @"com.zhangchao.AudioPlayer", //Ever Play
                                 nil];
@@ -43,7 +44,7 @@ static NSDictionary *bundleids = [[NSDictionary alloc] initWithObjectsAndKeys:
     return NO;
 }
 
-+ (NSString*)getLyricsKeyByBundleIdentifier:(NSString *)bundleid lyricsType:(int)lyricsType bluetoothType:(int)bluetoothType wiredType:(int)wiredType unsupported:(BOOL)unsupported{
++ (NSString*)getLyricsKeyByBundleIdentifier:(NSString *)bundleid lyricsType:(int)lyricsType bluetoothType:(int)bluetoothType wiredType:(int)wiredType unsupported:(BOOL)unsupported autoDetected:(BOOL) autoDetected {
     if(unsupported) {
         if (self.hasWiredHeadset) {
             return [self getLyricsKeyByType:wiredType];
@@ -57,11 +58,11 @@ static NSDictionary *bundleids = [[NSDictionary alloc] initWithObjectsAndKeys:
             NSDictionary *item = bundleids[bundleid];
             if (item) {
                 if (self.hasWiredHeadset) {
-                    return [self getLyricsKeyByType:lyricsType == 0 ? [item[@"wired"] integerValue] : wiredType];
+                    return [self getLyricsKeyByType:autoDetected ? [item[@"wired"] integerValue] : wiredType];
                 } else if(self.hasBluetoothHeadset) {
-                    return [self getLyricsKeyByType:lyricsType == 0 ? [item[@"bluetooth"] integerValue] : bluetoothType];
+                    return [self getLyricsKeyByType:autoDetected ? [item[@"bluetooth"] integerValue] : bluetoothType];
                 } else {
-                    return [self getLyricsKeyByType:lyricsType == 0 ? [item[@"default"] integerValue] : lyricsType];
+                    return [self getLyricsKeyByType:autoDetected ? [item[@"default"] integerValue] : lyricsType];
                 }
             }
         }

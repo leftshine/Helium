@@ -36,7 +36,7 @@ static uint8_t DATAUNIT = 0;
 - (void)formattedCurrentCapacity:(BOOL)showPercentage callback:(CallbackBlock) callback;
 -(void)formattedChargingSymbolImage:(BOOL)filled fontSize:(double)  fontSize textColor:(UIColor *) textColor callback:(CallbackBlock) callback;
 - (void)formattedWeatherString:(NSString *)location format:(NSString *) format useCurrentLocation:(BOOL) useCurrentLocation useMetric:(BOOL) useMetric useFahrenheit:(BOOL) useFahrenheit locale:(NSString *) locale fontSize:(double) fontSize textColor:(UIColor *) textColor weatherProvider:(NSInteger) weatherProvider weatherApiKey:(NSString *) weatherApiKey freeSub:(BOOL) freeSub callback:(CallbackBlock) callback;
-- (void)formattedLyricsString:(NSInteger)lyricsType bluetoothType:(NSInteger) bluetoothType wiredType:(NSInteger) wiredType unsupported:(BOOL) unsupported callback:(CallbackBlock) callback;
+- (void)formattedLyricsString:(NSInteger)unsupported unLyricsType:(NSInteger)unLyricsType unBluetoothType:(NSInteger) unBluetoothType unWiredType:(NSInteger) unWiredType supported:(NSInteger) supported lyricsType:(NSInteger)lyricsType bluetoothType:(NSInteger) bluetoothType wiredType:(NSInteger) wiredType callback:(CallbackBlock) callback;
 - (void)formattedCPUMEM:(NSInteger)type callback:(CallbackBlock) callback;
 
 - (NSMutableAttributedString *)formatString:(NSMutableAttributedString *) attributedString;

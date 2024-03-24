@@ -327,10 +327,14 @@
             // Lyrics
             {
                 [[WidgetUtils sharedInstance] formattedLyricsString:
-                    getIntFromDictKey(config, @"lyricsType", 0)
+                    getIntFromDictKey(config, @"unsupported", 0)
+                    unLyricsType: getIntFromDictKey(config, @"unLyricsType", 1)
+                    unBluetoothType: getIntFromDictKey(config, @"unBluetoothType", 1)
+                    unWiredType: getIntFromDictKey(config, @"unWiredType", 1)
+                    supported: getIntFromDictKey(config, @"supported", 0)
+                    lyricsType: getIntFromDictKey(config, @"lyricsType", 1)
                     bluetoothType: getIntFromDictKey(config, @"bluetoothType", 1)
                     wiredType: getIntFromDictKey(config, @"wiredType", 1)
-                    unsupported: getBoolFromDictKey(config, @"unsupported", NO)
                     callback: ^(NSMutableAttributedString *attributedString) {
                         weakSelf.fetchingData = false;
                         callback(attributedString);
@@ -358,11 +362,11 @@
         if (!self.fetchingData) {
             self.fetchingData = true;
             [self updateWidget:self.widgetConfig callback:^(NSMutableAttributedString *attributedString) {
-                if (attributedString) {
+                if (attributedString && [attributedString length] > 0) {
                     [self setAttributedText:attributedString];
                     [self setHidden:NO];
                 } else {
-                    [self setText:@""];
+                    [self setText:@" "];
                     [self setHidden:YES];
                 }
                 [self.parentView showOrHide];
