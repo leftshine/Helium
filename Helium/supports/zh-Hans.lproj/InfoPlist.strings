@@ -1,0 +1,3 @@
+"NSLocationWhenInUseUsageDescription" = "Helium希望利用您的当前位置为您提供当地天气信息。";
+"NSLocationAlwaysAndWhenInUseUsageDescription" = "Helium希望利用您的当前位置为您提供当地天气信息。";
+"Toggle HUD" = "打开/关闭HUD";

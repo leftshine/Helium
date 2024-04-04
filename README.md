@@ -11,7 +11,7 @@ To change the SDK, go to the `Makefile` and modify the `TARGET` to your SDK vers
 ```
 TARGET := iphone:clang:[SDK Version]:[Minimum Version]
 ```
-Run `./ipabuild.sh` to build the ipa. The resulting tipa should be in a folder called 'build'.
+Run `./build.sh` to build the ipa. The resulting tipa should be in a folder called 'build'.
 
 ## Tested Devices
 - iPhone 13 Pro (iOS 15.3.1, Jailed & Jailbroken)

@@ -1,0 +1,39 @@
+//
+//  Helium.pch
+//  Helium
+//
+//  Created by Fuuko on 2024/3/27.
+//
+
+#ifndef Helium_pch
+#define Helium_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+#if __has_include(<AvailabilityVersions.h>)
+    #import <AvailabilityVersions.h>
+#endif
+
+#ifdef __OBJC__
+    #if __has_include(<TargetConditionals.h>)
+        #import <TargetConditionals.h>
+    #endif
+
+    #import <Foundation/Foundation.h>
+    #import <os/log.h>
+    #import <UIKit/UIKit.h>
+    #define HMLogPrefix(index, valueString) [NSString stringWithFormat:@"boom - %d: %s = ", index, valueString]
+    #import "HMLog.h"
+#endif
+
+#define USER_DEFAULTS_PATH   @"/var/mobile/Library/Preferences/com.leemin.helium.plist"
+
+// HUD -> APP: Notify APP that the HUD's view is appeared.
+#define NOTIFY_LAUNCHED_HUD  "com.leemin.notification.hud.launched"
+
+// APP -> HUD: Notify HUD to dismiss itself.
+#define NOTIFY_DISMISSAL_HUD "com.leemin.notification.hud.dismissal"
+
+// APP -> HUD: Notify HUD that the user defaults has been changed by APP.
+#define NOTIFY_RELOAD_HUD    "com.leemin.notification.hud.reload"
+#endif /* Helium_pch */
