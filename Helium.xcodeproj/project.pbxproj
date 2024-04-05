@@ -347,7 +347,6 @@
 				32E7F6E42BB44BB800507110 /* main.swift */,
 				32E7F67A2BB199BA00507110 /* WidgetManager.swift */,
 				329934B42BB04F00009BE9B0 /* extensions */,
-				32E7F8B62BB704F600507110 /* intents */,
 				32E7F6862BB1A0E200507110 /* objc */,
 				329934AF2BB0477C009BE9B0 /* supports */,
 				329934AC2BB03A2C009BE9B0 /* views */,
@@ -373,8 +372,8 @@
 				32E7F6AA2BB1B31400507110 /* wallpaper.jpg */,
 				32E7F6EE2BB4523200507110 /* prefix.pch */,
 				329934B22BB04BDF009BE9B0 /* entitlements.plist */,
-				32E7F8B52BB6DF6700507110 /* Simulator-Info.plist */,
 				32E7F8B42BB6DF2000507110 /* Info.plist */,
+				32E7F8B52BB6DF6700507110 /* Simulator-Info.plist */,
 				329934B02BB047B1009BE9B0 /* build.sh */,
 				329934A02BB02AF6009BE9B0 /* Assets.xcassets */,
 				32E7F69C2BB1AE3F00507110 /* credits */,
@@ -695,13 +694,6 @@
 				32E7F8512BB6BE9E00507110 /* widgets */,
 			);
 			path = sources;
-			sourceTree = "<group>";
-		};
-		32E7F8B62BB704F600507110 /* intents */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = intents;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

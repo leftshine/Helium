@@ -22,10 +22,6 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
-	<key>NSUserActivityTypes</key>
-	<array>
-		<string>ToggleHUDIntentIntent</string>
-	</array>
 	<key>UIApplicationShortcutItems</key>
 	<array>
 		<dict>

@@ -5,9 +5,6 @@ flags:                 [ flat_namespace ]
 install-name:          /System/Library/PrivateFrameworks/BackBoardServices.framework/BackBoardServices
 current-version:       1
 compatibility-version: 1
-reexported-libraries:
-  - targets:              [ armv7-ios, armv7s-ios, arm64-ios, arm64e-ios, x86_64-ios-simulator ]
-    libraries:            [ /System/Library/PrivateFrameworks/AssertionServices.framework/AssertionServices ]
 exports:
   - targets:              [ armv7-ios, armv7s-ios, arm64-ios, arm64e-ios, x86_64-ios-simulator ]
     symbols:              [ _BKAccelerometer_server,

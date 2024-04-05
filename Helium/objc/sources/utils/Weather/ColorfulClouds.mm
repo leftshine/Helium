@@ -621,24 +621,38 @@ static NSString *UserAgent = @"Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_3_3 like 
 }
 
 - (NSString *)getDataFrom:(NSString *)url {
-    // NSLog(@"url:%@", url);
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    __block NSString *responseData = nil;
+
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
 
     [request setHTTPMethod:@"GET"];
     [request setURL:[NSURL URLWithString:url]];
     [request setValue:UserAgent forHTTPHeaderField:@"User-Agent"];
 
-    NSError *error = nil;
-    NSHTTPURLResponse *responseCode = nil;
+    NSURLSession *session = [NSURLSession sharedSession];
+    NSURLSessionDataTask *task = [session dataTaskWithRequest:request
+                                            completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        if (error) {
+            NSLog(@"Error getting %@, %@", url, error);
+        } else {
+            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
 
-    NSData *oResponseData = [NSURLConnection sendSynchronousRequest:request returningResponse:&responseCode error:&error];
+            if ([httpResponse statusCode] == 200) {
+                responseData = [[NSString alloc] initWithData:data
+                                                     encoding:NSUTF8StringEncoding];
+            } else {
+                NSLog(@"Error getting %@, HTTP status code %li", url, (long)[httpResponse statusCode]);
+            }
+        }
 
-    if ([responseCode statusCode] != 200) {
-        NSLog(@"Error getting %@, HTTP status code %li", url, [responseCode statusCode]);
-        return nil;
-    }
+        dispatch_semaphore_signal(semaphore);
+    }];
 
-    return [[NSString alloc] initWithData:oResponseData encoding:NSUTF8StringEncoding];
+    [task resume];
+    dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW, (int64_t)(30.0 * NSEC_PER_SEC)));
+
+    return responseData;
 }
 
 - (NSString *)encodeURIComponent:(NSString *)string
