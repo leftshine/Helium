@@ -20,10 +20,12 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         if let shortcutItem = connectionOptions.shortcutItem {
             handlerShortcut(shortcutItem)
+            exitApp()
         }
 
         if let url = connectionOptions.urlContexts.first?.url {
             handlerURL(url)
+            exitApp()
         }
 
         window = UIWindow(windowScene: windowScene)
@@ -35,6 +37,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     func windowScene(_ windowScene: UIWindowScene, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
         handlerShortcut(shortcutItem)
+        exitApp()
     }
 
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
@@ -42,12 +45,12 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             return
         }
         handlerURL(url)
+        exitApp()
     }
 
     func handlerShortcut(_ shortcutItem: UIApplicationShortcutItem) {
         if shortcutItem.type == "com.leemin.helium.shortcut.toggle-hud" {
             SetHUDEnabledBridger(!IsHUDEnabledBridger())
-            exitApp()
         }
     }
 
@@ -60,13 +63,12 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             } else if url.host == "off" && IsHUDEnabledBridger() {
                 SetHUDEnabledBridger(false)
             }
-            exitApp()
         }
     }
 
     func exitApp() {
         UIApplication.shared.perform(#selector(NSXPCConnection.suspend))
-        sleep(1)
-        exit(0)
+//        sleep(1)
+//        exit(0)
     }
 }
