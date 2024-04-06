@@ -56,6 +56,11 @@
 - (void)locationManagerDidChangeAuthorization:(CLLocationManager *)manager {
     switch (manager.authorizationStatus) {
         case kCLAuthorizationStatusAuthorizedWhenInUse:
+
+            if ([self.locationManager respondsToSelector:@selector(requestAlwaysAuthorization)]) {
+                [self.locationManager requestAlwaysAuthorization];
+            }
+
         case kCLAuthorizationStatusAuthorizedAlways:
             [manager startUpdatingLocation];
             break;
