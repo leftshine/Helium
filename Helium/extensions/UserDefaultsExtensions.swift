@@ -14,7 +14,7 @@ extension UserDefaults {
     func loadUserDefaults(forPath path: String) -> [String: Any] {
         do {
             let plistData: Data = try Data(contentsOf: URL(fileURLWithPath: path))
-            if let dict: [String: Any] = try PropertyListSerialization.propertyList(from: plistData, options: [], format: nil) as? [String: Any] {
+            if let dict: [String: Any] = try PropertyListSerialization.propertyList(from: plistData, options: PropertyListSerialization.ReadOptions(), format: nil) as? [String: Any] {
                 return dict
             }
         } catch {

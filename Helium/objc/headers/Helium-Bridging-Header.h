@@ -10,3 +10,7 @@
 #import "LunarDate.h"
 #import "SwiftObjCPPBridger.h"
 #import "WeatherUtils.h"
+
+#import "HideHUDIntent.h"
+#import "ShowHUDIntent.h"
+#import "ToggleHUDIntent.h"

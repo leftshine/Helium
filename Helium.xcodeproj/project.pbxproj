@@ -7,6 +7,22 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		32300C0E2BC14E07002296DC /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32300C0D2BC14E07002296DC /* SceneDelegate.swift */; };
+		32300C0F2BC14E07002296DC /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32300C0D2BC14E07002296DC /* SceneDelegate.swift */; };
+		32300C112BC15584002296DC /* ToggleHUDIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32300C102BC15584002296DC /* ToggleHUDIntentHandler.swift */; };
+		32300C122BC1569C002296DC /* ToggleHUDIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32300C102BC15584002296DC /* ToggleHUDIntentHandler.swift */; };
+		32300C132BC1614E002296DC /* Intents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32300BE42BC0F480002296DC /* Intents.framework */; };
+		32300C142BC16161002296DC /* Intents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32300BE42BC0F480002296DC /* Intents.framework */; };
+		32300C172BC1650A002296DC /* ShowHUDIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32300C162BC1650A002296DC /* ShowHUDIntentHandler.swift */; };
+		32300C192BC16517002296DC /* HideHUDIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32300C182BC16517002296DC /* HideHUDIntentHandler.swift */; };
+		32300C1A2BC165DE002296DC /* HideHUDIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32300C182BC16517002296DC /* HideHUDIntentHandler.swift */; };
+		32300C1B2BC165E1002296DC /* ShowHUDIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32300C162BC1650A002296DC /* ShowHUDIntentHandler.swift */; };
+		32300C302BC16B04002296DC /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 32300C2F2BC16B04002296DC /* Intents.intentdefinition */; };
+		32300C312BC16B04002296DC /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 32300C2F2BC16B04002296DC /* Intents.intentdefinition */; };
+		32300C432BC16BCB002296DC /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 32300C3F2BC16BCB002296DC /* Localizable.strings */; };
+		32300C442BC16BCB002296DC /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 32300C3F2BC16BCB002296DC /* Localizable.strings */; };
+		32300C452BC16BCB002296DC /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 32300C412BC16BCB002296DC /* InfoPlist.strings */; };
+		32300C462BC16BCB002296DC /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 32300C412BC16BCB002296DC /* InfoPlist.strings */; };
 		3299349F2BB02AF3009BE9B0 /* MainAppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3299349E2BB02AF3009BE9B0 /* MainAppView.swift */; };
 		329934A12BB02AF6009BE9B0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 329934A02BB02AF6009BE9B0 /* Assets.xcassets */; };
 		329934AE2BB03AF0009BE9B0 /* HomePageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 329934AD2BB03AF0009BE9B0 /* HomePageView.swift */; };
@@ -27,10 +43,6 @@
 		32E7F6812BB19AE600507110 /* WidgetPreferencesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32E7F6802BB19AE600507110 /* WidgetPreferencesView.swift */; };
 		32E7F6832BB19B0300507110 /* WidgetPreviewsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32E7F6822BB19B0300507110 /* WidgetPreviewsView.swift */; };
 		32E7F6852BB19B6300507110 /* Const.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32E7F6842BB19B6300507110 /* Const.swift */; };
-		32E7F6DA2BB305A300507110 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 32E7F6D12BB305A300507110 /* InfoPlist.strings */; };
-		32E7F6DB2BB305A300507110 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 32E7F6D32BB305A300507110 /* Localizable.strings */; };
-		32E7F6DC2BB305A300507110 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 32E7F6D62BB305A300507110 /* InfoPlist.strings */; };
-		32E7F6DD2BB305A300507110 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 32E7F6D82BB305A300507110 /* Localizable.strings */; };
 		32E7F6DF2BB4380200507110 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32E7F6DE2BB4380200507110 /* AppDelegate.swift */; };
 		32E7F6E12BB439D500507110 /* DispatchQueueExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32E7F6E02BB439D500507110 /* DispatchQueueExtensions.swift */; };
 		32E7F6E52BB44BB800507110 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32E7F6E42BB44BB800507110 /* main.swift */; };
@@ -60,11 +72,7 @@
 		32E7F7BE2BB5A55900507110 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32E7F6DE2BB4380200507110 /* AppDelegate.swift */; };
 		32E7F7C12BB5A55900507110 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32E7F7812BB5920900507110 /* AVFoundation.framework */; };
 		32E7F7C42BB5A55900507110 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32E7F78C2BB59ED700507110 /* IOKit.framework */; };
-		32E7F7C82BB5A55900507110 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 32E7F6D82BB305A300507110 /* Localizable.strings */; };
 		32E7F7C92BB5A55900507110 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 329934A02BB02AF6009BE9B0 /* Assets.xcassets */; };
-		32E7F7CA2BB5A55900507110 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 32E7F6D62BB305A300507110 /* InfoPlist.strings */; };
-		32E7F7CB2BB5A55900507110 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 32E7F6D32BB305A300507110 /* Localizable.strings */; };
-		32E7F7CC2BB5A55900507110 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 32E7F6D12BB305A300507110 /* InfoPlist.strings */; };
 		32E7F8542BB6BE9E00507110 /* IOHIDEvent+KIF.m in Sources */ = {isa = PBXBuildFile; fileRef = 32E7F8032BB6BE9E00507110 /* IOHIDEvent+KIF.m */; };
 		32E7F8552BB6BE9E00507110 /* IOHIDEvent+KIF.m in Sources */ = {isa = PBXBuildFile; fileRef = 32E7F8032BB6BE9E00507110 /* IOHIDEvent+KIF.m */; };
 		32E7F8562BB6BE9E00507110 /* UITouch-KIFAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 32E7F8162BB6BE9E00507110 /* UITouch-KIFAdditions.m */; };
@@ -133,7 +141,43 @@
 		32E7F8B32BB6DDD200507110 /* GraphicsServices.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 32E7F8A92BB6DDD100507110 /* GraphicsServices.tbd */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		32300BF02BC0F480002296DC /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		32300BF62BC0F4FD002296DC /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		32300BE42BC0F480002296DC /* Intents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Intents.framework; path = System/Library/Frameworks/Intents.framework; sourceTree = SDKROOT; };
+		32300C0D2BC14E07002296DC /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		32300C102BC15584002296DC /* ToggleHUDIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleHUDIntentHandler.swift; sourceTree = "<group>"; };
+		32300C152BC16171002296DC /* libswiftIntents.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libswiftIntents.tbd; path = usr/lib/swift/libswiftIntents.tbd; sourceTree = SDKROOT; };
+		32300C162BC1650A002296DC /* ShowHUDIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowHUDIntentHandler.swift; sourceTree = "<group>"; };
+		32300C182BC16517002296DC /* HideHUDIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HideHUDIntentHandler.swift; sourceTree = "<group>"; };
+		32300C2E2BC16B04002296DC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; name = Base; path = Base.lproj/Intents.intentdefinition; sourceTree = "<group>"; };
+		32300C332BC16B09002296DC /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Intents.strings"; sourceTree = "<group>"; };
+		32300C352BC16B11002296DC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Intents.strings; sourceTree = "<group>"; };
+		32300C402BC16BCB002296DC /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
+		32300C422BC16BCB002296DC /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		32300C472BC16BD8002296DC /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		32300C482BC16BD8002296DC /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		329934992BB02AF3009BE9B0 /* Helium.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Helium.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3299349E2BB02AF3009BE9B0 /* MainAppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainAppView.swift; sourceTree = "<group>"; };
 		329934A02BB02AF6009BE9B0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -163,10 +207,6 @@
 		32E7F6A42BB1B30900507110 /* Fuuko.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = Fuuko.jpg; sourceTree = "<group>"; };
 		32E7F6A92BB1B31400507110 /* icon.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = icon.jpg; sourceTree = "<group>"; };
 		32E7F6AA2BB1B31400507110 /* wallpaper.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = wallpaper.jpg; sourceTree = "<group>"; };
-		32E7F6D02BB305A300507110 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = InfoPlist.strings; sourceTree = "<group>"; };
-		32E7F6D22BB305A300507110 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = Localizable.strings; sourceTree = "<group>"; };
-		32E7F6D52BB305A300507110 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = InfoPlist.strings; sourceTree = "<group>"; };
-		32E7F6D72BB305A300507110 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Localizable.strings; sourceTree = "<group>"; };
 		32E7F6DE2BB4380200507110 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		32E7F6E02BB439D500507110 /* DispatchQueueExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchQueueExtensions.swift; sourceTree = "<group>"; };
 		32E7F6E42BB44BB800507110 /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
@@ -299,6 +339,7 @@
 				32E7F8AE2BB6DDD100507110 /* WeatherFoundation.tbd in Frameworks */,
 				32E7F8AA2BB6DDD100507110 /* SpringBoardServices.tbd in Frameworks */,
 				32E7F8B02BB6DDD100507110 /* Weather.tbd in Frameworks */,
+				32300C142BC16161002296DC /* Intents.framework in Frameworks */,
 				32E7F78D2BB59ED700507110 /* IOKit.framework in Frameworks */,
 				32E7F8AC2BB6DDD100507110 /* MediaRemote.tbd in Frameworks */,
 			);
@@ -314,6 +355,7 @@
 				32E7F8AF2BB6DDD100507110 /* WeatherFoundation.tbd in Frameworks */,
 				32E7F8AB2BB6DDD100507110 /* SpringBoardServices.tbd in Frameworks */,
 				32E7F8B12BB6DDD100507110 /* Weather.tbd in Frameworks */,
+				32300C132BC1614E002296DC /* Intents.framework in Frameworks */,
 				32E7F7C42BB5A55900507110 /* IOKit.framework in Frameworks */,
 				32E7F8AD2BB6DDD100507110 /* MediaRemote.tbd in Frameworks */,
 			);
@@ -322,6 +364,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		32300BFE2BC0FFFC002296DC /* intents */ = {
+			isa = PBXGroup;
+			children = (
+				32300C182BC16517002296DC /* HideHUDIntentHandler.swift */,
+				32300C162BC1650A002296DC /* ShowHUDIntentHandler.swift */,
+				32300C102BC15584002296DC /* ToggleHUDIntentHandler.swift */,
+				32300C2F2BC16B04002296DC /* Intents.intentdefinition */,
+			);
+			path = intents;
+			sourceTree = "<group>";
+		};
 		329934902BB02AF3009BE9B0 = {
 			isa = PBXGroup;
 			children = (
@@ -345,8 +398,10 @@
 			children = (
 				32E7F6DE2BB4380200507110 /* AppDelegate.swift */,
 				32E7F6E42BB44BB800507110 /* main.swift */,
+				32300C0D2BC14E07002296DC /* SceneDelegate.swift */,
 				32E7F67A2BB199BA00507110 /* WidgetManager.swift */,
 				329934B42BB04F00009BE9B0 /* extensions */,
+				32300BFE2BC0FFFC002296DC /* intents */,
 				32E7F6862BB1A0E200507110 /* objc */,
 				329934AF2BB0477C009BE9B0 /* supports */,
 				329934AC2BB03A2C009BE9B0 /* views */,
@@ -377,9 +432,9 @@
 				329934B02BB047B1009BE9B0 /* build.sh */,
 				329934A02BB02AF6009BE9B0 /* Assets.xcassets */,
 				32E7F69C2BB1AE3F00507110 /* credits */,
-				32E7F6D92BB305A300507110 /* en.lproj */,
+				32300C412BC16BCB002296DC /* InfoPlist.strings */,
+				32300C3F2BC16BCB002296DC /* Localizable.strings */,
 				32E7F7832BB5952500507110 /* PrivateFrameworks */,
-				32E7F6D42BB305A300507110 /* zh-Hans.lproj */,
 			);
 			path = supports;
 			sourceTree = "<group>";
@@ -450,29 +505,13 @@
 			path = credits;
 			sourceTree = "<group>";
 		};
-		32E7F6D42BB305A300507110 /* zh-Hans.lproj */ = {
-			isa = PBXGroup;
-			children = (
-				32E7F6D12BB305A300507110 /* InfoPlist.strings */,
-				32E7F6D32BB305A300507110 /* Localizable.strings */,
-			);
-			path = "zh-Hans.lproj";
-			sourceTree = "<group>";
-		};
-		32E7F6D92BB305A300507110 /* en.lproj */ = {
-			isa = PBXGroup;
-			children = (
-				32E7F6D62BB305A300507110 /* InfoPlist.strings */,
-				32E7F6D82BB305A300507110 /* Localizable.strings */,
-			);
-			path = en.lproj;
-			sourceTree = "<group>";
-		};
 		32E7F7802BB5920900507110 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				32300C152BC16171002296DC /* libswiftIntents.tbd */,
 				32E7F78C2BB59ED700507110 /* IOKit.framework */,
 				32E7F7812BB5920900507110 /* AVFoundation.framework */,
+				32300BE42BC0F480002296DC /* Intents.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -706,6 +745,7 @@
 				329934952BB02AF3009BE9B0 /* Sources */,
 				329934962BB02AF3009BE9B0 /* Frameworks */,
 				329934972BB02AF3009BE9B0 /* Resources */,
+				32300BF02BC0F480002296DC /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
@@ -723,6 +763,7 @@
 				32E7F7912BB5A55900507110 /* Sources */,
 				32E7F7C02BB5A55900507110 /* Frameworks */,
 				32E7F7C72BB5A55900507110 /* Resources */,
+				32300BF62BC0F4FD002296DC /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
@@ -756,6 +797,7 @@
 			knownRegions = (
 				en,
 				"zh-Hans",
+				Base,
 			);
 			mainGroup = 329934902BB02AF3009BE9B0;
 			productRefGroup = 3299349A2BB02AF3009BE9B0 /* Products */;
@@ -773,11 +815,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				32E7F6DD2BB305A300507110 /* Localizable.strings in Resources */,
 				329934A12BB02AF6009BE9B0 /* Assets.xcassets in Resources */,
-				32E7F6DC2BB305A300507110 /* InfoPlist.strings in Resources */,
-				32E7F6DB2BB305A300507110 /* Localizable.strings in Resources */,
-				32E7F6DA2BB305A300507110 /* InfoPlist.strings in Resources */,
+				32300C452BC16BCB002296DC /* InfoPlist.strings in Resources */,
+				32300C432BC16BCB002296DC /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -785,11 +825,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				32E7F7C82BB5A55900507110 /* Localizable.strings in Resources */,
 				32E7F7C92BB5A55900507110 /* Assets.xcassets in Resources */,
-				32E7F7CA2BB5A55900507110 /* InfoPlist.strings in Resources */,
-				32E7F7CB2BB5A55900507110 /* Localizable.strings in Resources */,
-				32E7F7CC2BB5A55900507110 /* InfoPlist.strings in Resources */,
+				32300C462BC16BCB002296DC /* InfoPlist.strings in Resources */,
+				32300C442BC16BCB002296DC /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -814,6 +852,8 @@
 				32E7F8842BB6BE9F00507110 /* WidgetUtils.mm in Sources */,
 				32E7F8602BB6BE9F00507110 /* HUDMainWindow.mm in Sources */,
 				32E7F85C2BB6BE9E00507110 /* HUDMainApplication.mm in Sources */,
+				32300C112BC15584002296DC /* ToggleHUDIntentHandler.swift in Sources */,
+				32300C172BC1650A002296DC /* ShowHUDIntentHandler.swift in Sources */,
 				32E7F8722BB6BE9F00507110 /* LRCLyricsParser.mm in Sources */,
 				329934B82BB04F59009BE9B0 /* UserDefaultsExtensions.swift in Sources */,
 				32E7F8822BB6BE9F00507110 /* WidgetsContainerView.mm in Sources */,
@@ -836,10 +876,13 @@
 				32E7F67D2BB19A7400507110 /* EditWidgetSetView.swift in Sources */,
 				32E7F8782BB6BE9F00507110 /* MediaRemoteManager.mm in Sources */,
 				32E7F8662BB6BE9F00507110 /* QWeather.mm in Sources */,
+				32300C192BC16517002296DC /* HideHUDIntentHandler.swift in Sources */,
 				32ADE5B82BB1977B002621A5 /* WidgetCustomizationView.swift in Sources */,
 				32E7F8742BB6BE9F00507110 /* LunarDate.mm in Sources */,
+				32300C302BC16B04002296DC /* Intents.intentdefinition in Sources */,
 				329934C32BB04FDB009BE9B0 /* FoundationExtensions.swift in Sources */,
 				32E7F67B2BB199BA00507110 /* WidgetManager.swift in Sources */,
+				32300C0E2BC14E07002296DC /* SceneDelegate.swift in Sources */,
 				32E7F6812BB19AE600507110 /* WidgetPreferencesView.swift in Sources */,
 				329934C62BB04FDB009BE9B0 /* Alert++.swift in Sources */,
 				329934C42BB04FDB009BE9B0 /* Color++.swift in Sources */,
@@ -870,6 +913,7 @@
 				32E7F8852BB6BE9F00507110 /* WidgetUtils.mm in Sources */,
 				32E7F8612BB6BE9F00507110 /* HUDMainWindow.mm in Sources */,
 				32E7F85D2BB6BE9F00507110 /* HUDMainApplication.mm in Sources */,
+				32300C122BC1569C002296DC /* ToggleHUDIntentHandler.swift in Sources */,
 				32E7F8732BB6BE9F00507110 /* LRCLyricsParser.mm in Sources */,
 				32E7F79D2BB5A55900507110 /* UserDefaultsExtensions.swift in Sources */,
 				32E7F8832BB6BE9F00507110 /* WidgetsContainerView.mm in Sources */,
@@ -886,16 +930,20 @@
 				32E7F7AC2BB5A55900507110 /* SettingsView.swift in Sources */,
 				32E7F86D2BB6BE9F00507110 /* EZTimer.mm in Sources */,
 				32E7F7AD2BB5A55900507110 /* DebugPageView.swift in Sources */,
+				32300C1B2BC165E1002296DC /* ShowHUDIntentHandler.swift in Sources */,
 				32E7F8812BB6BE9F00507110 /* AnyBackdropView.mm in Sources */,
 				32E7F7AF2BB5A55900507110 /* Haptic++.swift in Sources */,
 				32E7F85B2BB6BE9E00507110 /* HUDHelper.mm in Sources */,
 				32E7F7B02BB5A55900507110 /* EditWidgetSetView.swift in Sources */,
 				32E7F8792BB6BE9F00507110 /* MediaRemoteManager.mm in Sources */,
 				32E7F8672BB6BE9F00507110 /* QWeather.mm in Sources */,
+				32300C1A2BC165DE002296DC /* HideHUDIntentHandler.swift in Sources */,
 				32E7F7B12BB5A55900507110 /* WidgetCustomizationView.swift in Sources */,
 				32E7F8752BB6BE9F00507110 /* LunarDate.mm in Sources */,
+				32300C312BC16B04002296DC /* Intents.intentdefinition in Sources */,
 				32E7F7B42BB5A55900507110 /* FoundationExtensions.swift in Sources */,
 				32E7F7B52BB5A55900507110 /* WidgetManager.swift in Sources */,
+				32300C0F2BC14E07002296DC /* SceneDelegate.swift in Sources */,
 				32E7F7B62BB5A55900507110 /* WidgetPreferencesView.swift in Sources */,
 				32E7F7B72BB5A55900507110 /* Alert++.swift in Sources */,
 				32E7F7B92BB5A55900507110 /* Color++.swift in Sources */,
@@ -911,36 +959,32 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		32E7F6D12BB305A300507110 /* InfoPlist.strings */ = {
+		32300C2F2BC16B04002296DC /* Intents.intentdefinition */ = {
 			isa = PBXVariantGroup;
 			children = (
-				32E7F6D02BB305A300507110 /* zh-Hans */,
+				32300C2E2BC16B04002296DC /* Base */,
+				32300C332BC16B09002296DC /* zh-Hans */,
+				32300C352BC16B11002296DC /* en */,
 			);
-			name = InfoPlist.strings;
+			name = Intents.intentdefinition;
 			sourceTree = "<group>";
 		};
-		32E7F6D32BB305A300507110 /* Localizable.strings */ = {
+		32300C3F2BC16BCB002296DC /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				32E7F6D22BB305A300507110 /* zh-Hans */,
+				32300C402BC16BCB002296DC /* Base */,
+				32300C472BC16BD8002296DC /* zh-Hans */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
-		32E7F6D62BB305A300507110 /* InfoPlist.strings */ = {
+		32300C412BC16BCB002296DC /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				32E7F6D52BB305A300507110 /* en */,
+				32300C422BC16BCB002296DC /* Base */,
+				32300C482BC16BD8002296DC /* zh-Hans */,
 			);
 			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		32E7F6D82BB305A300507110 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				32E7F6D72BB305A300507110 /* en */,
-			);
-			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -999,6 +1043,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				INTENTS_CODEGEN_LANGUAGE = "Objective-C";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 3.2.6;
@@ -1007,6 +1052,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -1057,6 +1103,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				INTENTS_CODEGEN_LANGUAGE = "Objective-C";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 3.2.6;
@@ -1064,6 +1111,7 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_VERSION = 5.0;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -1071,6 +1119,7 @@
 		329934A82BB02AF6009BE9B0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
@@ -1108,7 +1157,6 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Helium/objc/headers/Helium-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -1116,6 +1164,7 @@
 		329934A92BB02AF6009BE9B0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
@@ -1152,7 +1201,6 @@
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Helium/objc/headers/Helium-Bridging-Header.h";
-				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -1198,7 +1246,6 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Helium/objc/headers/Helium-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -1243,7 +1290,6 @@
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Helium/objc/headers/Helium-Bridging-Header.h";
-				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
