@@ -492,8 +492,8 @@ struct WidgetPreferencesView: View {
                             DropdownItem(NSLocalizedString("System CPU Usage", comment: ""), tag: 0),
                             DropdownItem(NSLocalizedString("System Memory Total", comment: ""), tag: 1),
                             DropdownItem(NSLocalizedString("System Memory Usage", comment: ""), tag: 2),
-                            DropdownItem(NSLocalizedString("Application CPU Usage", comment: ""), tag: 3),
-                            DropdownItem(NSLocalizedString("Application Memory Usage", comment: ""), tag: 4),
+                            DropdownItem(NSLocalizedString("Helium CPU Usage", comment: ""), tag: 3),
+                            DropdownItem(NSLocalizedString("Helium Memory Usage", comment: ""), tag: 4),
                         ]
                     }
                 }

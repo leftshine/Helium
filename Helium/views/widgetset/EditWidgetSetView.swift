@@ -524,6 +524,7 @@ struct EditWidgetSetView: View {
                     }
                 }
             }
+            .listStyle(.insetGrouped)
             .navigationTitle(NSLocalizedString("Edit Widget", comment: ""))
             .onAppear {
                 if currentWidgetSet == widgetSet {

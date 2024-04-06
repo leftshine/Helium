@@ -57,6 +57,7 @@ struct WidgetCustomizationView: View {
                         }
                     }
                 }
+                .listStyle(.insetGrouped)
             }
             .navigationTitle(Text(NSLocalizedString("Customize", comment: "")))
         }
