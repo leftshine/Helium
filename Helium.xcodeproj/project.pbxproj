@@ -168,7 +168,6 @@
 		32300BE42BC0F480002296DC /* Intents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Intents.framework; path = System/Library/Frameworks/Intents.framework; sourceTree = SDKROOT; };
 		32300C0D2BC14E07002296DC /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		32300C102BC15584002296DC /* ToggleHUDIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleHUDIntentHandler.swift; sourceTree = "<group>"; };
-		32300C152BC16171002296DC /* libswiftIntents.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libswiftIntents.tbd; path = usr/lib/swift/libswiftIntents.tbd; sourceTree = SDKROOT; };
 		32300C162BC1650A002296DC /* ShowHUDIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowHUDIntentHandler.swift; sourceTree = "<group>"; };
 		32300C182BC16517002296DC /* HideHUDIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HideHUDIntentHandler.swift; sourceTree = "<group>"; };
 		32300C2E2BC16B04002296DC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; name = Base; path = Base.lproj/Intents.intentdefinition; sourceTree = "<group>"; };
@@ -183,7 +182,7 @@
 		329934A02BB02AF6009BE9B0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		329934AD2BB03AF0009BE9B0 /* HomePageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePageView.swift; sourceTree = "<group>"; };
 		329934B02BB047B1009BE9B0 /* build.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = build.sh; sourceTree = SOURCE_ROOT; };
-		329934B22BB04BDF009BE9B0 /* entitlements.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = entitlements.plist; sourceTree = "<group>"; };
+		329934B22BB04BDF009BE9B0 /* Helium.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Helium.entitlements; sourceTree = "<group>"; };
 		329934B52BB04F1D009BE9B0 /* ViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtensions.swift; sourceTree = "<group>"; };
 		329934B72BB04F59009BE9B0 /* UserDefaultsExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsExtensions.swift; sourceTree = "<group>"; };
 		329934B92BB04FDB009BE9B0 /* DarwinNotificationCenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DarwinNotificationCenter.swift; sourceTree = "<group>"; };
@@ -423,10 +422,10 @@
 		329934AF2BB0477C009BE9B0 /* supports */ = {
 			isa = PBXGroup;
 			children = (
+				329934B22BB04BDF009BE9B0 /* Helium.entitlements */,
 				32E7F6A92BB1B31400507110 /* icon.jpg */,
 				32E7F6AA2BB1B31400507110 /* wallpaper.jpg */,
 				32E7F6EE2BB4523200507110 /* prefix.pch */,
-				329934B22BB04BDF009BE9B0 /* entitlements.plist */,
 				32E7F8B42BB6DF2000507110 /* Info.plist */,
 				32E7F8B52BB6DF6700507110 /* Simulator-Info.plist */,
 				329934B02BB047B1009BE9B0 /* build.sh */,
@@ -508,7 +507,6 @@
 		32E7F7802BB5920900507110 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				32300C152BC16171002296DC /* libswiftIntents.tbd */,
 				32E7F78C2BB59ED700507110 /* IOKit.framework */,
 				32E7F7812BB5920900507110 /* AVFoundation.framework */,
 				32300BE42BC0F480002296DC /* Intents.framework */,

@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>application-identifier</key>
+	<string>com.leemin.helium</string>
 	<key>com.apple.AXMediaUtilitiesService-access</key>
 	<true/>
 	<key>com.apple.DragUI.accessibility</key>
@@ -43,6 +45,12 @@
 	<key>com.apple.hid.manager.user-access-keyboard</key>
 	<true/>
 	<key>com.apple.idle-timer-services</key>
+	<true/>
+	<key>com.apple.locationd.authorizeapplications</key>
+	<true/>
+	<key>com.apple.locationd.effective_bundle</key>
+	<true/>
+	<key>com.apple.locationd.status</key>
 	<true/>
 	<key>com.apple.managedconfiguration.profiled-access</key>
 	<true/>
@@ -103,6 +111,18 @@
 		<string>com.apple.AssistiveTouch</string>
 		<string>com.apple.Accessibility.SwitchControl</string>
 		<string>com.apple.Accessibility</string>
+	</array>
+	<key>com.apple.private.ubiquity-kvstore-access</key>
+	<array>
+		<string>com.apple.weather</string>
+	</array>
+	<key>com.apple.security.application-groups</key>
+	<array>
+		<string>group.com.apple.weather</string>
+	</array>
+	<key>com.apple.security.exception.files.absolute-path.read-write</key>
+	<array>
+		<string>/private/var/mobile/Library/Preferences/com.apple.weather.plist</string>
 	</array>
 	<key>com.apple.security.exception.mach-lookup.global-name</key>
 	<array>
@@ -170,24 +190,6 @@
 	<true/>
 	<key>com.apple.system.diagnostics.iokit-properties</key>
 	<true/>
-	<key>com.apple.locationd.authorizeapplications</key>
-	<true/>
-	<key>com.apple.locationd.effective_bundle</key>
-	<true/>
-	<key>com.apple.locationd.status</key>
-	<true/>
-	<key>com.apple.private.ubiquity-kvstore-access</key>
-	<array>
-		<string>com.apple.weather</string>
-	</array>
-	<key>com.apple.security.application-groups</key>
-	<array>
-		<string>group.com.apple.weather</string>
-	</array>
-	<key>com.apple.security.exception.files.absolute-path.read-write</key>
-	<array>
-		<string>/private/var/mobile/Library/Preferences/com.apple.weather.plist</string>
-	</array>
 	<key>file-read-data</key>
 	<true/>
 	<key>get-task-allow</key>

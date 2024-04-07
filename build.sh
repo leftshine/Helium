@@ -23,13 +23,13 @@ CODE_SIGNING_ALLOWED=NO | xcpretty
 
 #chmod 0644 Resources/Info.plist
 #chmod 0644 supports/Sandbox-Info.plist
-cp Helium/supports/entitlements.plist Helium.xcarchive/Products
+cp Helium/supports/Helium.entitlements Helium.xcarchive/Products
 cd Helium.xcarchive/Products/Applications
 codesign --remove-signature Helium.app
 cd -
 cd Helium.xcarchive/Products
 mv Applications Payload
-ldid -Sentitlements.plist Payload/Helium.app
+ldid -SHelium.entitlements Payload/Helium.app
 chmod 0644 Payload/Helium.app/Info.plist
 zip -qr Helium.tipa Payload
 cd -
