@@ -34,7 +34,7 @@ struct MainAppView: View {
                 }
 
             if DEBUG_MODE_ENABLED {
-                // Dbug
+                // Debug
                 DebugPageView()
                     .tabItem {
                         Label(NSLocalizedString("Debug", comment: ""), systemImage: "ladybug")

@@ -23,6 +23,12 @@
 		32300C442BC16BCB002296DC /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 32300C3F2BC16BCB002296DC /* Localizable.strings */; };
 		32300C452BC16BCB002296DC /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 32300C412BC16BCB002296DC /* InfoPlist.strings */; };
 		32300C462BC16BCB002296DC /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 32300C412BC16BCB002296DC /* InfoPlist.strings */; };
+		32300CD82BC2D97C002296DC /* HiddenContainerRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32300CD72BC2D97C002296DC /* HiddenContainerRecognizer.swift */; };
+		32300CD92BC2D97C002296DC /* HiddenContainerRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32300CD72BC2D97C002296DC /* HiddenContainerRecognizer.swift */; };
+		32300CDB2BC2D99B002296DC /* ScreenshotInvincibleContainerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32300CDA2BC2D99B002296DC /* ScreenshotInvincibleContainerProtocol.swift */; };
+		32300CDC2BC2D99B002296DC /* ScreenshotInvincibleContainerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32300CDA2BC2D99B002296DC /* ScreenshotInvincibleContainerProtocol.swift */; };
+		32300CDE2BC2D9B7002296DC /* ScreenshotInvisibleContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32300CDD2BC2D9B7002296DC /* ScreenshotInvisibleContainer.swift */; };
+		32300CDF2BC2D9B7002296DC /* ScreenshotInvisibleContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32300CDD2BC2D9B7002296DC /* ScreenshotInvisibleContainer.swift */; };
 		3299349F2BB02AF3009BE9B0 /* MainAppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3299349E2BB02AF3009BE9B0 /* MainAppView.swift */; };
 		329934A12BB02AF6009BE9B0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 329934A02BB02AF6009BE9B0 /* Assets.xcassets */; };
 		329934AE2BB03AF0009BE9B0 /* HomePageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 329934AD2BB03AF0009BE9B0 /* HomePageView.swift */; };
@@ -177,6 +183,9 @@
 		32300C422BC16BCB002296DC /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		32300C472BC16BD8002296DC /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		32300C482BC16BD8002296DC /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		32300CD72BC2D97C002296DC /* HiddenContainerRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HiddenContainerRecognizer.swift; sourceTree = "<group>"; };
+		32300CDA2BC2D99B002296DC /* ScreenshotInvincibleContainerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotInvincibleContainerProtocol.swift; sourceTree = "<group>"; };
+		32300CDD2BC2D9B7002296DC /* ScreenshotInvisibleContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotInvisibleContainer.swift; sourceTree = "<group>"; };
 		329934992BB02AF3009BE9B0 /* Helium.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Helium.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3299349E2BB02AF3009BE9B0 /* MainAppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainAppView.swift; sourceTree = "<group>"; };
 		329934A02BB02AF6009BE9B0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -374,6 +383,16 @@
 			path = intents;
 			sourceTree = "<group>";
 		};
+		32300CD62BC2D965002296DC /* SnapshotSafeView */ = {
+			isa = PBXGroup;
+			children = (
+				32300CD72BC2D97C002296DC /* HiddenContainerRecognizer.swift */,
+				32300CDA2BC2D99B002296DC /* ScreenshotInvincibleContainerProtocol.swift */,
+				32300CDD2BC2D9B7002296DC /* ScreenshotInvisibleContainer.swift */,
+			);
+			path = SnapshotSafeView;
+			sourceTree = "<group>";
+		};
 		329934902BB02AF3009BE9B0 = {
 			isa = PBXGroup;
 			children = (
@@ -441,6 +460,7 @@
 		329934B42BB04F00009BE9B0 /* extensions */ = {
 			isa = PBXGroup;
 			children = (
+				32300CD62BC2D965002296DC /* SnapshotSafeView */,
 				329934BF2BB04FDB009BE9B0 /* Alert++.swift */,
 				329934BD2BB04FDB009BE9B0 /* Color++.swift */,
 				32E7F6842BB19B6300507110 /* Const.swift */,
@@ -847,6 +867,8 @@
 				32E7F87E2BB6BE9F00507110 /* UsefulFunctions.mm in Sources */,
 				32E7F8622BB6BE9F00507110 /* HUDRootViewController.mm in Sources */,
 				329934C22BB04FDB009BE9B0 /* DropdownPicker.swift in Sources */,
+				32300CDE2BC2D9B7002296DC /* ScreenshotInvisibleContainer.swift in Sources */,
+				32300CD82BC2D97C002296DC /* HiddenContainerRecognizer.swift in Sources */,
 				32E7F8842BB6BE9F00507110 /* WidgetUtils.mm in Sources */,
 				32E7F8602BB6BE9F00507110 /* HUDMainWindow.mm in Sources */,
 				32E7F85C2BB6BE9E00507110 /* HUDMainApplication.mm in Sources */,
@@ -887,6 +909,7 @@
 				32E7F6E12BB439D500507110 /* DispatchQueueExtensions.swift in Sources */,
 				32E7F8542BB6BE9E00507110 /* IOHIDEvent+KIF.m in Sources */,
 				32E7F8582BB6BE9E00507110 /* TSEventFetcher.mm in Sources */,
+				32300CDB2BC2D99B002296DC /* ScreenshotInvincibleContainerProtocol.swift in Sources */,
 				32E7F6832BB19B0300507110 /* WidgetPreviewsView.swift in Sources */,
 				32E7F87C2BB6BE9F00507110 /* NSBundle+Language.mm in Sources */,
 				32E7F6DF2BB4380200507110 /* AppDelegate.swift in Sources */,
@@ -908,6 +931,8 @@
 				32E7F87F2BB6BE9F00507110 /* UsefulFunctions.mm in Sources */,
 				32E7F8632BB6BE9F00507110 /* HUDRootViewController.mm in Sources */,
 				32E7F7992BB5A55900507110 /* DropdownPicker.swift in Sources */,
+				32300CDF2BC2D9B7002296DC /* ScreenshotInvisibleContainer.swift in Sources */,
+				32300CD92BC2D97C002296DC /* HiddenContainerRecognizer.swift in Sources */,
 				32E7F8852BB6BE9F00507110 /* WidgetUtils.mm in Sources */,
 				32E7F8612BB6BE9F00507110 /* HUDMainWindow.mm in Sources */,
 				32E7F85D2BB6BE9F00507110 /* HUDMainApplication.mm in Sources */,
@@ -948,6 +973,7 @@
 				32E7F7BA2BB5A55900507110 /* DispatchQueueExtensions.swift in Sources */,
 				32E7F8552BB6BE9E00507110 /* IOHIDEvent+KIF.m in Sources */,
 				32E7F8592BB6BE9E00507110 /* TSEventFetcher.mm in Sources */,
+				32300CDC2BC2D99B002296DC /* ScreenshotInvincibleContainerProtocol.swift in Sources */,
 				32E7F7BB2BB5A55900507110 /* WidgetPreviewsView.swift in Sources */,
 				32E7F87D2BB6BE9F00507110 /* NSBundle+Language.mm in Sources */,
 				32E7F7BE2BB5A55900507110 /* AppDelegate.swift in Sources */,

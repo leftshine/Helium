@@ -105,6 +105,9 @@ static void ReloadHUD
     NSMutableArray <WidgetsContainerView *> *_containerViews;
 
     UIView *_contentView;
+    ScreenshotInvisibleContainer *_containerView;
+    UIView *_hiddenContainerView;
+    UIView *_borderView;
 
     UIInterfaceOrientation _orientation;
 
@@ -166,13 +169,19 @@ static void ReloadHUD
     [self loadUserDefaults:YES];
 
     if ([self debugBorder]) {
-        _contentView.layer.borderWidth = 1.0;
+        [_borderView setHidden:NO];
         [_horizontalLine setHidden:NO];
         [_verticalLine setHidden:NO];
     } else {
-        _contentView.layer.borderWidth = 0.0;
+        [_borderView setHidden:YES];
         [_horizontalLine setHidden:YES];
         [_verticalLine setHidden:YES];
+    }
+
+    if ([self hideOnScreenshot]) {
+        [_containerView setupContainerAsHideContentInScreenshots];
+    } else {
+        [_containerView setupContainerAsDisplayContentInScreenshots];
     }
 }
 
@@ -180,6 +189,13 @@ static void ReloadHUD
 {
     [self loadUserDefaults:NO];
     NSNumber *mode = [_userDefaults objectForKey:@"debugBorder"];
+    return mode ? [mode boolValue] : NO;
+}
+
+- (BOOL)hideOnScreenshot
+{
+    [self loadUserDefaults:NO];
+    NSNumber *mode = [_userDefaults objectForKey:@"hideOnScreenshot"];
     return mode ? [mode boolValue] : NO;
 }
 
@@ -241,21 +257,35 @@ static void ReloadHUD
     _contentView = [[UIView alloc] init];
     _contentView.backgroundColor = [UIColor clearColor];
     _contentView.translatesAutoresizingMaskIntoConstraints = NO;
-    _contentView.layer.borderColor = [UIColor redColor].CGColor;
-    [_contentView setUserInteractionEnabled:YES];
     [self.view addSubview:_contentView];
+
+    _hiddenContainerView = [[UIView alloc] init];
+    _hiddenContainerView.backgroundColor = [UIColor clearColor];
+    _hiddenContainerView.translatesAutoresizingMaskIntoConstraints = NO;
+    _containerView = [[ScreenshotInvisibleContainer alloc] initWithContent:_hiddenContainerView];
+    [_contentView addSubview:_containerView];
 
     _horizontalLine = [[UIView alloc] initWithFrame:CGRectZero];
     _horizontalLine.backgroundColor = [UIColor redColor];
     _horizontalLine.translatesAutoresizingMaskIntoConstraints = NO;
     [_horizontalLine setHidden:YES];
-    [_contentView addSubview:_horizontalLine];
+    [_hiddenContainerView addSubview:_horizontalLine];
 
     _verticalLine = [[UIView alloc] initWithFrame:CGRectZero];
     _verticalLine.backgroundColor = [UIColor redColor];
     _verticalLine.translatesAutoresizingMaskIntoConstraints = NO;
     [_verticalLine setHidden:YES];
-    [_contentView addSubview:_verticalLine];
+    [_hiddenContainerView addSubview:_verticalLine];
+
+    _borderView = [[UIView alloc] initWithFrame:CGRectZero];
+    _borderView.backgroundColor = [UIColor clearColor];
+    _borderView.layer.borderColor = [UIColor redColor].CGColor;
+    _borderView.layer.borderWidth = 1.0;
+    _borderView.translatesAutoresizingMaskIntoConstraints = NO;
+    [_borderView setHidden:YES];
+    [_hiddenContainerView addSubview:_borderView];
+
+    [_contentView setUserInteractionEnabled:YES];
 
     [self reloadWidgets];
     notify_post(NOTIFY_RELOAD_HUD);
@@ -303,7 +333,7 @@ static void ReloadHUD
         [containerView reloadWidgets];
         [containerView setLandscape:[self isLandscapeOrientation]];
         [_containerViews addObject:containerView];
-        [_contentView addSubview:containerView];
+        [_hiddenContainerView addSubview:containerView];
     }
 }
 
@@ -440,6 +470,12 @@ static void ReloadHUD
          [_verticalLine.centerXAnchor constraintEqualToAnchor:_contentView.centerXAnchor],
          [_verticalLine.widthAnchor constraintEqualToConstant:1],
          [_verticalLine.heightAnchor constraintEqualToAnchor:_contentView.heightAnchor]
+    ]];
+
+    [_constraints addObjectsFromArray:@[
+         [_borderView.centerXAnchor constraintEqualToAnchor:_contentView.centerXAnchor],
+         [_borderView.widthAnchor constraintEqualToAnchor:_contentView.widthAnchor],
+         [_borderView.heightAnchor constraintEqualToAnchor:_contentView.heightAnchor]
     ]];
 
     [NSLayoutConstraint activateConstraints:_constraints];
