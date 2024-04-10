@@ -1,28 +1,47 @@
 #!/bin/sh
 
+if [[ $* == *--scriptdebug* ]]; then
+    set -x
+fi
+set -e
+
 # This script is used to build the Helium app and create a tipa file with Xcode.
-if [ $# -ne 1 ]; then
-    echo "Usage: $0 <version>"
+if [ $# -lt 1 ]; then
+    echo "Usage: $0 <version> [--debug]"
     exit 1
 fi
 
 VERSION=$1
+shift
+
+# Check if --debug option is provided
+if [[ "$*" == *--debug* ]]; then
+    CONFIGURATION="Debug"
+else
+    CONFIGURATION="Release"
+fi
+
+if [ -f .env ]; then
+  export $(grep -v '^#' .env | xargs)
+fi
 
 # Strip leading "v" from version if present
 VERSION=${VERSION#v}
 
+#replace env
+sed -i '' "s#{SENTRY_DSN}#$SENTRY_DSN#g" Helium/objc/headers/Const.h
+sed -i '' "s#{SENTRY_ENV}#$CONFIGURATION#g" Helium/objc/headers/Const.h
+
 # Build using Xcode
 xcodebuild clean archive \
 -scheme Helium \
--project Helium.xcodeproj \
+-workspace Helium.xcworkspace \
 -sdk iphoneos \
 -destination 'generic/platform=iOS' \
 -archivePath Helium \
--configuration Debug \
+-configuration $CONFIGURATION \
 CODE_SIGNING_ALLOWED=NO | xcpretty
 
-#chmod 0644 Resources/Info.plist
-#chmod 0644 supports/Sandbox-Info.plist
 cp Helium/supports/Helium.entitlements Helium.xcarchive/Products
 cd Helium.xcarchive/Products/Applications
 codesign --remove-signature Helium.app
