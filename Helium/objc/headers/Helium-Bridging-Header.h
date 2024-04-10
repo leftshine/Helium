@@ -6,6 +6,7 @@
 //
 
 #import <CoreLocation/CoreLocation.h>
+#import "Const.h"
 #import "FontUtils.h"
 #import "LunarDate.h"
 #import "SwiftObjCPPBridger.h"

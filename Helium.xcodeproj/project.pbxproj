@@ -145,6 +145,8 @@
 		32E7F8B12BB6DDD100507110 /* Weather.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 32E7F8A82BB6DDD100507110 /* Weather.tbd */; };
 		32E7F8B22BB6DDD100507110 /* GraphicsServices.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 32E7F8A92BB6DDD100507110 /* GraphicsServices.tbd */; };
 		32E7F8B32BB6DDD200507110 /* GraphicsServices.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 32E7F8A92BB6DDD100507110 /* GraphicsServices.tbd */; };
+		B6A5A0BEEFE31A62B9E02F9E /* Pods_Helium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2AB3039E3ACD3EBD8AA3BA8 /* Pods_Helium.framework */; };
+		F049972BECA6E37A14F26C01 /* Pods_Helium_Simulator.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 720E5C09D50E0796DBED59FB /* Pods_Helium_Simulator.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -171,6 +173,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1AE6D19E454FA8752036ADCC /* Pods-Helium-Simulator.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Helium-Simulator.debug.xcconfig"; path = "Target Support Files/Pods-Helium-Simulator/Pods-Helium-Simulator.debug.xcconfig"; sourceTree = "<group>"; };
+		2810F6F5881836FDAC27498F /* Pods-Helium.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Helium.debug.xcconfig"; path = "Target Support Files/Pods-Helium/Pods-Helium.debug.xcconfig"; sourceTree = "<group>"; };
+		320F72F52BC6C8180033417A /* Const.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Const.h; sourceTree = "<group>"; };
 		32300BE42BC0F480002296DC /* Intents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Intents.framework; path = System/Library/Frameworks/Intents.framework; sourceTree = SDKROOT; };
 		32300C0D2BC14E07002296DC /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		32300C102BC15584002296DC /* ToggleHUDIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleHUDIntentHandler.swift; sourceTree = "<group>"; };
@@ -334,6 +339,10 @@
 		32E7F8A92BB6DDD100507110 /* GraphicsServices.tbd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.text-based-dylib-definition"; path = GraphicsServices.tbd; sourceTree = "<group>"; };
 		32E7F8B42BB6DF2000507110 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		32E7F8B52BB6DF6700507110 /* Simulator-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Simulator-Info.plist"; sourceTree = "<group>"; };
+		720E5C09D50E0796DBED59FB /* Pods_Helium_Simulator.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Helium_Simulator.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		802FF56F944344DB11424938 /* Pods-Helium-Simulator.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Helium-Simulator.release.xcconfig"; path = "Target Support Files/Pods-Helium-Simulator/Pods-Helium-Simulator.release.xcconfig"; sourceTree = "<group>"; };
+		9066F2F37641B0C4F87F0449 /* Pods-Helium.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Helium.release.xcconfig"; path = "Target Support Files/Pods-Helium/Pods-Helium.release.xcconfig"; sourceTree = "<group>"; };
+		E2AB3039E3ACD3EBD8AA3BA8 /* Pods_Helium.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Helium.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -350,6 +359,7 @@
 				32300C142BC16161002296DC /* Intents.framework in Frameworks */,
 				32E7F78D2BB59ED700507110 /* IOKit.framework in Frameworks */,
 				32E7F8AC2BB6DDD100507110 /* MediaRemote.tbd in Frameworks */,
+				B6A5A0BEEFE31A62B9E02F9E /* Pods_Helium.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -366,6 +376,7 @@
 				32300C132BC1614E002296DC /* Intents.framework in Frameworks */,
 				32E7F7C42BB5A55900507110 /* IOKit.framework in Frameworks */,
 				32E7F8AD2BB6DDD100507110 /* MediaRemote.tbd in Frameworks */,
+				F049972BECA6E37A14F26C01 /* Pods_Helium_Simulator.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -399,6 +410,7 @@
 				3299349B2BB02AF3009BE9B0 /* Helium */,
 				3299349A2BB02AF3009BE9B0 /* Products */,
 				32E7F7802BB5920900507110 /* Frameworks */,
+				B357E36149F0D23016BA72BD /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -530,6 +542,8 @@
 				32E7F78C2BB59ED700507110 /* IOKit.framework */,
 				32E7F7812BB5920900507110 /* AVFoundation.framework */,
 				32300BE42BC0F480002296DC /* Intents.framework */,
+				E2AB3039E3ACD3EBD8AA3BA8 /* Pods_Helium.framework */,
+				720E5C09D50E0796DBED59FB /* Pods_Helium_Simulator.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -679,6 +693,7 @@
 		32E7F8362BB6BE9E00507110 /* headers */ = {
 			isa = PBXGroup;
 			children = (
+				320F72F52BC6C8180033417A /* Const.h */,
 				32E7F8342BB6BE9E00507110 /* Helium-Bridging-Header.h */,
 				32E7F8352BB6BE9E00507110 /* SwiftObjCPPBridger.h */,
 				32E7F7E42BB6BE9E00507110 /* hud */,
@@ -753,6 +768,17 @@
 			path = sources;
 			sourceTree = "<group>";
 		};
+		B357E36149F0D23016BA72BD /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				2810F6F5881836FDAC27498F /* Pods-Helium.debug.xcconfig */,
+				9066F2F37641B0C4F87F0449 /* Pods-Helium.release.xcconfig */,
+				1AE6D19E454FA8752036ADCC /* Pods-Helium-Simulator.debug.xcconfig */,
+				802FF56F944344DB11424938 /* Pods-Helium-Simulator.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -760,10 +786,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 329934A72BB02AF6009BE9B0 /* Build configuration list for PBXNativeTarget "Helium" */;
 			buildPhases = (
+				949CD33DE5BFCEFA16BC7844 /* [CP] Check Pods Manifest.lock */,
 				329934952BB02AF3009BE9B0 /* Sources */,
 				329934962BB02AF3009BE9B0 /* Frameworks */,
 				329934972BB02AF3009BE9B0 /* Resources */,
+				320F72F42BC6BBBD0033417A /* Run Updated Build Version Script */,
 				32300BF02BC0F480002296DC /* Embed Foundation Extensions */,
+				EB468E22F673FEB24D2FC1AF /* [CP] Embed Pods Frameworks */,
+				320F72F32BC56D030033417A /* Run Upload DYSM Script */,
 			);
 			buildRules = (
 			);
@@ -778,10 +808,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 32E7F7CD2BB5A55900507110 /* Build configuration list for PBXNativeTarget "Helium-Simulator" */;
 			buildPhases = (
+				1A1C185DB55229601F4C2C04 /* [CP] Check Pods Manifest.lock */,
 				32E7F7912BB5A55900507110 /* Sources */,
 				32E7F7C02BB5A55900507110 /* Frameworks */,
 				32E7F7C72BB5A55900507110 /* Resources */,
 				32300BF62BC0F4FD002296DC /* Embed Foundation Extensions */,
+				9003588904AA34D97A5032E3 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -850,6 +882,128 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		1A1C185DB55229601F4C2C04 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Helium-Simulator-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		320F72F32BC56D030033417A /* Run Upload DYSM Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${TARGET_NAME}",
+			);
+			name = "Run Upload DYSM Script";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif which sentry-cli >/dev/null; then\nERROR=$(sentry-cli debug-files upload --include-sources \"$DWARF_DSYM_FOLDER_PATH\" --force-foreground 2>&1 >/dev/null)\nif [ ! $? -eq 0 ]; then\necho \"error: sentry-cli - $ERROR\"\nfi\nelse\necho \"error: sentry-cli not installed, download from https://github.com/getsentry/sentry-cli/releases\"\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		320F72F42BC6BBBD0033417A /* Run Updated Build Version Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run Updated Build Version Script";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Set the build number to the current git commit count.\n# If we're using the Dev scheme, then we'll suffix the build\n# number with the current branch name, to make collisions\n# far less likely across feature branches.\n# Based on: http://w3facility.info/question/how-do-i-force-xcode-to-rebuild-the-info-plist-file-in-my-project-every-time-i-build-the-project/\n#\ngit=`sh /etc/profile; which git`\nappBuild=`\"$git\" rev-list --all |wc -l`\nif [ $CONFIGURATION = \"Debug\" ]; then\nbranchName=`\"$git\" rev-parse --abbrev-ref HEAD`\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $appBuild-$branchName\" \"${TARGET_BUILD_DIR}/${INFOPLIST_PATH}\"\nelse\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $appBuild\" \"${TARGET_BUILD_DIR}/${INFOPLIST_PATH}\"\nfi\necho \"Updated ${TARGET_BUILD_DIR}/${INFOPLIST_PATH}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9003588904AA34D97A5032E3 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Helium-Simulator/Pods-Helium-Simulator-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Helium-Simulator/Pods-Helium-Simulator-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Helium-Simulator/Pods-Helium-Simulator-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		949CD33DE5BFCEFA16BC7844 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Helium-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		EB468E22F673FEB24D2FC1AF /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Helium/Pods-Helium-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Helium/Pods-Helium-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Helium/Pods-Helium-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		329934952BB02AF3009BE9B0 /* Sources */ = {
@@ -1052,7 +1206,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -1118,7 +1272,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -1142,8 +1296,9 @@
 		};
 		329934A82BB02AF6009BE9B0 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2810F6F5881836FDAC27498F /* Pods-Helium.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
@@ -1187,8 +1342,9 @@
 		};
 		329934A92BB02AF6009BE9B0 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9066F2F37641B0C4F87F0449 /* Pods-Helium.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
@@ -1231,6 +1387,7 @@
 		};
 		32E7F7CE2BB5A55900507110 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1AE6D19E454FA8752036ADCC /* Pods-Helium-Simulator.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1276,6 +1433,7 @@
 		};
 		32E7F7CF2BB5A55900507110 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 802FF56F944344DB11424938 /* Pods-Helium-Simulator.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;

@@ -1,0 +1,24 @@
+PODS:
+  - Sentry (8.23.0):
+    - Sentry/Core (= 8.23.0)
+  - Sentry/Core (8.23.0)
+
+DEPENDENCIES:
+  - Sentry (from `https://github.com/getsentry/sentry-cocoa.git`, tag `8.23.0`)
+
+EXTERNAL SOURCES:
+  Sentry:
+    :git: https://github.com/getsentry/sentry-cocoa.git
+    :tag: 8.23.0
+
+CHECKOUT OPTIONS:
+  Sentry:
+    :git: https://github.com/getsentry/sentry-cocoa.git
+    :tag: 8.23.0
+
+SPEC CHECKSUMS:
+  Sentry: 1b0c990ea2a722f4ab91a5e1487ff64751ab94d1
+
+PODFILE CHECKSUM: 6852afdef9948fb5eb00b0a66bf60146358a75b1
+
+COCOAPODS: 1.15.2

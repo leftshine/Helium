@@ -6,6 +6,7 @@
 //
 
 import Intents
+import Sentry
 import SwiftUI
 import UIKit
 
@@ -21,6 +22,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Load fonts from documents
         if let documentsFontsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
             FontUtils.shared().loadFonts(fromFolder: documentsFontsPath)
+        }
+
+        SentrySDK.start { options in
+            options.dsn = SENTRY_DSN
+            options.debug = true // Enabled debug when first installing is always helpful
+            options.environment = SENTRY_ENV
+
+            // Enable all experimental features
+            options.attachViewHierarchy = true
+            options.enablePreWarmedAppStartTracing = true
+            options.enableTimeToFullDisplayTracing = true
+            options.swiftAsyncStacktraces = true
         }
 
 //        window = UIWindow(frame: UIScreen.main.bounds)

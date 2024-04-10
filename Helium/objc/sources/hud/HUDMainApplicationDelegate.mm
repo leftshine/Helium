@@ -18,6 +18,9 @@
 #import "SBSAccessibilityWindowHostingController.h"
 #import "UIWindow+Private.h"
 
+#import "Const.h"
+#import "Sentry.h"
+
 @implementation HUDMainApplicationDelegate {
     HUDRootViewController *_rootViewController;
     SBSAccessibilityWindowHostingController *_windowHostingController;
@@ -80,6 +83,18 @@
     [invocation setArgument:&windowLevel atIndex:3];
     [invocation invoke];
 #pragma clang diagnostic pop
+
+    [SentrySDK startWithConfigureOptions:^(SentryOptions *options) {
+        options.dsn = @SENTRY_DSN;
+        options.debug = YES;     // Enabled debug when first installing is always helpful
+        options.environment = @SENTRY_ENV;
+
+        // Enable all experimental features
+        options.attachViewHierarchy = YES;
+        options.enablePreWarmedAppStartTracing = YES;
+        options.enableTimeToFullDisplayTracing = YES;
+        options.swiftAsyncStacktraces = YES;
+    }];
 
     return YES;
 }
