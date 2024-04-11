@@ -25,31 +25,7 @@
 #import "SpringBoardServices.h"
 #import "UIApplication+Private.h"
 
-#define NOTIFY_UI_LOCKSTATE   "com.apple.springboard.lockstate"
-#define NOTIFY_LS_APP_CHANGED "com.apple.LaunchServices.ApplicationsChanged"
-
-static void LaunchServicesApplicationStateChanged
-    (CFNotificationCenterRef center,
-    void                     *observer,
-    CFStringRef              name,
-    const void               *object,
-    CFDictionaryRef          userInfo) {
-    /* Application installed or uninstalled */
-
-    BOOL isAppInstalled = NO;
-
-    for (LSApplicationProxy *app in [[objc_getClass("LSApplicationWorkspace") defaultWorkspace] allApplications]) {
-        if ([app.applicationIdentifier isEqualToString:@"com.leemin.helium"]) {
-            isAppInstalled = YES;
-            break;
-        }
-    }
-
-    if (!isAppInstalled) {
-        UIApplication *app = [UIApplication sharedApplication];
-        [app terminateWithSuccess];
-    }
-}
+#define NOTIFY_UI_LOCKSTATE "com.apple.springboard.lockstate"
 
 static void SpringBoardLockStatusChanged
     (CFNotificationCenterRef center,
@@ -126,15 +102,6 @@ static void ReloadHUD
     });
 
     CFNotificationCenterRef darwinCenter = CFNotificationCenterGetDarwinNotifyCenter();
-
-    CFNotificationCenterAddObserver(
-        darwinCenter,
-        (__bridge const void *)self,
-        LaunchServicesApplicationStateChanged,
-        CFSTR(NOTIFY_LS_APP_CHANGED),
-        NULL,
-        CFNotificationSuspensionBehaviorCoalesce
-        );
 
     CFNotificationCenterAddObserver(
         darwinCenter,

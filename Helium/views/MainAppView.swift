@@ -13,32 +13,39 @@ var firstRun = true
 // MARK: Root View
 
 struct MainAppView: View {
+    @State var debugMode = false
+    @State var selectedTab: Tab = .home
+
     var body: some View {
-        TabView {
+        TabView(selection: $selectedTab) {
             // Home Page
             HomePageView()
                 .tabItem {
                     Label(NSLocalizedString("Home", comment: ""), systemImage: "house")
                 }
+                .tag(Tab.home)
 
             // Widget Customization
             WidgetCustomizationView()
                 .tabItem {
                     Label(NSLocalizedString("Customize", comment: ""), systemImage: "paintbrush")
                 }
+                .tag(Tab.customization)
 
             // Settings
             SettingsView()
                 .tabItem {
                     Label(NSLocalizedString("Settings", comment: ""), systemImage: "gear")
                 }
+                .tag(Tab.settings)
 
-            if DEBUG_MODE_ENABLED {
+            if debugMode {
                 // Debug
                 DebugPageView()
                     .tabItem {
                         Label(NSLocalizedString("Debug", comment: ""), systemImage: "ladybug")
                     }
+                    .tag(Tab.debug)
             }
         }
         .onAppear {
@@ -64,6 +71,20 @@ struct MainAppView: View {
                 UIApplication.shared.alert(title: NSLocalizedString("Not Supported", comment: ""), body: NSLocalizedString("This app must be installed with TrollStore.", comment: ""))
             }
         }
+        .onTapGesture(count: 5) {
+            if self.selectedTab == .settings {
+                debugMode = true
+            }
+        }
+    }
+}
+
+extension MainAppView {
+    enum Tab: Hashable {
+        case home
+        case customization
+        case settings
+        case debug
     }
 }
 
