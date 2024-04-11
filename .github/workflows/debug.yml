@@ -9,10 +9,13 @@ on:
   pull_request:
 
 env:
-  THEOS: ''
   XCODE_VERSION: '15.1'
   logT: ''
   msT: ''
+  SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+  SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+  SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+  SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
 
 jobs:
   build:
@@ -26,44 +29,12 @@ jobs:
 
       - name: Install Homebrew dependencies
         run: |
-          HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=1 brew install --overwrite dpkg ldid make libplist openssl@3
+          HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=1 brew install --overwrite dpkg ldid make libplist openssl@3 getsentry/tools/sentry-cli
           echo "/usr/local/opt/make/libexec/gnubin" >> $GITHUB_PATH
 
-      - name: Checkout XXTouchNG/theos
-        uses: actions/checkout@v4
-        with:
-          repository: XXTouchNG/theos
-          ref: 78ee784d8d3238982c9abdc58cd39919263648b1
-          path: theos
-          submodules: recursive
-
-      - name: Add THEOS environment variables
+      - name: Install Sentry dependencies
         run: |
-          rm -rf $GITHUB_WORKSPACE/theos/sdks
-          echo "THEOS=$GITHUB_WORKSPACE/theos" >> $GITHUB_ENV
-
-      - name: Restore additional SDKs
-        id: cached-sdks-restore
-        uses: actions/cache/restore@v4
-        with:
-          path: ${{ env.THEOS }}/sdks
-          key: ${{ runner.os }}-sdks-${{ env.XCODE_VERSION }}
-
-      - if: ${{ steps.cached-sdks-restore.outputs.cache-hit != 'true' }}
-        name: Checkout theos/sdks
-        uses: actions/checkout@v4
-        with:
-          repository: theos/sdks
-          ref: master
-          path: ${{ env.THEOS }}/sdks
-
-      - if: ${{ steps.cached-sdks-restore.outputs.cache-hit != 'true' }}
-        name: Save SDKs
-        id: cached-sdks-save
-        uses: actions/cache/save@v4
-        with:
-          path: ${{ env.THEOS }}/sdks
-          key: ${{ steps.cached-sdks-restore.outputs.cache-primary-key }}
+          gem install cocoapods
 
       - name: Checkout
         uses: actions/checkout@v4
@@ -73,34 +44,36 @@ jobs:
   
       - name: Setup build environment
         run: |
-          echo "Available SDKs: $(find $THEOS/sdks -name "*.sdk" -maxdepth 1 -print)"
           sT=$(TZ=UTC-8 date +'%S')
           echo "msT=$(date -j -f "%Y-%m-%d %H:%M:%S" "$(TZ=UTC-8 date +'%Y-%m-%d %H:%M'):${sT}" +%s)" >> $GITHUB_ENV
           echo "logT=$(TZ=UTC-8 date +'%Y-%m-%d %H:%M'):${sT}" >> $GITHUB_ENV
-          echo $msT
-          echo $logT
+          cd $GITHUB_WORKSPACE/Helium
+          echo "SENTRY_ORG=$SENTRY_ORG" > .env
+          echo "SENTRY_PROJECT=$SENTRY_PROJECT" >> .env
+          echo "SENTRY_AUTH_TOKEN=$SENTRY_AUTH_TOKEN" >> .env
+          echo "SENTRY_DSN=$SENTRY_DSN" >> .env
 
       - name: Make IPA
         run: |
           cd $GITHUB_WORKSPACE/Helium
-          ./ipabuild.sh --debug
+          ./build.sh --debug
 
       - name: Collect symbols
         run: |
           cd $GITHUB_WORKSPACE/Helium
-          find .theos/obj -name "*.dSYM" -print | zip -r build/Helium_symbols.zip -@
+          find Helium.xcarchive/dSYMs -name "*.dSYM" -print | zip -r packages/Helium_symbols.zip -@
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: Helium.tipa
-          path: ${{ github.workspace }}/Helium/build/Helium.tipa
+          path: ${{ github.workspace }}/Helium/packages/Helium.tipa
 
       - name: Upload symbols
         uses: actions/upload-artifact@v4
         with:
           name: Helium_symbols
-          path: ${{ github.workspace }}/Helium/build/Helium_symbols.zip
+          path: ${{ github.workspace }}/Helium/packages/Helium_symbols.zip
 
       - name: Upload testing release
         uses: softprops/action-gh-release@v1
@@ -114,4 +87,4 @@ jobs:
           prerelease: true
           target_commitish: ${{ github.sha }}
           files: |
-            ${{ github.workspace }}/Helium/build/Helium.tipa
+            ${{ github.workspace }}/Helium/packages/Helium.tipa

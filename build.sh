@@ -5,15 +5,6 @@ if [[ $* == *--scriptdebug* ]]; then
 fi
 set -e
 
-# This script is used to build the Helium app and create a tipa file with Xcode.
-if [ $# -lt 1 ]; then
-    echo "Usage: $0 <version> [--debug]"
-    exit 1
-fi
-
-VERSION=$1
-shift
-
 # Check if --debug option is provided
 if [[ "$*" == *--debug* ]]; then
     CONFIGURATION="Debug"
@@ -24,9 +15,6 @@ fi
 if [ -f .env ]; then
   export $(grep -v '^#' .env | xargs)
 fi
-
-# Strip leading "v" from version if present
-VERSION=${VERSION#v}
 
 #replace env
 sed -i '' "s#{SENTRY_DSN}#$SENTRY_DSN#g" Helium/objc/headers/Const.h
@@ -53,4 +41,4 @@ chmod 0644 Payload/Helium.app/Info.plist
 zip -qr Helium.tipa Payload
 cd -
 mkdir -p packages
-mv Helium.xcarchive/Products/Helium.tipa packages/Helium_v$VERSION.tipa
+mv Helium.xcarchive/Products/Helium.tipa packages/Helium.tipa
