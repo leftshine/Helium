@@ -221,6 +221,10 @@
 /* WeatherUtils.mm */
 "error" = "出错啦";
 
+/* LyricsUtils.mm */
+"get_lyrics" = "[00:00.000]获取歌词中";
+"no_lyrics" = "[00:00.000]未获取到歌词\n[00:05.000] ";
+
 /* ColorfulClouds */
 "CLEAR_DAY" = "晴";
 "CLEAR_NIGHT" = "晴";

@@ -38,7 +38,7 @@ static NSString *UserAgent = @"Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_3_3 like 
     if (self.gettingLyric == false && self.noLyric == -1) {
         self.parser = [LRCLyricsParser sharedParser];
         [self.parser cleanLyrics];
-        [self.parser parseLRCString:@"[00:00.000]获取歌词中"];
+        [self.parser parseLRCString:NSLocalizedString(@"get_lyrics", comment: @"")];
 
         self.gettingLyric = true;
         [self getKugouLyricByName:[self trimTitle:self.title]
@@ -67,7 +67,7 @@ static NSString *UserAgent = @"Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_3_3 like 
         if (self.noLyric == 1) {
             self.parser = [LRCLyricsParser sharedParser];
             [self.parser cleanLyrics];
-            [self.parser parseLRCString:@"[00:00.000]未获取到歌词"];
+            [self.parser parseLRCString:NSLocalizedString(@"no_lyrics", comment: @"")];
         }
     }
 }
@@ -243,7 +243,7 @@ static NSString *UserAgent = @"Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_3_3 like 
         } else {
             NSError *notFoundError = [NSError errorWithDomain:NSCocoaErrorDomain
                                                          code:404
-                                                     userInfo:@{ NSLocalizedDescriptionKey: @"未找到匹配的歌曲" }];
+                                                     userInfo:@{ NSLocalizedDescriptionKey: @"No lyrics content found" }];
             completion(nil, notFoundError);
         }
     }];
@@ -376,7 +376,7 @@ static NSString *UserAgent = @"Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_3_3 like 
         } else {
             NSError *notFoundError = [NSError errorWithDomain:NSCocoaErrorDomain
                                                          code:404
-                                                     userInfo:@{ NSLocalizedDescriptionKey: @"未找到匹配的歌曲" }];
+                                                     userInfo:@{ NSLocalizedDescriptionKey: @"No lyrics content found" }];
             completion(nil, notFoundError);
         }
     }];

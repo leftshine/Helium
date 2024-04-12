@@ -217,6 +217,10 @@
 /* WeatherUtils.mm */
 "error" = "error";
 
+/* LyricsUtils.mm */
+"get_lyrics" = "[00:00.000]getting lyrics";
+"no_lyrics" = "[00:00.000]lyrics not available\n[00:05.000] ";
+
 /* ColorfulClouds */
 "CLEAR_DAY" = "Clear";
 "CLEAR_NIGHT" = "Clear";
