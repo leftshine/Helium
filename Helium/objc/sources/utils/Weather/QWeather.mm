@@ -1,10 +1,16 @@
+//
+//  QWeather.mm
+//  Helium
+//
+//  Created by Fuuko on 2024/4/13.
+//
+
 #import <CoreLocation/CoreLocation.h>
 #import "LocationUtils.h"
+#import "NetworkUtils.h"
 #import "QWeather.h"
 #import "UsefulFunctions.h"
 #import "WeatherUtils.h"
-
-static NSString *UserAgent = @"Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_3_3 like Mac OS X; en-us) AppleWebKit/533.17.9 (KHTML, like Gecko) Version/5.0.2 Mobile/8J2 Safari/6533.18.5";
 
 @implementation QWeather
 
@@ -43,7 +49,7 @@ static NSString *UserAgent = @"Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_3_3 like 
 }
 
 - (NSDictionary *)fetchNowWeatherForLocation:(NSString *)location {
-    NSString *res = [self getDataFrom:[NSString stringWithFormat:@"https://%@.qweather.com/v7/weather/now?location=%@&key=%@&lang=%@&unit=%@", self.freeSub ? @"devapi" : @"api", location, self.apiKey, self.locale, self.useMetric ? @"m" : @"i"]];
+    NSString *res = [NetworkUtils getDataFrom:[NSString stringWithFormat:@"https://%@.qweather.com/v7/weather/now?location=%@&key=%@&lang=%@&unit=%@", self.freeSub ? @"devapi" : @"api", location, self.apiKey, self.locale, self.useMetric ? @"m" : @"i"]];
     NSData *data = [res dataUsingEncoding:NSUTF8StringEncoding];
     NSError *erro = nil;
 
@@ -56,7 +62,7 @@ static NSString *UserAgent = @"Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_3_3 like 
 }
 
 - (NSDictionary *)fetchTodayWeatherForLocation:(NSString *)location {
-    NSString *res = [self getDataFrom:[NSString stringWithFormat:@"https://%@.qweather.com/v7/weather/3d?location=%@&key=%@&lang=%@&unit=%@", self.freeSub ? @"devapi" : @"api", location, self.apiKey, self.locale, self.useMetric ? @"m" : @"i"]];
+    NSString *res = [NetworkUtils getDataFrom:[NSString stringWithFormat:@"https://%@.qweather.com/v7/weather/3d?location=%@&key=%@&lang=%@&unit=%@", self.freeSub ? @"devapi" : @"api", location, self.apiKey, self.locale, self.useMetric ? @"m" : @"i"]];
     NSData *data = [res dataUsingEncoding:NSUTF8StringEncoding];
     NSError *erro = nil;
 
@@ -69,7 +75,7 @@ static NSString *UserAgent = @"Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_3_3 like 
 }
 
 - (NSDictionary *)fetch24HoursWeatherForLocation:(NSString *)location {
-    NSString *res = [self getDataFrom:[NSString stringWithFormat:@"https://%@.qweather.com/v7/weather/24h?location=%@&key=%@&lang=%@&unit=%@", self.freeSub ? @"devapi" : @"api", location, self.apiKey, self.locale, self.useMetric ? @"m" : @"i"]];
+    NSString *res = [NetworkUtils getDataFrom:[NSString stringWithFormat:@"https://%@.qweather.com/v7/weather/24h?location=%@&key=%@&lang=%@&unit=%@", self.freeSub ? @"devapi" : @"api", location, self.apiKey, self.locale, self.useMetric ? @"m" : @"i"]];
     NSData *data = [res dataUsingEncoding:NSUTF8StringEncoding];
     NSError *erro = nil;
 
@@ -698,48 +704,6 @@ static NSString *UserAgent = @"Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_3_3 like 
     long long longTimestamp = (long long)timestamp;
 
     return longTimestamp;
-}
-
-- (NSString *)getDataFrom:(NSString *)url {
-    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-    __block NSString *responseData = nil;
-
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-
-    [request setHTTPMethod:@"GET"];
-    [request setURL:[NSURL URLWithString:url]];
-    [request setValue:UserAgent forHTTPHeaderField:@"User-Agent"];
-
-    NSURLSession *session = [NSURLSession sharedSession];
-    NSURLSessionDataTask *task = [session dataTaskWithRequest:request
-                                            completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        if (error) {
-            NSLog(@"Error getting %@, %@", url, error);
-        } else {
-            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-
-            if ([httpResponse statusCode] == 200) {
-                responseData = [[NSString alloc] initWithData:data
-                                                     encoding:NSUTF8StringEncoding];
-            } else {
-                NSLog(@"Error getting %@, HTTP status code %li", url, (long)[httpResponse statusCode]);
-            }
-        }
-
-        dispatch_semaphore_signal(semaphore);
-    }];
-
-    [task resume];
-    dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW, (int64_t)(30.0 * NSEC_PER_SEC)));
-
-    return responseData;
-}
-
-- (NSString *)encodeURIComponent:(NSString *)string
-{
-    NSString *s = [string stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
-
-    return s;
 }
 
 - (NSString *)formatFloat:(double)f {

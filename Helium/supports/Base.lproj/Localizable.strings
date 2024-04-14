@@ -130,6 +130,8 @@
 "System Memory Usage" = "System Memory Usage";
 "Helium CPU Usage" = "Helium CPU Usage";
 "Helium Memory Usage" = "Helium Memory Usage";
+"Coin ID" = "Coin ID";
+"Coin Example" = "BTCUSDT";
 
 /* WidgetPreviewsView.swift */
 "ERROR" = "ERROR";
@@ -138,6 +140,9 @@
 
 /* EditWidgetSetView.swift */
 "Enable" = "Enable Widget Set";
+"Alignment" = "Alignment";
+"Horizontal" = "Horizontal";
+"Vertical" = "Vertical";
 "Orientation Mode" = "Orientation Mode";
 "Portrait & Landscape" = "Portrait & Landscape";
 "Portrait" = "Portrait";
@@ -213,6 +218,8 @@
 "Charging Symbol" = "Charging Symbol";
 "Weather" = "Weather";
 "Lyrics" = "Lyrics";
+"CPU&MEM" = "CPU&MEM";
+"Crypto Coin" = "Crypto Coin";
 
 /* WeatherUtils.mm */
 "error" = "error";

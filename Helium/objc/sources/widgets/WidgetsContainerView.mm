@@ -1,3 +1,10 @@
+//
+//  WidgetsContainerView.mm
+//  Helium
+//
+//  Created by Fuuko on 2024/4/13.
+//
+
 #import "EZTimer.h"
 #import "UsefulFunctions.h"
 #import "WidgetsContainerView.h"
@@ -68,6 +75,9 @@
         // Orientation Mode
         NSInteger oMode = getIntFromDictKey(config, @"orientationMode", 0);
         self.orientationMode = oMode;
+
+        NSInteger align = getIntFromDictKey(config, @"alignment", 0);
+        self.alignment = align;
 
         // blur config
         NSDictionary *blurDetails = [config valueForKey:@"blurDetails"] ? [config valueForKey:@"blurDetails"] : @{
@@ -223,59 +233,86 @@
                 [self.widgetViews addObject:widgetView];
                 [self addSubview:widgetView];
 
-                [self addConstraints:@[
-                     [widgetView.topAnchor constraintEqualToAnchor:self.topAnchor],
-                     [widgetView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor]
-                ]];
-
-                if (i == 0) { // First view
+                if (self.alignment == 0) { // Horizontal Layout
                     [self addConstraints:@[
-                         [widgetView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor]
+                         [widgetView.topAnchor constraintEqualToAnchor:self.topAnchor],
+                         [widgetView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor]
                     ]];
 
-                    if ([widgetIDs count] == 1) { // If only one view
-                        [widgetView setTextAlignment:textAlign];
-                    } else { // If more than one view
-                        if (textAlign == NSTextAlignmentLeft) { // Left-aligned when the first view is left-aligned
-                            [widgetView setTextAlignment:NSTextAlignmentCenter];
-                            [widgetView setContentHighPriority:YES];
-                        } else { // Right-aligned when the first view is centered or right-aligned
-                            [widgetView setTextAlignment:NSTextAlignmentRight];
-                            [widgetView setContentHighPriority:NO];
-                        }
-                    }
-                } else {
-                    WidgetView *previousWidgetView = self.widgetViews[i - 1];
-                    [self addConstraints:@[
-                         [widgetView.leadingAnchor constraintEqualToAnchor:previousWidgetView.trailingAnchor]
-                    ]];
+                    if (i == 0) { // First view
+                        [self addConstraints:@[
+                             [widgetView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor]
+                        ]];
 
-                    if ([widgetIDs count] >= 2) {
-                        if (textAlign == NSTextAlignmentRight) { // Content compression resistance when the second and last view are right-aligned
-                            [widgetView setTextAlignment:NSTextAlignmentCenter];
-                            [widgetView setContentHighPriority:YES];
-                        } else {
-                            if ([widgetIDs count] > 2 && i < ([widgetIDs count] - 1)) { // Content compression resistance for the middle views
+                        if ([widgetIDs count] == 1) { // If only one view
+                            [widgetView setTextAlignment:textAlign];
+                        } else { // If more than one view
+                            if (textAlign == NSTextAlignmentLeft) { // Left-aligned when the first view is left-aligned
                                 [widgetView setTextAlignment:NSTextAlignmentCenter];
                                 [widgetView setContentHighPriority:YES];
-                            } else {
-                                [widgetView setTextAlignment:NSTextAlignmentLeft];
+                            } else { // Right-aligned when the first view is centered or right-aligned
+                                [widgetView setTextAlignment:NSTextAlignmentRight];
                                 [widgetView setContentHighPriority:NO];
                             }
                         }
+                    } else {
+                        WidgetView *previousWidgetView = self.widgetViews[i - 1];
+                        [self addConstraints:@[
+                             [widgetView.leadingAnchor constraintEqualToAnchor:previousWidgetView.trailingAnchor]
+                        ]];
+
+                        if ([widgetIDs count] >= 2) {
+                            if (textAlign == NSTextAlignmentRight) { // Content compression resistance when the second and last view are right-aligned
+                                [widgetView setTextAlignment:NSTextAlignmentCenter];
+                                [widgetView setContentHighPriority:YES];
+                            } else {
+                                if ([widgetIDs count] > 2 && i < ([widgetIDs count] - 1)) { // Content compression resistance for the middle views
+                                    [widgetView setTextAlignment:NSTextAlignmentCenter];
+                                    [widgetView setContentHighPriority:YES];
+                                } else {
+                                    [widgetView setTextAlignment:NSTextAlignmentLeft];
+                                    [widgetView setContentHighPriority:NO];
+                                }
+                            }
+                        }
                     }
+                } else { // Vertical Layout
+                    [self addConstraints:@[
+                         [widgetView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
+                         [widgetView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor]
+                    ]];
+
+                    if (i == 0) { // First view
+                        [self addConstraints:@[
+                             [widgetView.topAnchor constraintEqualToAnchor:self.topAnchor]
+                        ]];
+                    } else {
+                        WidgetView *previousWidgetView = self.widgetViews[i - 1];
+                        [self addConstraints:@[
+                             [widgetView.topAnchor constraintEqualToAnchor:previousWidgetView.bottomAnchor]
+                        ]];
+                    }
+
+                    [widgetView setTextAlignment:textAlign];
                 }
             }
 
-            WidgetView *lastWidgetView = [self.widgetViews lastObject];
-            [self addConstraints:@[
-                 [lastWidgetView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor]
-            ]];
-
-            if (!autoResizes && [widgetIDs count] >= 2 && textAlign == NSTextAlignmentCenter) { // When there are more than two views and they are centered, the first and last views are the same size
-                WidgetView *firstWidgetView = [self.widgetViews firstObject];
+            if (self.alignment == 0) { // Horizontal Layout
+                WidgetView *lastWidgetView = [self.widgetViews lastObject];
                 [self addConstraints:@[
-                     [firstWidgetView.widthAnchor constraintEqualToAnchor:lastWidgetView.widthAnchor]
+                     [lastWidgetView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor]
+                ]];
+
+                if (!autoResizes && [widgetIDs count] >= 2 && textAlign == NSTextAlignmentCenter) { // When there are more than two views and they are centered, the first and last views are the same size
+                    WidgetView *firstWidgetView = [self.widgetViews firstObject];
+                    [self addConstraints:@[
+                         [firstWidgetView.widthAnchor constraintEqualToAnchor:lastWidgetView.widthAnchor]
+                    ]];
+                }
+            } else { // Vertical Layout
+                WidgetView *lastWidgetView = [self.widgetViews lastObject];
+                [self addConstraints:@[
+                     [lastWidgetView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor]
                 ]];
             }
         }

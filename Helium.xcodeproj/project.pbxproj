@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		320F72F72BCA9BBE0033417A /* CryptoCoinUtils.mm in Sources */ = {isa = PBXBuildFile; fileRef = 320F72F62BCA9BBE0033417A /* CryptoCoinUtils.mm */; };
+		320F72F82BCA9BBE0033417A /* CryptoCoinUtils.mm in Sources */ = {isa = PBXBuildFile; fileRef = 320F72F62BCA9BBE0033417A /* CryptoCoinUtils.mm */; };
+		320F72FC2BCAA3200033417A /* NetworkUtils.mm in Sources */ = {isa = PBXBuildFile; fileRef = 320F72FB2BCAA3200033417A /* NetworkUtils.mm */; };
+		320F72FD2BCAA3200033417A /* NetworkUtils.mm in Sources */ = {isa = PBXBuildFile; fileRef = 320F72FB2BCAA3200033417A /* NetworkUtils.mm */; };
 		32300C0E2BC14E07002296DC /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32300C0D2BC14E07002296DC /* SceneDelegate.swift */; };
 		32300C0F2BC14E07002296DC /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32300C0D2BC14E07002296DC /* SceneDelegate.swift */; };
 		32300C112BC15584002296DC /* ToggleHUDIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32300C102BC15584002296DC /* ToggleHUDIntentHandler.swift */; };
@@ -176,6 +180,10 @@
 		1AE6D19E454FA8752036ADCC /* Pods-Helium-Simulator.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Helium-Simulator.debug.xcconfig"; path = "Target Support Files/Pods-Helium-Simulator/Pods-Helium-Simulator.debug.xcconfig"; sourceTree = "<group>"; };
 		2810F6F5881836FDAC27498F /* Pods-Helium.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Helium.debug.xcconfig"; path = "Target Support Files/Pods-Helium/Pods-Helium.debug.xcconfig"; sourceTree = "<group>"; };
 		320F72F52BC6C8180033417A /* Const.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Const.h; sourceTree = "<group>"; };
+		320F72F62BCA9BBE0033417A /* CryptoCoinUtils.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CryptoCoinUtils.mm; sourceTree = "<group>"; };
+		320F72F92BCA9BDB0033417A /* CryptoCoinUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CryptoCoinUtils.h; sourceTree = "<group>"; };
+		320F72FA2BCAA2160033417A /* NetworkUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NetworkUtils.h; sourceTree = "<group>"; };
+		320F72FB2BCAA3200033417A /* NetworkUtils.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = NetworkUtils.mm; sourceTree = "<group>"; };
 		32300BE42BC0F480002296DC /* Intents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Intents.framework; path = System/Library/Frameworks/Intents.framework; sourceTree = SDKROOT; };
 		32300C0D2BC14E07002296DC /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		32300C102BC15584002296DC /* ToggleHUDIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleHUDIntentHandler.swift; sourceTree = "<group>"; };
@@ -663,7 +671,7 @@
 		32E7F82E2BB6BE9E00507110 /* utils */ = {
 			isa = PBXGroup;
 			children = (
-				32E7F8222BB6BE9E00507110 /* Weather */,
+				320F72F92BCA9BDB0033417A /* CryptoCoinUtils.h */,
 				32E7F8232BB6BE9E00507110 /* EZTimer.h */,
 				32E7F8242BB6BE9E00507110 /* FontUtils.h */,
 				32E7F8252BB6BE9E00507110 /* HMLog.h */,
@@ -673,8 +681,10 @@
 				32E7F8292BB6BE9E00507110 /* LyricsUtils.h */,
 				32E7F82A2BB6BE9E00507110 /* MediaRemoteManager.h */,
 				32E7F82B2BB6BE9E00507110 /* MusicPlayerUtils.h */,
+				320F72FA2BCAA2160033417A /* NetworkUtils.h */,
 				32E7F82C2BB6BE9E00507110 /* NSBundle+Language.h */,
 				32E7F82D2BB6BE9E00507110 /* UsefulFunctions.h */,
+				32E7F8222BB6BE9E00507110 /* Weather */,
 			);
 			path = utils;
 			sourceTree = "<group>";
@@ -731,6 +741,7 @@
 		32E7F84C2BB6BE9E00507110 /* utils */ = {
 			isa = PBXGroup;
 			children = (
+				320F72F62BCA9BBE0033417A /* CryptoCoinUtils.mm */,
 				32E7F8422BB6BE9E00507110 /* EZTimer.mm */,
 				32E7F8432BB6BE9E00507110 /* FontUtils.mm */,
 				32E7F8442BB6BE9E00507110 /* LocationUtils.mm */,
@@ -739,6 +750,7 @@
 				32E7F8472BB6BE9E00507110 /* LyricsUtils.mm */,
 				32E7F8482BB6BE9E00507110 /* MediaRemoteManager.mm */,
 				32E7F8492BB6BE9E00507110 /* MusicPlayerUtils.mm */,
+				320F72FB2BCAA3200033417A /* NetworkUtils.mm */,
 				32E7F84A2BB6BE9E00507110 /* NSBundle+Language.mm */,
 				32E7F84B2BB6BE9E00507110 /* UsefulFunctions.mm */,
 				32E7F8412BB6BE9E00507110 /* Weather */,
@@ -1033,6 +1045,7 @@
 				32E7F8822BB6BE9F00507110 /* WidgetsContainerView.mm in Sources */,
 				32E7F8702BB6BE9F00507110 /* LocationUtils.mm in Sources */,
 				32E7F8882BB6BE9F00507110 /* SwiftObjCPPBridger.m in Sources */,
+				320F72F72BCA9BBE0033417A /* CryptoCoinUtils.mm in Sources */,
 				32E7F8762BB6BE9F00507110 /* LyricsUtils.mm in Sources */,
 				329934C12BB04FDB009BE9B0 /* FlipEffect.swift in Sources */,
 				32E7F8642BB6BE9F00507110 /* ColorfulClouds.mm in Sources */,
@@ -1055,6 +1068,7 @@
 				32E7F8742BB6BE9F00507110 /* LunarDate.mm in Sources */,
 				32300C302BC16B04002296DC /* Intents.intentdefinition in Sources */,
 				329934C32BB04FDB009BE9B0 /* FoundationExtensions.swift in Sources */,
+				320F72FC2BCAA3200033417A /* NetworkUtils.mm in Sources */,
 				32E7F67B2BB199BA00507110 /* WidgetManager.swift in Sources */,
 				32300C0E2BC14E07002296DC /* SceneDelegate.swift in Sources */,
 				32E7F6812BB19AE600507110 /* WidgetPreferencesView.swift in Sources */,
@@ -1097,6 +1111,7 @@
 				32E7F8712BB6BE9F00507110 /* LocationUtils.mm in Sources */,
 				32E7F8892BB6BE9F00507110 /* SwiftObjCPPBridger.m in Sources */,
 				32E7F8772BB6BE9F00507110 /* LyricsUtils.mm in Sources */,
+				320F72F82BCA9BBE0033417A /* CryptoCoinUtils.mm in Sources */,
 				32E7F79E2BB5A55900507110 /* FlipEffect.swift in Sources */,
 				32E7F8652BB6BE9F00507110 /* ColorfulClouds.mm in Sources */,
 				32E7F7A42BB5A55900507110 /* ViewExtensions.swift in Sources */,
@@ -1119,6 +1134,7 @@
 				32E7F8752BB6BE9F00507110 /* LunarDate.mm in Sources */,
 				32300C312BC16B04002296DC /* Intents.intentdefinition in Sources */,
 				32E7F7B42BB5A55900507110 /* FoundationExtensions.swift in Sources */,
+				320F72FD2BCAA3200033417A /* NetworkUtils.mm in Sources */,
 				32E7F7B52BB5A55900507110 /* WidgetManager.swift in Sources */,
 				32300C0F2BC14E07002296DC /* SceneDelegate.swift in Sources */,
 				32E7F7B62BB5A55900507110 /* WidgetPreferencesView.swift in Sources */,

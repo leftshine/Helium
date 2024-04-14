@@ -17,6 +17,7 @@ struct EditWidgetSetView: View {
 
     @State var id: String = UUID().uuidString
     @State var isEnabled: Bool = true
+    @State var alignment: Int = 0
     @State var orientationMode: Int = 0
     @State var nameInput: String = ""
     @State var updateInterval: Double = 1.0
@@ -87,7 +88,24 @@ struct EditWidgetSetView: View {
                         }
                     }
 
-                    // MARK: Update Interval
+                    // MARK: Alignment
+
+                    HStack {
+                        Text(NSLocalizedString("Alignment", comment: ""))
+                            .bold()
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        DropdownPicker(selection: $alignment) {
+                            [
+                                DropdownItem(NSLocalizedString("Horizontal", comment: ""), tag: 0),
+                                DropdownItem(NSLocalizedString("Vertical", comment: ""), tag: 1),
+                            ]
+                        }
+                        .onChange(of: alignment) { _ in
+                            changesMade = true
+                        }
+                    }
+
+                    // MARK: Orientation Mode
 
                     HStack {
                         Text(NSLocalizedString("Orientation Mode", comment: ""))
@@ -533,6 +551,7 @@ struct EditWidgetSetView: View {
                 currentWidgetSet = widgetSet
                 id = widgetSet.id
                 isEnabled = widgetSet.isEnabled
+                alignment = widgetSet.alignment
                 orientationMode = widgetSet.orientationMode
                 nameInput = widgetSet.title
                 updateInterval = widgetSet.updateInterval
@@ -613,6 +632,7 @@ struct EditWidgetSetView: View {
         widgetManager.editWidgetSet(widgetSet: widgetSet, newSetDetails: .init(
             id: id,
             isEnabled: isEnabled,
+            alignment: alignment,
             orientationMode: orientationMode,
             title: nameInput,
             updateInterval: updateInterval,

@@ -21,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) BOOL isEnabled;
 @property (nonatomic) BOOL isLandscape;
 @property (nonatomic) NSInteger orientationMode;
+@property (nonatomic) NSInteger alignment;
 
 - (void)setupView;
 - (void)reloadConfig;

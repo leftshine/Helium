@@ -1,3 +1,10 @@
+//
+//  MusicPlayerUtils.mm
+//  Helium
+//
+//  Created by Fuuko on 2024/4/13.
+//
+
 #import "MusicPlayerUtils.h"
 
 @implementation MusicPlayerUtils

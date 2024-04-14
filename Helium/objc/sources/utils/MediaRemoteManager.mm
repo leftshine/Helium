@@ -1,3 +1,10 @@
+//
+//  MediaRemoteManager.mm
+//  Helium
+//
+//  Created by Fuuko on 2024/4/13.
+//
+
 #import "MediaRemote.h"
 #import "MediaRemoteManager.h"
 

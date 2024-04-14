@@ -94,6 +94,7 @@
         options.enablePreWarmedAppStartTracing = YES;
         options.enableTimeToFullDisplayTracing = YES;
         options.swiftAsyncStacktraces = YES;
+//        options.tracesSampleRate = @1.0;
     }];
 
     return YES;

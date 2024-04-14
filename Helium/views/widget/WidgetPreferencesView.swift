@@ -24,7 +24,7 @@ struct WidgetPreferencesView: View {
     @State var timeFormat: Int = 0
     @State var showPercentage: Bool = true
     @State var filledSymbol: Bool = true
-    @State var weatherFormat: String = "{i}{n}{lt}°~{ht}°({t}°,{bt}°)💧{h}%"
+    @State var weatherFormat: String = "{i}{n}{ts}💧{h}%"
     @State var weatherProvider: Int = 0
     @State var useCurrentLocation: Bool = false
     @State var useMetric: Int = 0
@@ -38,6 +38,7 @@ struct WidgetPreferencesView: View {
     @State var bluetoothType: Int = 1
     @State var wiredType: Int = 1
     @State var displayType: Int = 0
+    @State var coinID: String = "BTCUSDT,DOGEUSDT"
 
     @State var modified: Bool = false
     @State private var isPresented = false
@@ -244,6 +245,9 @@ struct WidgetPreferencesView: View {
                     }
                 }
             case .weather:
+
+                // MARK: Weather
+
                 ScrollView(.vertical, showsIndicators: false) {
                     VStack {
                         HStack {
@@ -346,6 +350,9 @@ struct WidgetPreferencesView: View {
                     }
                 }
             case .lyrics:
+
+                // MARK: Lyrics
+
                 VStack {
                     HStack {
                         Text(NSLocalizedString("Unsupported Option", comment: ""))
@@ -480,6 +487,9 @@ struct WidgetPreferencesView: View {
                     }
                 }
             case .cpumen:
+
+                // MARK: CPU & Mem
+
                 HStack {
                     Text(NSLocalizedString("Display Type", comment: ""))
                         .foregroundColor(.primary)
@@ -497,8 +507,22 @@ struct WidgetPreferencesView: View {
                         ]
                     }
                 }
-//            default:
-//                Text(NSLocalizedString("No Configurable Aspects", comment: ""))
+            case .cryptoCoin:
+
+                // MARK: Crypto Coin
+
+                HStack {
+                    Text(NSLocalizedString("Coin ID", comment: ""))
+                        .foregroundColor(.primary)
+                        .bold()
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    TextField(NSLocalizedString("Coin Example", comment: ""), text: $coinID.onChange { _ in
+                        modified = true
+                    })
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                }
+            default:
+                Text(NSLocalizedString("No Configurable Aspects", comment: ""))
             }
         }
         .padding(.horizontal, 15)
@@ -601,6 +625,12 @@ struct WidgetPreferencesView: View {
 
             if let dtype = widgetID.config["displayType"] as? Int {
                 displayType = dtype
+            }
+
+            // MARK: Crypto Coin Handling
+
+            if let coin = widgetID.config["coinID"] as? String {
+                coinID = coin
             }
         }
         .onDisappear {
@@ -710,8 +740,17 @@ struct WidgetPreferencesView: View {
             // MARK: CPU&MEM Handling
 
             widgetStruct.config["displayType"] = displayType
-//        default:
-//            return
+        case .cryptoCoin:
+
+            // MARK: Crypto Coin Handling
+
+            if coinID == "" {
+                widgetStruct.config["coinID"] = nil
+            } else {
+                widgetStruct.config["coinID"] = coinID
+            }
+        default:
+            return
         }
 
         widgetManager.updateWidgetConfig(widgetSet: widgetSet, id: widgetID, newID: widgetStruct)
@@ -783,18 +822,6 @@ struct WeatherLocationView: View {
             DispatchQueue.global().async {
                 locations.removeAll()
                 let array = WeatherUtils.getGeocodeByName(searchString)
-                // let json = try! JSONSerialization.jsonObject(with: data!, options: []) as! Dictionary<String, Any>
-                // if json["status"] as? String == "1" {
-                //     let array = json["geocodes"] as! [Dictionary<String, Any>]
-                //     for item in array {
-                //         let name = item["formatted_address"] as! String
-                //         let country = item["country"] as! String
-                //         let province = item["province"] as! String
-                //         let city = item["city"] as! String
-                //         let location = item["location"] as! String
-                //         locations.append(Location(name: name, country: country, province: province, city: city, location: location))
-                //     }
-                // }
                 if array != nil {
                     for item in array! {
                         let l = item as! CLPlacemark

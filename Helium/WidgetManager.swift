@@ -23,6 +23,7 @@ enum WidgetModule: Int, CaseIterable {
     case weather = 9
     case lyrics = 10
     case cpumen = 11
+    case cryptoCoin = 12
 }
 
 struct WidgetIDStruct: Identifiable, Equatable {
@@ -69,6 +70,7 @@ struct WidgetSetStruct: Identifiable, Equatable {
     var id: String
 
     var isEnabled: Bool
+    var alignment: Int
     var orientationMode: Int
     var title: String
     var updateInterval: Double
@@ -167,6 +169,7 @@ class WidgetManager: ObservableObject {
                 var widgetSet: WidgetSetStruct = .init(
                     id: s["id"] as? String ?? UUID().uuidString,
                     isEnabled: s["isEnabled"] as? Bool ?? true,
+                    alignment: s["alignment"] as? Int ?? 0,
                     orientationMode: s["orientationMode"] as? Int ?? 0,
                     title: s["title"] as? String ?? NSLocalizedString("Untitled", comment: ""),
                     updateInterval: s["updateInterval"] as? Double ?? 1.0,
@@ -210,6 +213,7 @@ class WidgetManager: ObservableObject {
             var wSet: [String: Any] = [:]
             wSet["id"] = s.id
             wSet["isEnabled"] = s.isEnabled
+            wSet["alignment"] = s.alignment
             wSet["orientationMode"] = s.orientationMode
             wSet["title"] = s.title
             wSet["updateInterval"] = s.updateInterval
@@ -365,6 +369,7 @@ class WidgetManager: ObservableObject {
         addWidgetSet(widgetSet: .init(
             id: UUID().uuidString,
             isEnabled: true,
+            alignment: 0,
             orientationMode: 0,
             title: title,
             updateInterval: 1.0,
@@ -410,6 +415,7 @@ class WidgetManager: ObservableObject {
         for (i, wSet) in widgetSets.enumerated() {
             if wSet == widgetSet {
                 widgetSets[i].isEnabled = ns.isEnabled
+                widgetSets[i].alignment = ns.alignment
                 widgetSets[i].orientationMode = ns.orientationMode
                 widgetSets[i].title = ns.title
                 widgetSets[i].updateInterval = ns.updateInterval
@@ -480,6 +486,8 @@ class WidgetDetails {
             return (NSLocalizedString("Lyrics", comment: ""), NSLocalizedString("Lyrics", comment: ""))
         case .cpumen:
             return (NSLocalizedString("CPU&MEM", comment: ""), "20%")
+        case .cryptoCoin:
+            return (NSLocalizedString("Crypto Coin", comment: ""), "🪙")
         }
     }
 

@@ -54,6 +54,5 @@ typedef void (^QWeatherLocationCallbackBlock)(NSString *location);
 - (NSString *)precipitationPast24Hours:(BOOL)withUnit;
 
 - (NSDictionary *)getWeatherData;
-- (NSString *)getDataFrom:(NSString *)url;
 - (void)updateWeather:(QWeatherDataCallbackBlock)dataCallback;
 @end

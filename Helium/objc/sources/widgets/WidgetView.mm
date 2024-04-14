@@ -1,3 +1,10 @@
+//
+//  WidgetView.mm
+//  Helium
+//
+//  Created by Fuuko on 2024/4/13.
+//
+
 #import "WidgetsContainerView.h"
 #import "WidgetUtils.h"
 #import "WidgetView.h"
@@ -216,6 +223,7 @@
     9 = Weather
     10 = Lyrics
     11 = CPU&MEM
+    12 = Crypto Coin
  */
 - (void)updateWidget:(NSDictionary *)config callback:(CallbackBlock)callback {
     NSInteger parsedID = [config valueForKey:@"widgetID"] ? [[config valueForKey:@"widgetID"] integerValue] : 0;
@@ -370,6 +378,19 @@
             [[WidgetUtils sharedInstance] formattedCPUMEM:
              getIntFromDictKey(config, @"displayType", 0)
                                                  callback: ^(NSMutableAttributedString *attributedString) {
+                weakSelf.fetchingData = false;
+                callback(attributedString);
+            }
+            ];
+        }
+        break;
+
+        case 12:
+            // Crypto Coin
+        {
+            [[WidgetUtils sharedInstance] formattedCryptoCoin:
+             getStringFromDictKey(config, @"coinID")
+                                                     callback: ^(NSMutableAttributedString *attributedString) {
                 weakSelf.fetchingData = false;
                 callback(attributedString);
             }

@@ -34,56 +34,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             options.enablePreWarmedAppStartTracing = true
             options.enableTimeToFullDisplayTracing = true
             options.swiftAsyncStacktraces = true
+//            options.tracesSampleRate = 1.0
         }
 
-//        window = UIWindow(frame: UIScreen.main.bounds)
-//        let hostingController = UIHostingController(rootView: MainAppView())
-//        window?.rootViewController = hostingController
-//        window?.makeKeyAndVisible()
         return true
     }
-
-//    func application(_ application: UIApplication, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
-//        if shortcutItem.type == "com.leemin.helium.shortcut.toggle-hud" {
-//            SetHUDEnabledBridger(!IsHUDEnabledBridger())
-//            UIApplication.shared.perform(#selector(NSXPCConnection.suspend))
-//        }
-//    }
-
-//    func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
-//        if url.scheme == "helium" {
-//            if url.host == "toggle" {
-//                SetHUDEnabledBridger(!IsHUDEnabledBridger())
-//                UIApplication.shared.perform(#selector(NSXPCConnection.suspend))
-//            } else if url.host == "on" && !IsHUDEnabledBridger() {
-//                SetHUDEnabledBridger(true)
-//                UIApplication.shared.perform(#selector(NSXPCConnection.suspend))
-//            } else if url.host == "off" && IsHUDEnabledBridger() {
-//                SetHUDEnabledBridger(false)
-//                UIApplication.shared.perform(#selector(NSXPCConnection.suspend))
-//            } else {
-//                UIApplication.shared.perform(#selector(NSXPCConnection.suspend))
-//            }
-//        }
-//        return false
-//    }
-
-//    func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
-//        if userActivity.activityType == String(describing: ToggleHUDIntent.self) {
-//            SetHUDEnabledBridger(!IsHUDEnabledBridger())
-//            UIApplication.shared.perform(#selector(NSXPCConnection.suspend))
-//        } else if userActivity.activityType == String(describing: ShowHUDIntent.self) && !IsHUDEnabledBridger() {
-//            SetHUDEnabledBridger(true)
-//            UIApplication.shared.perform(#selector(NSXPCConnection.suspend))
-//        } else if userActivity.activityType == String(describing: HideHUDIntent.self) && IsHUDEnabledBridger() {
-//            SetHUDEnabledBridger(false)
-//            UIApplication.shared.perform(#selector(NSXPCConnection.suspend))
-//        } else {
-//            UIApplication.shared.perform(#selector(NSXPCConnection.suspend))
-//        }
-//
-//        return true
-//    }
 
     func application(_ application: UIApplication, handlerFor intent: INIntent) -> Any? {
         switch intent {

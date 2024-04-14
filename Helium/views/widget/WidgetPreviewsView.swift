@@ -109,6 +109,8 @@ struct WidgetPreviewsView: View {
             default:
                 text = "233MB"
             }
+        case .cryptoCoin:
+            text = widget.config["coinID"] as? String ?? NSLocalizedString("Unknown", comment: "")
         }
         widget.modified = false
     }

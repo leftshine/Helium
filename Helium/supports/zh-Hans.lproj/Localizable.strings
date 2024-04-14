@@ -131,14 +131,19 @@
 "System Memory Usage" = "系统内存使用量";
 "Helium CPU Usage" = "氦气CPU使用率";
 "Helium Memory Usage" = "氦气内存使用量";
+"Coin ID" = "货币ID";
+"Coin Example" = "BTCUSDT";
 
 /* WidgetPreviewsView.swift */
 "ERROR" = "错误";
 "Unknown" = "未知";
-"Weather Preview" = "🌤晴 15°~20° (20°)💧54%";
+"Weather Preview" = "🌤晴 20°💧54%";
 
 /* EditWidgetSetView.swift */
 "Enable" = "启用小部件集";
+"Alignment" = "排列方式";
+"Horizontal" = "水平";
+"Vertical" = "垂直";
 "Orientation Mode" = "显示模式";
 "Portrait & Landscape" = "竖屏和横屏";
 "Portrait" = "竖屏";
@@ -217,6 +222,8 @@
 "Charging Symbol" = "充电符号";
 "Weather" = "天气";
 "Lyrics" = "歌词";
+"CPU&MEM" = "CPU&内存";
+"Crypto Coin" = "加密货币";
 
 /* WeatherUtils.mm */
 "error" = "出错啦";

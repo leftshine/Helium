@@ -54,6 +54,5 @@ typedef void (^CCWeatherLocationCallbackBlock)(NSString *location);
 - (NSString *)airQualityIndex;
 
 - (NSDictionary *)getWeatherData;
-- (NSString *)getDataFrom:(NSString *)url;
 - (void)updateWeather:(CCWeatherDataCallbackBlock)dataCallback;
 @end

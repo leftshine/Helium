@@ -1,3 +1,10 @@
+//
+//  WidgetUtils.mm
+//  Helium
+//
+//  Created by Fuuko on 2024/4/13.
+//
+
 #import <ifaddrs.h>
 #import <IOKit/IOKitLib.h>
 #import <mach/mach.h>
@@ -9,6 +16,7 @@
 #import "WidgetUtils.h"
 
 #import "ColorfulClouds.h"
+#import "CryptoCoinUtils.h"
 #import "LunarDate.h"
 #import "LyricsUtils.h"
 #import "MediaRemoteManager.h"
@@ -688,6 +696,33 @@
     }
 }
 
+#pragma mark - Crypto Coin Widget
+- (void)formattedCryptoCoin:(NSString *)coinIDs callback:(CallbackBlock)callback {
+    @autoreleasepool {
+        NSMutableArray *array = [[NSMutableArray alloc] init];
+
+        NSDictionary *data = [CryptoCoinUtils getMarkPriceByIDs:coinIDs];
+        HMLog(data);
+
+        if (data) {
+            for (NSDictionary *da in data) {
+                NSString *temp = [NSString stringWithFormat:@"%@:%@", da[@"symbol"], [self removeExtraZerosFromDouble:[da[@"price"] doubleValue]]];
+                [array addObject:temp];
+                HMLog(temp);
+            }
+        }
+
+        if ([array count] > 0) {
+            HMLog(array);
+            NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:[array componentsJoinedByString:@"\n"]];
+            attributedString = [self formatString:attributedString];
+            callback([attributedString copy]);
+        } else {
+            callback(nil);
+        }
+    }
+}
+
 #pragma mark - Other Functions
 - (NSAttributedString *)emptyAtributedWhitespace {
     // You can put any random string there or how many spaces you want
@@ -703,6 +738,16 @@
     }
 
     return attributedString;
+}
+
+- (NSString *)removeExtraZerosFromDouble:(double)value {
+    NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+
+    [formatter setNumberStyle:NSNumberFormatterDecimalStyle];
+    [formatter setMinimumFractionDigits:0];
+    [formatter setMaximumFractionDigits:16];
+    [formatter setUsesGroupingSeparator:NO];
+    return [formatter stringFromNumber:@(value)];
 }
 
 @end
