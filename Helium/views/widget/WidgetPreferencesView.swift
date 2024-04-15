@@ -776,6 +776,7 @@ struct WeatherLocationView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
 
     @State var locations: [Location] = []
+    @State private var loading = false
 
     var body: some View {
         NavigationView {
@@ -814,11 +815,15 @@ struct WeatherLocationView: View {
                 .padding(.vertical, 0)
                 .navigationBarTitle(Text(NSLocalizedString("Get Location ID", comment: "")))
             }
+            .toast(isPresenting: $loading) {
+                AlertToast(type: .loading)
+            }
         }
     }
 
     func search() {
         if !searchString.isEmpty {
+            loading = true
             DispatchQueue.global().async {
                 locations.removeAll()
                 let array = WeatherUtils.getGeocodeByName(searchString)
@@ -828,6 +833,7 @@ struct WeatherLocationView: View {
                         locations.append(Location(name: l.name, country: l.country, province: l.administrativeArea, city: l.locality, area: l.subLocality, location: l.location))
                     }
                 }
+                loading = false
             }
         }
     }
