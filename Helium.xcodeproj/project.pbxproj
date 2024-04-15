@@ -11,6 +11,16 @@
 		320F72F82BCA9BBE0033417A /* CryptoCoinUtils.mm in Sources */ = {isa = PBXBuildFile; fileRef = 320F72F62BCA9BBE0033417A /* CryptoCoinUtils.mm */; };
 		320F72FC2BCAA3200033417A /* NetworkUtils.mm in Sources */ = {isa = PBXBuildFile; fileRef = 320F72FB2BCAA3200033417A /* NetworkUtils.mm */; };
 		320F72FD2BCAA3200033417A /* NetworkUtils.mm in Sources */ = {isa = PBXBuildFile; fileRef = 320F72FB2BCAA3200033417A /* NetworkUtils.mm */; };
+		320F72FF2BCC081F0033417A /* EnableWidgetSetIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 320F72FE2BCC081F0033417A /* EnableWidgetSetIntentHandler.swift */; };
+		320F73002BCC081F0033417A /* EnableWidgetSetIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 320F72FE2BCC081F0033417A /* EnableWidgetSetIntentHandler.swift */; };
+		320F73022BCC083B0033417A /* DisableWidgetSetIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 320F73012BCC083B0033417A /* DisableWidgetSetIntentHandler.swift */; };
+		320F73032BCC083B0033417A /* DisableWidgetSetIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 320F73012BCC083B0033417A /* DisableWidgetSetIntentHandler.swift */; };
+		320F73092BCC0EDD0033417A /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 320F73082BCC0EDD0033417A /* ActivityIndicator.swift */; };
+		320F730A2BCC0EDD0033417A /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 320F73082BCC0EDD0033417A /* ActivityIndicator.swift */; };
+		320F730C2BCC0EF10033417A /* AlertToast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 320F730B2BCC0EF10033417A /* AlertToast.swift */; };
+		320F730D2BCC0EF10033417A /* AlertToast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 320F730B2BCC0EF10033417A /* AlertToast.swift */; };
+		320F730F2BCC0F000033417A /* BlurView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 320F730E2BCC0F000033417A /* BlurView.swift */; };
+		320F73102BCC0F000033417A /* BlurView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 320F730E2BCC0F000033417A /* BlurView.swift */; };
 		32300C0E2BC14E07002296DC /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32300C0D2BC14E07002296DC /* SceneDelegate.swift */; };
 		32300C0F2BC14E07002296DC /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32300C0D2BC14E07002296DC /* SceneDelegate.swift */; };
 		32300C112BC15584002296DC /* ToggleHUDIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32300C102BC15584002296DC /* ToggleHUDIntentHandler.swift */; };
@@ -184,14 +194,18 @@
 		320F72F92BCA9BDB0033417A /* CryptoCoinUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CryptoCoinUtils.h; sourceTree = "<group>"; };
 		320F72FA2BCAA2160033417A /* NetworkUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NetworkUtils.h; sourceTree = "<group>"; };
 		320F72FB2BCAA3200033417A /* NetworkUtils.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = NetworkUtils.mm; sourceTree = "<group>"; };
+		320F72FE2BCC081F0033417A /* EnableWidgetSetIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnableWidgetSetIntentHandler.swift; sourceTree = "<group>"; };
+		320F73012BCC083B0033417A /* DisableWidgetSetIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisableWidgetSetIntentHandler.swift; sourceTree = "<group>"; };
+		320F73082BCC0EDD0033417A /* ActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
+		320F730B2BCC0EF10033417A /* AlertToast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertToast.swift; sourceTree = "<group>"; };
+		320F730E2BCC0F000033417A /* BlurView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlurView.swift; sourceTree = "<group>"; };
+		320F73172BCD0DBC0033417A /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Intents.strings"; sourceTree = "<group>"; };
 		32300BE42BC0F480002296DC /* Intents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Intents.framework; path = System/Library/Frameworks/Intents.framework; sourceTree = SDKROOT; };
 		32300C0D2BC14E07002296DC /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		32300C102BC15584002296DC /* ToggleHUDIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleHUDIntentHandler.swift; sourceTree = "<group>"; };
 		32300C162BC1650A002296DC /* ShowHUDIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowHUDIntentHandler.swift; sourceTree = "<group>"; };
 		32300C182BC16517002296DC /* HideHUDIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HideHUDIntentHandler.swift; sourceTree = "<group>"; };
 		32300C2E2BC16B04002296DC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; name = Base; path = Base.lproj/Intents.intentdefinition; sourceTree = "<group>"; };
-		32300C332BC16B09002296DC /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Intents.strings"; sourceTree = "<group>"; };
-		32300C352BC16B11002296DC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Intents.strings; sourceTree = "<group>"; };
 		32300C402BC16BCB002296DC /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		32300C422BC16BCB002296DC /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		32300C472BC16BD8002296DC /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -391,9 +405,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		320F73072BCC0EBA0033417A /* AlertToast */ = {
+			isa = PBXGroup;
+			children = (
+				320F73082BCC0EDD0033417A /* ActivityIndicator.swift */,
+				320F730B2BCC0EF10033417A /* AlertToast.swift */,
+				320F730E2BCC0F000033417A /* BlurView.swift */,
+			);
+			path = AlertToast;
+			sourceTree = "<group>";
+		};
 		32300BFE2BC0FFFC002296DC /* intents */ = {
 			isa = PBXGroup;
 			children = (
+				320F73012BCC083B0033417A /* DisableWidgetSetIntentHandler.swift */,
+				320F72FE2BCC081F0033417A /* EnableWidgetSetIntentHandler.swift */,
 				32300C182BC16517002296DC /* HideHUDIntentHandler.swift */,
 				32300C162BC1650A002296DC /* ShowHUDIntentHandler.swift */,
 				32300C102BC15584002296DC /* ToggleHUDIntentHandler.swift */,
@@ -480,7 +506,6 @@
 		329934B42BB04F00009BE9B0 /* extensions */ = {
 			isa = PBXGroup;
 			children = (
-				32300CD62BC2D965002296DC /* SnapshotSafeView */,
 				329934BF2BB04FDB009BE9B0 /* Alert++.swift */,
 				329934BD2BB04FDB009BE9B0 /* Color++.swift */,
 				32E7F6842BB19B6300507110 /* Const.swift */,
@@ -492,6 +517,8 @@
 				329934BE2BB04FDB009BE9B0 /* Haptic++.swift */,
 				329934B72BB04F59009BE9B0 /* UserDefaultsExtensions.swift */,
 				329934B52BB04F1D009BE9B0 /* ViewExtensions.swift */,
+				320F73072BCC0EBA0033417A /* AlertToast */,
+				32300CD62BC2D965002296DC /* SnapshotSafeView */,
 			);
 			path = extensions;
 			sourceTree = "<group>";
@@ -1028,6 +1055,7 @@
 				32E7F86A2BB6BE9F00507110 /* WeatherUtils.mm in Sources */,
 				32E7F8862BB6BE9F00507110 /* WidgetView.mm in Sources */,
 				32E7F6E52BB44BB800507110 /* main.swift in Sources */,
+				320F730C2BCC0EF10033417A /* AlertToast.swift in Sources */,
 				32E7F86E2BB6BE9F00507110 /* FontUtils.mm in Sources */,
 				3299349F2BB02AF3009BE9B0 /* MainAppView.swift in Sources */,
 				32E7F87E2BB6BE9F00507110 /* UsefulFunctions.mm in Sources */,
@@ -1046,6 +1074,8 @@
 				32E7F8702BB6BE9F00507110 /* LocationUtils.mm in Sources */,
 				32E7F8882BB6BE9F00507110 /* SwiftObjCPPBridger.m in Sources */,
 				320F72F72BCA9BBE0033417A /* CryptoCoinUtils.mm in Sources */,
+				320F730F2BCC0F000033417A /* BlurView.swift in Sources */,
+				320F73092BCC0EDD0033417A /* ActivityIndicator.swift in Sources */,
 				32E7F8762BB6BE9F00507110 /* LyricsUtils.mm in Sources */,
 				329934C12BB04FDB009BE9B0 /* FlipEffect.swift in Sources */,
 				32E7F8642BB6BE9F00507110 /* ColorfulClouds.mm in Sources */,
@@ -1074,10 +1104,12 @@
 				32E7F6812BB19AE600507110 /* WidgetPreferencesView.swift in Sources */,
 				329934C62BB04FDB009BE9B0 /* Alert++.swift in Sources */,
 				329934C42BB04FDB009BE9B0 /* Color++.swift in Sources */,
+				320F73022BCC083B0033417A /* DisableWidgetSetIntentHandler.swift in Sources */,
 				32E7F6E12BB439D500507110 /* DispatchQueueExtensions.swift in Sources */,
 				32E7F8542BB6BE9E00507110 /* IOHIDEvent+KIF.m in Sources */,
 				32E7F8582BB6BE9E00507110 /* TSEventFetcher.mm in Sources */,
 				32300CDB2BC2D99B002296DC /* ScreenshotInvincibleContainerProtocol.swift in Sources */,
+				320F72FF2BCC081F0033417A /* EnableWidgetSetIntentHandler.swift in Sources */,
 				32E7F6832BB19B0300507110 /* WidgetPreviewsView.swift in Sources */,
 				32E7F87C2BB6BE9F00507110 /* NSBundle+Language.mm in Sources */,
 				32E7F6DF2BB4380200507110 /* AppDelegate.swift in Sources */,
@@ -1094,6 +1126,7 @@
 				32E7F86B2BB6BE9F00507110 /* WeatherUtils.mm in Sources */,
 				32E7F8872BB6BE9F00507110 /* WidgetView.mm in Sources */,
 				32E7F7972BB5A55900507110 /* main.swift in Sources */,
+				320F730D2BCC0EF10033417A /* AlertToast.swift in Sources */,
 				32E7F86F2BB6BE9F00507110 /* FontUtils.mm in Sources */,
 				32E7F7982BB5A55900507110 /* MainAppView.swift in Sources */,
 				32E7F87F2BB6BE9F00507110 /* UsefulFunctions.mm in Sources */,
@@ -1112,6 +1145,8 @@
 				32E7F8892BB6BE9F00507110 /* SwiftObjCPPBridger.m in Sources */,
 				32E7F8772BB6BE9F00507110 /* LyricsUtils.mm in Sources */,
 				320F72F82BCA9BBE0033417A /* CryptoCoinUtils.mm in Sources */,
+				320F73102BCC0F000033417A /* BlurView.swift in Sources */,
+				320F730A2BCC0EDD0033417A /* ActivityIndicator.swift in Sources */,
 				32E7F79E2BB5A55900507110 /* FlipEffect.swift in Sources */,
 				32E7F8652BB6BE9F00507110 /* ColorfulClouds.mm in Sources */,
 				32E7F7A42BB5A55900507110 /* ViewExtensions.swift in Sources */,
@@ -1140,10 +1175,12 @@
 				32E7F7B62BB5A55900507110 /* WidgetPreferencesView.swift in Sources */,
 				32E7F7B72BB5A55900507110 /* Alert++.swift in Sources */,
 				32E7F7B92BB5A55900507110 /* Color++.swift in Sources */,
+				320F73032BCC083B0033417A /* DisableWidgetSetIntentHandler.swift in Sources */,
 				32E7F7BA2BB5A55900507110 /* DispatchQueueExtensions.swift in Sources */,
 				32E7F8552BB6BE9E00507110 /* IOHIDEvent+KIF.m in Sources */,
 				32E7F8592BB6BE9E00507110 /* TSEventFetcher.mm in Sources */,
 				32300CDC2BC2D99B002296DC /* ScreenshotInvincibleContainerProtocol.swift in Sources */,
+				320F73002BCC081F0033417A /* EnableWidgetSetIntentHandler.swift in Sources */,
 				32E7F7BB2BB5A55900507110 /* WidgetPreviewsView.swift in Sources */,
 				32E7F87D2BB6BE9F00507110 /* NSBundle+Language.mm in Sources */,
 				32E7F7BE2BB5A55900507110 /* AppDelegate.swift in Sources */,
@@ -1157,8 +1194,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				32300C2E2BC16B04002296DC /* Base */,
-				32300C332BC16B09002296DC /* zh-Hans */,
-				32300C352BC16B11002296DC /* en */,
+				320F73172BCD0DBC0033417A /* zh-Hans */,
 			);
 			name = Intents.intentdefinition;
 			sourceTree = "<group>";

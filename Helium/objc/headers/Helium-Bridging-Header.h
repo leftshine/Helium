@@ -12,6 +12,8 @@
 #import "SwiftObjCPPBridger.h"
 #import "WeatherUtils.h"
 
+#import "DisableWidgetSetIntent.h"
+#import "EnableWidgetSetIntent.h"
 #import "HideHUDIntent.h"
 #import "ShowHUDIntent.h"
 #import "ToggleHUDIntent.h"

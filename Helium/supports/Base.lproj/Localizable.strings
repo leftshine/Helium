@@ -139,6 +139,8 @@
 "Weather Preview" = "🌤Sun 20°💧54%";
 
 /* EditWidgetSetView.swift */
+"Widget Set ID" = "Widget Set ID\nClick to copy";
+"copied!" = "copied!";
 "Enable" = "Enable Widget Set";
 "Alignment" = "Alignment";
 "Horizontal" = "Horizontal";

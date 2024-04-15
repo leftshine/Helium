@@ -48,6 +48,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             return ShowHUDIntentHandler()
         case is HideHUDIntent:
             return HideHUDIntentHandler()
+        case is EnableWidgetSetIntent:
+            return EnableWidgetSetIntentHandler()
+        case is DisableWidgetSetIntent:
+            return DisableWidgetSetIntentHandler()
         default:
             return nil
         }

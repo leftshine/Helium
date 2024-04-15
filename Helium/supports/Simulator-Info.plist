@@ -22,6 +22,8 @@
 		<string>ToggleHUDIntent</string>
 		<string>ShowHUDIntent</string>
 		<string>HideHUDIntent</string>
+		<string>EnableWidgetSetIntent</string>
+		<string>DisableWidgetSetIntent</string>
 	</array>
 	<key>NSAppTransportSecurity</key>
 	<dict>
@@ -30,6 +32,8 @@
 	</dict>
 	<key>NSUserActivityTypes</key>
 	<array>
+		<string>DisableWidgetSetIntent</string>
+		<string>EnableWidgetSetIntent</string>
 		<string>HideHUDIntent</string>
 		<string>ShowHUDIntent</string>
 		<string>ToggleHUDIntent</string>

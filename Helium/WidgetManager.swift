@@ -456,6 +456,26 @@ class WidgetManager: ObservableObject {
         }
         return nil
     }
+
+    public func enableWidgetSetByID(id: String) {
+        for (index, widgetSet) in widgetSets.enumerated() {
+            if widgetSet.id == id {
+                widgetSets[index].isEnabled = true
+                saveWidgetSets()
+                return
+            }
+        }
+    }
+
+    public func disableWidgetSetByID(id: String) {
+        for (index, widgetSet) in widgetSets.enumerated() {
+            if widgetSet.id == id {
+                widgetSets[index].isEnabled = false
+                saveWidgetSets()
+                return
+            }
+        }
+    }
 }
 
 // MARK: Widget Details for Previews

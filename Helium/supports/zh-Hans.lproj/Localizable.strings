@@ -140,6 +140,8 @@
 "Weather Preview" = "🌤晴 20°💧54%";
 
 /* EditWidgetSetView.swift */
+"Widget Set ID" = "小部件集ID\n点击复制";
+"copied!" = "已复制!";
 "Enable" = "启用小部件集";
 "Alignment" = "排列方式";
 "Horizontal" = "水平";

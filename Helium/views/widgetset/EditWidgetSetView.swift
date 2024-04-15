@@ -55,6 +55,7 @@ struct EditWidgetSetView: View {
     @State var textAlpha: Double = 1.0
 
     @State var changesMade: Bool = false
+    @State var showToast: Bool = false
 
     private let fonts: [String] = FontUtils.shared().allFontNames()
 
@@ -66,6 +67,18 @@ struct EditWidgetSetView: View {
                 // MARK: Title Field
 
                 Section {
+                    HStack {
+                        Text(NSLocalizedString("Widget Set ID", comment: ""))
+                            .bold()
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        Text(id)
+                            .padding()
+                            .onTapGesture {
+                                UIPasteboard.general.string = id
+                                showToast = true
+                            }
+                    }
+
                     HStack {
                         Text(NSLocalizedString("Widget Set Title", comment: ""))
                             .bold()
@@ -609,6 +622,9 @@ struct EditWidgetSetView: View {
                     widgetIDs.append(newWidget)
                 })
             })
+            .toast(isPresenting: $showToast) {
+                AlertToast(type: .regular, title: NSLocalizedString("copied!", comment: ""))
+            }
         }
     }
 

@@ -521,8 +521,8 @@ struct WidgetPreferencesView: View {
                     })
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                 }
-            default:
-                Text(NSLocalizedString("No Configurable Aspects", comment: ""))
+//            default:
+//                Text(NSLocalizedString("No Configurable Aspects", comment: ""))
             }
         }
         .padding(.horizontal, 15)
@@ -749,8 +749,8 @@ struct WidgetPreferencesView: View {
             } else {
                 widgetStruct.config["coinID"] = coinID
             }
-        default:
-            return
+//        default:
+//            return
         }
 
         widgetManager.updateWidgetConfig(widgetSet: widgetSet, id: widgetID, newID: widgetStruct)
