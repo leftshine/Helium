@@ -25,7 +25,8 @@
 "Save" = "保存";
 "Version " = "版本 ";
 "UNKNOWN" = "未知";
-"Release" = "发布";
+"SRelease" = "Release";
+"SDebug" = "Debug";
 "Locale" = "地区";
 "Weather Provider" = "天气服务商";
 "System Weather" = "系统自带";

@@ -26,7 +26,11 @@ struct SettingsView: View {
                 // App Version/Build Number
                 Section {
                 } header: {
-                    Label(NSLocalizedString("Version ", comment: "") + "\(Bundle.main.releaseVersionNumber ?? NSLocalizedString("UNKNOWN", comment: "")) (\(buildNumber != 0 ? "\(buildNumber)" : NSLocalizedString("Release", comment: "")))", systemImage: "info")
+                    #if DEBUG
+                        Label(NSLocalizedString("Version ", comment: "") + "\(Bundle.main.releaseVersionNumber ?? NSLocalizedString("UNKNOWN", comment: "")) (\(Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as! String)) \(NSLocalizedString("SDebug", comment: ""))", systemImage: "info")
+                    #else
+                    Label(NSLocalizedString("Version ", comment: "") + "\(Bundle.main.releaseVersionNumber ?? NSLocalizedString("UNKNOWN", comment: "")) (\(Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as! String)) \(NSLocalizedString("SRelease", comment: ""))", systemImage: "info")
+                    #endif
                 }
 
                 // Preferences List

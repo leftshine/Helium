@@ -25,7 +25,8 @@
 "Save" = "Save";
 "Version " = "Version ";
 "UNKNOWN" = "UNKNOWN";
-"Release" = "Release";
+"SRelease" = "Release";
+"SDebug" = "Debug";
 "Locale" = "Locale";
 "Weather Provider" = "Weather Provider";
 "System Weather" = "System";

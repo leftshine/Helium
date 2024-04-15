@@ -7,7 +7,6 @@
 
 import Foundation
 
-let buildNumber: Int = 0
 let configVersion: Int = 1
 let NOTIFY_RELOAD_HUD = "com.leemin.notification.hud.reload"
 
