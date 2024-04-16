@@ -9,16 +9,6 @@
 
 @implementation IWeather : NSObject
 
-+ (instancetype)sharedInstance {
-    static IWeather *_shared = nil;
-    static dispatch_once_t onceToken;
-
-    dispatch_once(&onceToken, ^{
-        _shared = [[self alloc] init];
-    });
-    return _shared;
-}
-
 - (NSString *)formatFloat:(double)f {
     if (fmodf(f, 1) == 0) {
         return [NSString stringWithFormat:@"%.0f", f];
@@ -33,9 +23,9 @@
 
     dispatch_once(&onceToken, ^{
         formatter = [[NSMeasurementFormatter alloc] init];
+        [formatter setUnitOptions:NSMeasurementFormatterUnitOptionsProvidedUnit];
+        formatter.numberFormatter.maximumFractionDigits = 1;
     });
-    [formatter setUnitOptions:NSMeasurementFormatterUnitOptionsProvidedUnit];
-    formatter.numberFormatter.maximumFractionDigits = 1;
     return formatter;
 }
 
@@ -162,6 +152,10 @@
 }
 
 - (void)updateWeather:(__strong IWeatherDataCallbackBlock)dataCallback {
+}
+
++ (instancetype)sharedInstance {
+    return nil;
 }
 
 @end

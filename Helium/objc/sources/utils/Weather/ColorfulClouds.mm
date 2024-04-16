@@ -16,6 +16,16 @@
 
 @implementation ColorfulClouds
 
++ (instancetype)sharedInstance {
+    static ColorfulClouds *_shared = nil;
+    static dispatch_once_t onceToken;
+
+    dispatch_once(&onceToken, ^{
+        _shared = [[self alloc] init];
+    });
+    return _shared;
+}
+
 - (instancetype)init {
     self = [super init];
 
