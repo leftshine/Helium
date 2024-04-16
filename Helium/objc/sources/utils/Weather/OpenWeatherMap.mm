@@ -1,20 +1,20 @@
 //
-//  ColorfulClouds.mm
+//  OpenWeatherMap.mm
 //  Helium
 //
-//  Created by Fuuko on 2024/4/13.
+//  Created by Fuuko on 2024/4/16.
 //
 
 #import <CoreLocation/CoreLocation.h>
-#import "ColorfulClouds.h"
 #import "DateTimeUtils.h"
 #import "LocationUtils.h"
 #import "NetworkUtils.h"
+#import "OpenWeatherMap.h"
 #import "UsefulFunctions.h"
 #import "WeatherUtils.h"
 #import "WeatherWindSpeedFormatter.h"
 
-@implementation ColorfulClouds
+@implementation OpenWeatherMap
 
 - (instancetype)init {
     self = [super init];
@@ -28,7 +28,8 @@
 }
 
 - (NSDictionary *)fetchWeatherForLocation:(NSString *)location {
-    NSString *res = [NetworkUtils getDataFrom:[NSString stringWithFormat:@"https://api.caiyunapp.com/v2.6/%@/%@/weather?lang=%@&unit=%@&alert=true&dailysteps=1&hourlysteps=24", self.apiKey, location, self.locale, self.useMetric ? @"metric" : @"imperial"]];
+    NSArray *components = [location componentsSeparatedByString:@","];
+    NSString *res = [NetworkUtils getDataFrom:[NSString stringWithFormat:@"https://app.owm.io/app/1.0/weather?lat=%@&lon=%@&units=%@&appid=%@&exclude=minutely,alerts", components[1], components[0], self.useMetric ? @"metric" : @"imperial", self.apiKey]];
     NSData *data = [res dataUsingEncoding:NSUTF8StringEncoding];
     NSError *erro = nil;
 
@@ -51,10 +52,10 @@
 - (NSString *)temperature:(BOOL)withSymbol {
     NSString *temperatureString = nil;
 
-    if (self.weatherData && [self.weatherData[@"status"] isEqualToString:@"ok"]) {
+    if (self.weatherData) {
         NSMeasurementFormatter *formatter = [self sharedNSMeasurementFormatter];
         formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:self.locale];
-        NSMeasurement *measurement = [[NSMeasurement alloc] initWithDoubleValue:getIntFromDictKey(self.weatherData[@"result"][@"realtime"], @"temperature") unit:[self useMetric] ? NSUnitTemperature.celsius : NSUnitTemperature.fahrenheit];
+        NSMeasurement *measurement = [[NSMeasurement alloc] initWithDoubleValue:getIntFromDictKey(self.weatherData[@"current"], @"temp") unit:[self useMetric] ? NSUnitTemperature.celsius : NSUnitTemperature.fahrenheit];
         measurement = [self useFahrenheit] ? [measurement measurementByConvertingToUnit:NSUnitTemperature.fahrenheit] : [measurement measurementByConvertingToUnit:NSUnitTemperature.celsius];
 
         if (withSymbol) {
@@ -76,10 +77,10 @@
 - (NSString *)feelsLike:(BOOL)withSymbol {
     NSString *temperatureString = nil;
 
-    if (self.weatherData && [self.weatherData[@"status"] isEqualToString:@"ok"]) {
+    if (self.weatherData) {
         NSMeasurementFormatter *formatter = [self sharedNSMeasurementFormatter];
         formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:self.locale];
-        NSMeasurement *measurement = [[NSMeasurement alloc] initWithDoubleValue:getIntFromDictKey(self.weatherData[@"result"][@"realtime"], @"apparent_temperature") unit:[self useMetric] ? NSUnitTemperature.celsius : NSUnitTemperature.fahrenheit];
+        NSMeasurement *measurement = [[NSMeasurement alloc] initWithDoubleValue:getIntFromDictKey(self.weatherData[@"current"], @"feels_like") unit:[self useMetric] ? NSUnitTemperature.celsius : NSUnitTemperature.fahrenheit];
         measurement = [self useFahrenheit] ? [measurement measurementByConvertingToUnit:NSUnitTemperature.fahrenheit] : [measurement measurementByConvertingToUnit:NSUnitTemperature.celsius];
 
         if (withSymbol) {
@@ -97,50 +98,27 @@
 - (NSString *)conditionsEmoji {
     NSString *weatherEmoji = @"";
 
-    if (self.weatherData && [self.weatherData[@"status"] isEqualToString:@"ok"]) {
-        NSString *weatherCode = getStringFromDictKey(self.weatherData[@"result"][@"realtime"], @"skycon", @"UNKNOWN");
+    if (self.weatherData) {
+        NSString *weatherCode = getStringFromDictKey([self.weatherData[@"current"][@"weather"] firstObject], @"icon", @"UNKNOWN");
 
-        // NSLog(@"boom %d", weatherCode);
-        if ([weatherCode isEqualToString:@"CLEAR_DAY"]) {
+        if ([weatherCode isEqualToString:@"01d"]) {
             weatherEmoji = @"☀️";
-        } else if ([weatherCode isEqualToString:@"CLEAR_NIGHT"]) {
+        } else if ([weatherCode isEqualToString:@"01n"]) {
             weatherEmoji = @"🌙";
-        } else if ([weatherCode isEqualToString:@"PARTLY_CLOUDY_DAY"]) {
+        } else if ([weatherCode isEqualToString:@"02d"]) {
             weatherEmoji = @"⛅️";
-        } else if ([weatherCode isEqualToString:@"PARTLY_CLOUDY_NIGHT"]) {
+        } else if ([weatherCode isEqualToString:@"02n"]) {
             weatherEmoji = @"🌥️";
-        } else if ([weatherCode isEqualToString:@"CLOUDY"]) {
+        } else if ([weatherCode isEqualToString:@"03d"] || [weatherCode isEqualToString:@"03n"] || [weatherCode isEqualToString:@"04d"] || [weatherCode isEqualToString:@"04n"]) {
             weatherEmoji = @"☁️";
-        } else if ([weatherCode isEqualToString:@"LIGHT_HAZE"]) {
-            weatherEmoji = @"🌫️";
-        } else if ([weatherCode isEqualToString:@"MODERATE_HAZE"]) {
-            weatherEmoji = @"🌫️";
-        } else if ([weatherCode isEqualToString:@"HEAVY_HAZE"]) {
-            weatherEmoji = @"🌫️";
-        } else if ([weatherCode isEqualToString:@"LIGHT_RAIN"]) {
+        } else if ([weatherCode isEqualToString:@"09d"] || [weatherCode isEqualToString:@"09n"] || [weatherCode isEqualToString:@"10d"] || [weatherCode isEqualToString:@"10n"]) {
             weatherEmoji = @"🌧️";
-        } else if ([weatherCode isEqualToString:@"MODERATE_RAIN"]) {
-            weatherEmoji = @"🌧️";
-        } else if ([weatherCode isEqualToString:@"HEAVY_RAIN"]) {
-            weatherEmoji = @"🌧️";
-        } else if ([weatherCode isEqualToString:@"STORM_RAIN"]) {
-            weatherEmoji = @"🌧️";
-        } else if ([weatherCode isEqualToString:@"FOG"]) {
+        } else if ([weatherCode isEqualToString:@"11d"] || [weatherCode isEqualToString:@"11n"]) {
+            weatherEmoji = @"⛈️";
+        } else if ([weatherCode isEqualToString:@"13d"] || [weatherCode isEqualToString:@"13n"]) {
+            weatherEmoji = @"🌨️";
+        } else if ([weatherCode isEqualToString:@"50d"] || [weatherCode isEqualToString:@"50n"]) {
             weatherEmoji = @"🌫️";
-        } else if ([weatherCode isEqualToString:@"LIGHT_SNOW"]) {
-            weatherEmoji = @"🌨️";
-        } else if ([weatherCode isEqualToString:@"MODERATE_SNOW"]) {
-            weatherEmoji = @"🌨️";
-        } else if ([weatherCode isEqualToString:@"HEAVY_SNOW"]) {
-            weatherEmoji = @"🌨️";
-        } else if ([weatherCode isEqualToString:@"STORM_SNOW"]) {
-            weatherEmoji = @"🌨️";
-        } else if ([weatherCode isEqualToString:@"DUST"]) {
-            weatherEmoji = @"🌬️";
-        } else if ([weatherCode isEqualToString:@"SAND"]) {
-            weatherEmoji = @"🌪️";
-        } else if ([weatherCode isEqualToString:@"WIND"]) {
-            weatherEmoji = @"🌬️";
         } else {
             weatherEmoji = @"❓";
         }
@@ -154,50 +132,30 @@
     NSInteger hour = [[NSCalendar currentCalendar] component:NSCalendarUnitHour fromDate:[NSDate date]];
     BOOL isDayTime = (hour >= 6 && hour < 18); // Assuming day time is between 6 AM and 6 PM
 
-    if (self.weatherData && [self.weatherData[@"status"] isEqualToString:@"ok"]) {
-        NSString *weatherCode = getStringFromDictKey(self.weatherData[@"result"][@"realtime"], @"skycon", @"UNKNOWN");
+    if (self.weatherData) {
+        NSString *weatherCode = getStringFromDictKey([self.weatherData[@"current"][@"weather"] firstObject], @"icon", @"UNKNOWN");
 
         // NSLog(@"boom %d", weatherCode);
-        if ([weatherCode isEqualToString:@"CLEAR_DAY"]) {
+        if ([weatherCode isEqualToString:@"01d"]) {
             weatherImage = [UIImage systemImageNamed:@"sun.max.fill" withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
-        } else if ([weatherCode isEqualToString:@"CLEAR_NIGHT"]) {
+        } else if ([weatherCode isEqualToString:@"01n"]) {
             weatherImage = [UIImage systemImageNamed:@"moon.fill" withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
-        } else if ([weatherCode isEqualToString:@"PARTLY_CLOUDY_DAY"]) {
+        } else if ([weatherCode isEqualToString:@"02d"]) {
             weatherImage = [UIImage systemImageNamed:@"cloud.sun.fill" withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
-        } else if ([weatherCode isEqualToString:@"PARTLY_CLOUDY_NIGHT"]) {
+        } else if ([weatherCode isEqualToString:@"02n"]) {
             weatherImage = [UIImage systemImageNamed:@"cloud.moon.fill" withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
-        } else if ([weatherCode isEqualToString:@"CLOUDY"]) {
+        } else if ([weatherCode isEqualToString:@"03d"] || [weatherCode isEqualToString:@"03n"] || [weatherCode isEqualToString:@"04d"] || [weatherCode isEqualToString:@"04n"]) {
             weatherImage = [UIImage systemImageNamed:@"cloud.fill" withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
-        } else if ([weatherCode isEqualToString:@"LIGHT_HAZE"]) {
-            weatherImage = [UIImage systemImageNamed:@"sun.haze.fill" withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
-        } else if ([weatherCode isEqualToString:@"MODERATE_HAZE"]) {
-            weatherImage = [UIImage systemImageNamed:@"sun.haze.fill" withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
-        } else if ([weatherCode isEqualToString:@"HEAVY_HAZE"]) {
-            weatherImage = [UIImage systemImageNamed:@"sun.haze.fill" withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
-        } else if ([weatherCode isEqualToString:@"LIGHT_RAIN"]) {
+        } else if ([weatherCode isEqualToString:@"09d"] || [weatherCode isEqualToString:@"09n"]) {
             weatherImage = [UIImage systemImageNamed:@"cloud.drizzle.fill" withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
-        } else if ([weatherCode isEqualToString:@"MODERATE_RAIN"]) {
+        } else if ([weatherCode isEqualToString:@"10d"] || [weatherCode isEqualToString:@"10n"]) {
             weatherImage = [UIImage systemImageNamed:@"cloud.rain.fill" withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
-        } else if ([weatherCode isEqualToString:@"HEAVY_RAIN"]) {
-            weatherImage = [UIImage systemImageNamed:@"cloud.heavyrain.fill" withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
-        } else if ([weatherCode isEqualToString:@"STORM_RAIN"]) {
-            weatherImage = [UIImage systemImageNamed:@"cloud.bolt.rain.fill" withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
-        } else if ([weatherCode isEqualToString:@"FOG"]) {
+        } else if ([weatherCode isEqualToString:@"11d"] || [weatherCode isEqualToString:@"11n"]) {
+            weatherImage = [UIImage systemImageNamed:@"cloud.bolt.fill" withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
+        } else if ([weatherCode isEqualToString:@"13d"] || [weatherCode isEqualToString:@"13n"]) {
+            weatherImage = [UIImage systemImageNamed:@"cloud.snow.fill" withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
+        } else if ([weatherCode isEqualToString:@"50d"] || [weatherCode isEqualToString:@"50n"]) {
             weatherImage = [UIImage systemImageNamed:@"cloud.fog.fill" withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
-        } else if ([weatherCode isEqualToString:@"LIGHT_SNOW"]) {
-            weatherImage = [UIImage systemImageNamed:@"cloud.snow.fill" withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
-        } else if ([weatherCode isEqualToString:@"MODERATE_SNOW"]) {
-            weatherImage = [UIImage systemImageNamed:@"cloud.snow.fill" withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
-        } else if ([weatherCode isEqualToString:@"HEAVY_SNOW"]) {
-            weatherImage = [UIImage systemImageNamed:@"cloud.snow.fill" withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
-        } else if ([weatherCode isEqualToString:@"STORM_SNOW"]) {
-            weatherImage = [UIImage systemImageNamed:@"cloud.snow.fill" withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
-        } else if ([weatherCode isEqualToString:@"DUST"]) {
-            weatherImage = isDayTime ? [UIImage systemImageNamed:@"sun.dust.fill" withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]] : [UIImage systemImageNamed:@"moon.dust.fill" withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
-        } else if ([weatherCode isEqualToString:@"SAND"]) {
-            weatherImage = [UIImage systemImageNamed:@"smoke.fill" withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
-        } else if ([weatherCode isEqualToString:@"WIND"]) {
-            weatherImage = [UIImage systemImageNamed:@"wind" withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
         } else {
             weatherImage = [UIImage systemImageNamed:@"questionmark.circle.fill" withConfiguration:[UIImageSymbolConfiguration configurationWithPointSize:fontSize]];
         }
@@ -211,8 +169,8 @@
 }
 
 - (NSString *)conditionsDescription {
-    if (self.weatherData && [self.weatherData[@"status"] isEqualToString:@"ok"]) {
-        return NSLocalizedString(getStringFromDictKey(self.weatherData[@"result"][@"realtime"], @"skycon", @"UNKNOWN"), comment: @"");
+    if (self.weatherData) {
+        return NSLocalizedString(getStringFromDictKey([self.weatherData[@"current"][@"weather"] firstObject], @"main", @"UNKNOWN"), comment: @"");
     }
 
     return NSLocalizedString(@"UNKNOWN", comment: @"");
@@ -225,13 +183,13 @@
 - (NSString *)lowDescription:(BOOL)withSymbol {
     NSString *temperatureString = nil;
 
-    if (self.weatherData && [self.weatherData[@"status"] isEqualToString:@"ok"]) {
-        NSArray *dailyForecasts = self.weatherData[@"result"][@"daily"][@"temperature"];
+    if (self.weatherData) {
+        NSArray *dailyForecasts = self.weatherData[@"daily"];
 
         if (dailyForecasts != nil && dailyForecasts.count > 0) {
             NSMeasurementFormatter *formatter = [self sharedNSMeasurementFormatter];
             formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:self.locale];
-            NSMeasurement *measurement = [[NSMeasurement alloc] initWithDoubleValue:getIntFromDictKey([dailyForecasts firstObject], @"min") unit:[self useMetric] ? NSUnitTemperature.celsius : NSUnitTemperature.fahrenheit];
+            NSMeasurement *measurement = [[NSMeasurement alloc] initWithDoubleValue:getIntFromDictKey([dailyForecasts firstObject], @"temp_min") unit:[self useMetric] ? NSUnitTemperature.celsius : NSUnitTemperature.fahrenheit];
             measurement = [self useFahrenheit] ? [measurement measurementByConvertingToUnit:NSUnitTemperature.fahrenheit] : [measurement measurementByConvertingToUnit:NSUnitTemperature.celsius];
 
             if (withSymbol) {
@@ -254,13 +212,13 @@
 - (NSString *)highDescription:(BOOL)withSymbol {
     NSString *temperatureString = nil;
 
-    if (self.weatherData && [self.weatherData[@"status"] isEqualToString:@"ok"]) {
-        NSArray *dailyForecasts = self.weatherData[@"result"][@"daily"][@"temperature"];
+    if (self.weatherData) {
+        NSArray *dailyForecasts = self.weatherData[@"daily"];
 
         if (dailyForecasts != nil && dailyForecasts.count > 0) {
             NSMeasurementFormatter *formatter = [self sharedNSMeasurementFormatter];
             formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:self.locale];
-            NSMeasurement *measurement = [[NSMeasurement alloc] initWithDoubleValue:getIntFromDictKey([dailyForecasts firstObject], @"max") unit:[self useMetric] ? NSUnitTemperature.celsius : NSUnitTemperature.fahrenheit];
+            NSMeasurement *measurement = [[NSMeasurement alloc] initWithDoubleValue:getIntFromDictKey([dailyForecasts firstObject], @"temp_max") unit:[self useMetric] ? NSUnitTemperature.celsius : NSUnitTemperature.fahrenheit];
             measurement = [self useFahrenheit] ? [measurement measurementByConvertingToUnit:NSUnitTemperature.fahrenheit] : [measurement measurementByConvertingToUnit:NSUnitTemperature.celsius];
 
             if (withSymbol) {
@@ -283,11 +241,11 @@
 - (NSString *)windSpeed:(BOOL)withUnit {
     NSString *windSpeedString = nil;
 
-    if (self.weatherData && [self.weatherData[@"status"] isEqualToString:@"ok"]) {
+    if (self.weatherData) {
         NSMeasurementFormatter *formatter = [self sharedNSMeasurementFormatter];
         formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:self.locale];
-        NSMeasurement *measurement = [[NSMeasurement alloc] initWithDoubleValue:getDoubleFromDictKey(self.weatherData[@"result"][@"realtime"][@"wind"], @"speed") unit:NSUnitSpeed.kilometersPerHour];
-        measurement = [self useMetric] ? measurement : [measurement measurementByConvertingToUnit:NSUnitSpeed.milesPerHour];
+        NSMeasurement *measurement = [[NSMeasurement alloc] initWithDoubleValue:getDoubleFromDictKey(self.weatherData[@"current"], @"wind_speed") unit:NSUnitSpeed.metersPerSecond];
+        measurement = [self useMetric] ? [measurement measurementByConvertingToUnit:NSUnitSpeed.kilometersPerHour] : [measurement measurementByConvertingToUnit:NSUnitSpeed.milesPerHour];
 
         if (withUnit) {
             windSpeedString = [formatter stringFromMeasurement:measurement];
@@ -308,10 +266,10 @@
 - (NSString *)windDirection:(BOOL)shortDescription {
     NSString *windDirectionString = nil;
 
-    if (self.weatherData && [self.weatherData[@"status"] isEqualToString:@"ok"]) {
+    if (self.weatherData) {
         WeatherWindSpeedFormatter *formatter = [WeatherWindSpeedFormatter convenienceFormatter];
         formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:self.locale];
-        windDirectionString = [formatter stringForWindDirection:getDoubleFromDictKey(self.weatherData[@"result"][@"realtime"][@"wind"], @"direction") shortDescription:shortDescription];
+        windDirectionString = [formatter stringForWindDirection:getDoubleFromDictKey(self.weatherData[@"current"], @"wind_deg") shortDescription:shortDescription];
     }
 
     return windDirectionString ? : @"--";
@@ -324,8 +282,8 @@
 - (NSString *)humidity:(BOOL)withSymbol {
     NSString *humidityString = nil;
 
-    if (self.weatherData && [self.weatherData[@"status"] isEqualToString:@"ok"]) {
-        humidityString = [NSString stringWithFormat:withSymbol ? @"%.0f%%" : @"%.0f", getDoubleFromDictKey(self.weatherData[@"result"][@"realtime"], @"humidity") * 100];
+    if (self.weatherData) {
+        humidityString = [NSString stringWithFormat:withSymbol ? @"%.0f%%" : @"%.0f", getDoubleFromDictKey(self.weatherData[@"current"], @"humidity")];
     }
 
     return humidityString ? : @"--";
@@ -338,11 +296,11 @@
 - (NSString *)visibility:(BOOL)withUnit {
     NSString *visibilityString = nil;
 
-    if (self.weatherData && [self.weatherData[@"status"] isEqualToString:@"ok"]) {
+    if (self.weatherData) {
         NSMeasurementFormatter *formatter = [self sharedNSMeasurementFormatter];
         formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:self.locale];
-        NSMeasurement *measurement = [[NSMeasurement alloc] initWithDoubleValue:getDoubleFromDictKey(self.weatherData[@"result"][@"realtime"], @"visibility") unit:NSUnitLength.kilometers];
-        measurement = [self useMetric] ? measurement : [measurement measurementByConvertingToUnit:NSUnitLength.miles];
+        NSMeasurement *measurement = [[NSMeasurement alloc] initWithDoubleValue:getDoubleFromDictKey(self.weatherData[@"current"], @"visibility") unit:NSUnitLength.meters];
+        measurement = [self useMetric] ? [measurement measurementByConvertingToUnit:NSUnitLength.kilometers] : [measurement measurementByConvertingToUnit:NSUnitLength.miles];
 
         if (withUnit) {
             visibilityString = [formatter stringFromMeasurement:measurement];
@@ -363,13 +321,13 @@
 - (NSString *)precipitationPast24Hours:(BOOL)withUnit {
     NSString *precipitationString = nil;
 
-    if (self.weatherData && [self.weatherData[@"status"] isEqualToString:@"ok"]) {
-        NSArray *dailyForecasts = self.weatherData[@"result"][@"daily"][@"precipitation"];
+    if (self.weatherData) {
+        NSArray *dailyForecasts = self.weatherData[@"daily"];
 
         if (dailyForecasts != nil && dailyForecasts.count > 0) {
             NSMeasurementFormatter *formatter = [self sharedNSMeasurementFormatter];
             formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:self.locale];
-            NSMeasurement *measurement = [[NSMeasurement alloc] initWithDoubleValue:getDoubleFromDictKey([dailyForecasts firstObject], @"avg") unit:NSUnitLength.millimeters];
+            NSMeasurement *measurement = [[NSMeasurement alloc] initWithDoubleValue:getDoubleFromDictKey([dailyForecasts firstObject], @"precipitation") unit:NSUnitLength.millimeters];
             measurement = [self useMetric] ? measurement : [measurement measurementByConvertingToUnit:NSUnitLength.inches];
 
             if (withUnit) {
@@ -392,13 +350,13 @@
 - (NSString *)precipitationNextHour:(BOOL)withSymbol {
     NSString *precipitationString = nil;
 
-    if (self.weatherData && [self.weatherData[@"status"] isEqualToString:@"ok"]) {
-        NSArray *hourlyForecasts = self.weatherData[@"result"][@"hourly"][@"precipitation"];
+    if (self.weatherData) {
+        NSArray *hourlyForecasts = self.weatherData[@"hourly"];
 
         if (hourlyForecasts != nil && hourlyForecasts.count > 0) {
             NSMeasurementFormatter *formatter = [self sharedNSMeasurementFormatter];
             formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:self.locale];
-            NSMeasurement *measurement = [[NSMeasurement alloc] initWithDoubleValue:getIntFromDictKey([hourlyForecasts firstObject], @"value") unit:NSUnitLength.millimeters];
+            NSMeasurement *measurement = [[NSMeasurement alloc] initWithDoubleValue:getIntFromDictKey([hourlyForecasts firstObject][@"rain"], @"1h", 0) unit:NSUnitLength.millimeters];
             measurement = [self useMetric] ? measurement : [measurement measurementByConvertingToUnit:NSUnitLength.inches];
 
             if (withSymbol) {
@@ -421,11 +379,11 @@
 - (NSString *)precipitationPercentNextHour:(BOOL)withSymbol {
     NSString *precipitationString = nil;
 
-    if (self.weatherData && [self.weatherData[@"status"] isEqualToString:@"ok"]) {
-        NSArray *hourlyForecasts = self.weatherData[@"result"][@"hourly"][@"precipitation"];
+    if (self.weatherData) {
+        NSArray *hourlyForecasts = self.weatherData[@"hourly"];
 
         if (hourlyForecasts != nil && hourlyForecasts.count > 0) {
-            precipitationString = [NSString stringWithFormat:withSymbol ? @"%.0f%%" : @"%.0f", getDoubleFromDictKey([hourlyForecasts firstObject], @"probability")];
+            precipitationString = [NSString stringWithFormat:withSymbol ? @"%.0f%%" : @"%.0f", getDoubleFromDictKey([hourlyForecasts firstObject], @"pop") * 100];
         }
     } else {
         precipitationString = @"--";
@@ -441,10 +399,10 @@
 - (NSString *)pressure:(BOOL)withUnit {
     NSString *pressureString = nil;
 
-    if (self.weatherData && [self.weatherData[@"status"] isEqualToString:@"ok"]) {
+    if (self.weatherData) {
         NSMeasurementFormatter *formatter = [self sharedNSMeasurementFormatter];
         formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:self.locale];
-        NSMeasurement *measurement = [[NSMeasurement alloc] initWithDoubleValue:getDoubleFromDictKey(self.weatherData[@"result"][@"realtime"], @"pressure") / 100 unit:NSUnitPressure.hectopascals];
+        NSMeasurement *measurement = [[NSMeasurement alloc] initWithDoubleValue:getDoubleFromDictKey(self.weatherData[@"current"], @"pressure") unit:NSUnitPressure.hectopascals];
         measurement = [self useMetric] ? measurement : [measurement measurementByConvertingToUnit:NSUnitPressure.poundsForcePerSquareInch];
 
         if (withUnit) {
@@ -462,21 +420,11 @@
 - (NSString *)UVIndex {
     NSString *uvIndexString = nil;
 
-    if (self.weatherData && [self.weatherData[@"status"] isEqualToString:@"ok"]) {
-        uvIndexString = [NSString stringWithFormat:@"%.0f", getDoubleFromDictKey(self.weatherData[@"result"][@"realtime"][@"life_index"][@"ultraviolet"], @"index")];
+    if (self.weatherData) {
+        uvIndexString = [NSString stringWithFormat:@"%.0f", getDoubleFromDictKey(self.weatherData[@"current"], @"uvi")];
     }
 
     return uvIndexString ? : @"--";
-}
-
-- (NSString *)airQualityIndex {
-    NSString *airQualityIndexString = nil;
-
-    if (self.weatherData && [self.weatherData[@"status"] isEqualToString:@"ok"]) {
-        airQualityIndexString = [NSString stringWithFormat:@"%.0f", getDoubleFromDictKey(self.weatherData[@"result"][@"realtime"][@"air_quality"][@"aqi"], self.useMetric ? @"chn" : @"usa")];
-    }
-
-    return airQualityIndexString ? : @"--";
 }
 
 - (NSDictionary *)getWeatherData {
@@ -524,7 +472,6 @@
     [data setObject:[self pressure:YES] forKey:@"pressure_with_unit"];
 
     [data setObject:self.UVIndex forKey:@"uv_index"];
-    [data setObject:self.airQualityIndex forKey:@"aqi"];
     return data;
 }
 

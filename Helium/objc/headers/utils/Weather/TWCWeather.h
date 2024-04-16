@@ -1,4 +1,14 @@
+//
+//  TWCWeather.h
+//  Helium
+//
+//  Created by Fuuko on 2024/4/15.
+//
 // https://github.com/DGh0st/HSWidgets
+
+#ifndef TWCWeather_h
+#define TWCWeather_h
+
 #import "WeatherHeaders.h"
 @class City, WATodayModel;
 
@@ -48,3 +58,5 @@ typedef void (^TWCWeatherDataCallbackBlock)(NSDictionary *weatherData);
 - (NSDictionary *)getWeatherData;
 - (void)updateModel:(TWCWeatherDataCallbackBlock)dataCallback;
 @end
+
+#endif /* TWCWeather_h */

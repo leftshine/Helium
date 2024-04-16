@@ -345,6 +345,14 @@ struct WidgetPreferencesView: View {
                                         .foregroundColor(.secondary)
                                     Spacer()
                                 }
+                            } else if weatherProvider == 3 {
+                                HStack {
+                                    Text(NSLocalizedString("Weather Format OpenWeatherMap", comment: ""))
+                                        .multilineTextAlignment(.leading)
+                                        .font(.subheadline)
+                                        .foregroundColor(.secondary)
+                                    Spacer()
+                                }
                             }
                         }
                     }

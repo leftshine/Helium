@@ -21,6 +21,7 @@
 #import "LyricsUtils.h"
 #import "MediaRemoteManager.h"
 #import "MusicPlayerUtils.h"
+#import "OpenWeatherMap.h"
 #import "QWeather.h"
 #import "TWCWeather.h"
 #import "UsefulFunctions.h"
@@ -71,6 +72,7 @@
 #pragma mark - Date Widget
 - (void)formattedDate:(NSString *)format locale:(NSString *)locale callback:(CallbackBlock)callback {
     @autoreleasepool {
+        format = [self processWidgetString:format];
         formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:locale];
         NSDate *currentDate = [NSDate date];
         NSString *newDateFormat = [LunarDate getChineseCalendarWithDate:currentDate format:format];
@@ -415,6 +417,8 @@
 
 - (void)formattedWeatherString:(NSString *)location format:(NSString *)format useCurrentLocation:(BOOL)useCurrentLocation useMetric:(BOOL)useMetric useFahrenheit:(BOOL)useFahrenheit locale:(NSString *)locale fontSize:(double)fontSize textColor:(UIColor *)textColor weatherProvider:(NSInteger)weatherProvider weatherApiKey:(NSString *)weatherApiKey freeSub:(BOOL)freeSub callback:(CallbackBlock)callback {
     @autoreleasepool {
+        format = [self processWidgetString:format];
+
         if (weatherProvider == 0) {
             TWCWeather *twcWeather = [TWCWeather sharedInstance];
             twcWeather.locale = [[NSLocale alloc] initWithLocaleIdentifier:locale];
@@ -463,6 +467,26 @@
             colorfulClouds.useCurrentLocation = useCurrentLocation;
             colorfulClouds.location = location;
             [colorfulClouds updateWeather:^(NSDictionary *weatherData) {
+                if (weatherData != nil) {
+                    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithAttributedString:[self formattedWeatherData:weatherData
+                                                                                                                                                  format:format
+                                                                                                                                               textColor:textColor]];
+                    attributedString = [self formatString:attributedString];
+                    callback([attributedString copy]);
+                } else {
+                    callback(nil);
+                }
+            }];
+        } else if (weatherProvider == 3) {
+            OpenWeatherMap *openWeatherMap = [OpenWeatherMap sharedInstance];
+            openWeatherMap.useMetric = useMetric;
+            openWeatherMap.useFahrenheit = useFahrenheit;
+            openWeatherMap.apiKey = weatherApiKey;
+            openWeatherMap.locale = locale;
+            openWeatherMap.fontSize = fontSize;
+            openWeatherMap.useCurrentLocation = useCurrentLocation;
+            openWeatherMap.location = location;
+            [openWeatherMap updateWeather:^(NSDictionary *weatherData) {
                 if (weatherData != nil) {
                     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithAttributedString:[self formattedWeatherData:weatherData
                                                                                                                                                   format:format
@@ -738,6 +762,13 @@
     }
 
     return attributedString;
+}
+
+- (NSString *)processWidgetString:(NSString *)widgetString {
+    NSString *processedString = [widgetString stringByReplacingOccurrencesOfString:@"\\n" withString:@"\n"];
+
+    processedString = [processedString stringByReplacingOccurrencesOfString:@"\\t" withString:@"\t"];
+    return processedString;
 }
 
 - (NSString *)removeExtraZerosFromDouble:(double)value {

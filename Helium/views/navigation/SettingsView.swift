@@ -29,7 +29,7 @@ struct SettingsView: View {
                     #if DEBUG
                         Label(NSLocalizedString("Version ", comment: "") + "\(Bundle.main.releaseVersionNumber ?? NSLocalizedString("UNKNOWN", comment: "")) (\(Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as! String)) \(NSLocalizedString("SDebug", comment: ""))", systemImage: "info")
                     #else
-                    Label(NSLocalizedString("Version ", comment: "") + "\(Bundle.main.releaseVersionNumber ?? NSLocalizedString("UNKNOWN", comment: "")) (\(Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as! String)) \(NSLocalizedString("SRelease", comment: ""))", systemImage: "info")
+                        Label(NSLocalizedString("Version ", comment: "") + "\(Bundle.main.releaseVersionNumber ?? NSLocalizedString("UNKNOWN", comment: "")) (\(Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as! String)) \(NSLocalizedString("SRelease", comment: ""))", systemImage: "info")
                     #endif
                 }
 
@@ -102,11 +102,12 @@ struct SettingsView: View {
                                 DropdownItem(NSLocalizedString("System Weather", comment: ""), tag: 0),
                                 DropdownItem(NSLocalizedString("QWeather", comment: ""), tag: 1),
                                 DropdownItem(NSLocalizedString("ColorfulClouds", comment: ""), tag: 2),
+                                DropdownItem(NSLocalizedString("OpenWeatherMap", comment: ""), tag: 3),
                             ]
                         }
                     }
 
-                    if weatherProvider == 1 || weatherProvider == 2 {
+                    if weatherProvider == 1 || weatherProvider == 2 || weatherProvider == 3 {
                         HStack {
                             Text(NSLocalizedString("Weather API Key", comment: ""))
                                 .bold()

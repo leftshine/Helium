@@ -10,6 +10,7 @@
 
 @interface NetworkUtils : NSObject
 + (NSString *)getDataFrom:(NSString *)url;
++ (NSString *)getDataFrom:(NSString *)url userAgent:(NSString *)userAgent;
 + (NSString *)encodeURIComponent:(NSString *)string;
 @end
 

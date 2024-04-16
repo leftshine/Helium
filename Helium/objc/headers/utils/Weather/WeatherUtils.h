@@ -1,3 +1,13 @@
+//
+//  WeatherUtils.h
+//  Helium
+//
+//  Created by Fuuko on 2024/4/15.
+//
+
+#ifndef WeatherUtils_h
+#define WeatherUtils_h
+
 #import <Foundation/Foundation.h>
 @class CLPlacemark;
 
@@ -6,3 +16,5 @@
 + (NSArray *)getGeocodeByName:(NSString *)name;
 + (CLPlacemark *)getPlacemarkByGeocode:(NSString *)geolocation;
 @end
+
+#endif /* WeatherUtils_h */

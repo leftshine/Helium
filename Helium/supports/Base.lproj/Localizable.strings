@@ -109,8 +109,9 @@
 "Save Changes" = "Save Changes";
 "Would you like to save changes to the widget?" = "Would you like to save changes to the widget?";
 "Weather Format System" = "This weather format explanation includes:\nLocation: {l}\nWeather Icon: {i}\nWeather Emoji: {e}\nWeather Description: {n}\nCurrent Temperature: {t} {ts}\nCurrent Humidity: {h} {hs}\nFeels Like Temperature: {bt} {bts}\nLowest Temperature: {lt} {lts}\nHighest Temperature: {ht} {hts}\nWind Speed: {ws} {wsu}\nWind Direction: {wd} {wds}\nVisibility: {v} {vu}\nNext Hour Precipitation: {ppn} {ppns}\nPrecipitation Past 24 Hours: {pp24} {pp24u}\nPressure: {ps} {psu}\nUV Index: {uvi}\nAir Quality Index: {aqi}\nThose ending with 's' include symbols, those ending with 'u' include units.";
-"Weather Format QWeather" = "This weather format explanation includes:\nLocation: {l}\nWeather Icon: {i}\nWeather Emoji: {e}\nWeather Description: {n}\nCurrent Temperature: {t} {ts}\nCurrent Humidity: {h} {hs}\nFeels Like Temperature: {bt} {bts}\nLowest Temperature: {lt} {lts}\nHighest Temperature: {ht} {hts}\nWind Speed: {ws} {wsu}\nWind Direction: {wd}\nVisibility: {v} {vu}\nNext Hour Precipitation: {pn} {pns}\nNext Hour Precipitation Percent: {ppn} {ppns}\nPrecipitation Past 24 Hours: {pp24} {pp24u}\nPressure: {ps} {psu}\nThose ending with 's' include symbols, those ending with 'u' include units.";
-"Weather Format ColorfulClouds" = "This weather format explanation includes:\nLocation: {l}\nWeather Icon: {i}\nWeather Emoji: {e}\nWeather Description: {n}\nCurrent Temperature: {t} {ts}\nCurrent Humidity: {h} {hs}\nFeels Like Temperature: {bt} {bts}\nLowest Temperature: {lt} {lts}\nHighest Temperature: {ht} {hts}\nWind Speed: {ws} {wsu}\nWind Direction: {wd} {wds}\nVisibility: {v} {vu}\nNext Hour Precipitation: {pn} {pns}\nNext Hour Precipitation Percent: {ppn} {ppns}\nPrecipitation Past 24 Hours: {pp24} {pp24u}\nPressure: {ps} {psu}\nUV Index: {uvi}\nAir Quality Index: {aqi}\nThose ending with 's' include symbols, those ending with 'u' include units.";
+"Weather Format QWeather" = "This weather format explanation includes:\nLocation: {l}\nWeather Icon: {i}\nWeather Emoji: {e}\nWeather Description: {n}\nCurrent Temperature: {t} {ts}\nCurrent Humidity: {h} {hs}\nFeels Like Temperature: {bt} {bts}\nLowest Temperature: {lt} {lts}\nHighest Temperature: {ht} {hts}\nWind Speed: {ws} {wsu}\nWind Direction: {wd}\nVisibility: {v} {vu}\nNext Hour Precipitation: {pp} {pps}\nNext Hour Precipitation Percent: {ppn} {ppns}\nPrecipitation Past 24 Hours: {pp24} {pp24u}\nPressure: {ps} {psu}\nThose ending with 's' include symbols, those ending with 'u' include units.";
+"Weather Format ColorfulClouds" = "This weather format explanation includes:\nLocation: {l}\nWeather Icon: {i}\nWeather Emoji: {e}\nWeather Description: {n}\nCurrent Temperature: {t} {ts}\nCurrent Humidity: {h} {hs}\nFeels Like Temperature: {bt} {bts}\nLowest Temperature: {lt} {lts}\nHighest Temperature: {ht} {hts}\nWind Speed: {ws} {wsu}\nWind Direction: {wd} {wds}\nVisibility: {v} {vu}\nNext Hour Precipitation: {pp} {pps}\nNext Hour Precipitation Percent: {ppn} {ppns}\nPrecipitation Past 24 Hours: {pp24} {pp24u}\nPressure: {ps} {psu}\nUV Index: {uvi}\nAir Quality Index: {aqi}\nThose ending with 's' include symbols, those ending with 'u' include units.";
+"Weather Format OpenWeatherMap" = "This weather format explanation includes:\nLocation: {l}\nWeather Icon: {i}\nWeather Emoji: {e}\nWeather Description: {n}\nCurrent Temperature: {t} {ts}\nCurrent Humidity: {h} {hs}\nFeels Like Temperature: {bt} {bts}\nLowest Temperature: {lt} {lts}\nHighest Temperature: {ht} {hts}\nWind Speed: {ws} {wsu}\nWind Direction: {wd} {wds}\nVisibility: {v} {vu}\nNext Hour Precipitation: {pp} {pps}\nNext Hour Precipitation Percent: {ppn} {ppns}\nPrecipitation Past 24 Hours: {pp24} {pp24u}\nPressure: {ps} {psu}\nUV Index: {uvi}\nThose ending with 's' include symbols, those ending with 'u' include units.";
 "Format" = "Format";
 "Auto Detection" = "Default";
 "Artist" = "Artist";
@@ -252,3 +253,12 @@
 "DUST" = "Dust";
 "SAND" = "Sand";
 "WIND" = "Wind";
+
+/* OpenWeatherMap */
+"Thunderstorm" = "Thunderstorm";
+"Drizzle" = "Drizzle";
+"Rain" = "Rain";
+"Snow" = "Snow";
+"Atmosphere" = "Atmosphere";
+"Clear" = "Clear";
+"Clouds" = "Clouds";

@@ -12,6 +12,11 @@ static NSString *UserAgent = @"Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_3_3 like 
 @implementation NetworkUtils
 
 + (NSString *)getDataFrom:(NSString *)url {
+    return [self getDataFrom:url userAgent:UserAgent];
+}
+
++ (NSString *)getDataFrom:(NSString *)url userAgent:(NSString *)userAgent {
+    HMLog(url);
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
     __block NSString *responseData = nil;
 
@@ -19,13 +24,13 @@ static NSString *UserAgent = @"Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_3_3 like 
 
     [request setHTTPMethod:@"GET"];
     [request setURL:[NSURL URLWithString:url]];
-    [request setValue:UserAgent forHTTPHeaderField:@"User-Agent"];
+    [request setValue:userAgent forHTTPHeaderField:@"User-Agent"];
 
     NSURLSession *session = [NSURLSession sharedSession];
     NSURLSessionDataTask *task = [session dataTaskWithRequest:request
                                             completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         if (error) {
-            NSLog(@"Error getting %@, %@", url, error);
+            HMLog(url, error);
         } else {
             NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
 
@@ -33,7 +38,7 @@ static NSString *UserAgent = @"Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_3_3 like 
                 responseData = [[NSString alloc] initWithData:data
                                                      encoding:NSUTF8StringEncoding];
             } else {
-                NSLog(@"Error getting %@, HTTP status code %li", url, (long)[httpResponse statusCode]);
+                HMLog(url, (long)[httpResponse statusCode]);
             }
         }
 

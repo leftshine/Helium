@@ -21,6 +21,12 @@
 		320F730D2BCC0EF10033417A /* AlertToast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 320F730B2BCC0EF10033417A /* AlertToast.swift */; };
 		320F730F2BCC0F000033417A /* BlurView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 320F730E2BCC0F000033417A /* BlurView.swift */; };
 		320F73102BCC0F000033417A /* BlurView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 320F730E2BCC0F000033417A /* BlurView.swift */; };
+		320F73202BCE64CE0033417A /* DateTimeUtils.mm in Sources */ = {isa = PBXBuildFile; fileRef = 320F731F2BCE64CE0033417A /* DateTimeUtils.mm */; };
+		320F73212BCE64CE0033417A /* DateTimeUtils.mm in Sources */ = {isa = PBXBuildFile; fileRef = 320F731F2BCE64CE0033417A /* DateTimeUtils.mm */; };
+		320F73242BCE6B5C0033417A /* IWeather.mm in Sources */ = {isa = PBXBuildFile; fileRef = 320F73232BCE6B5C0033417A /* IWeather.mm */; };
+		320F73252BCE6B5C0033417A /* IWeather.mm in Sources */ = {isa = PBXBuildFile; fileRef = 320F73232BCE6B5C0033417A /* IWeather.mm */; };
+		320F73282BCE729F0033417A /* OpenWeatherMap.mm in Sources */ = {isa = PBXBuildFile; fileRef = 320F73272BCE729F0033417A /* OpenWeatherMap.mm */; };
+		320F73292BCE729F0033417A /* OpenWeatherMap.mm in Sources */ = {isa = PBXBuildFile; fileRef = 320F73272BCE729F0033417A /* OpenWeatherMap.mm */; };
 		32300C0E2BC14E07002296DC /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32300C0D2BC14E07002296DC /* SceneDelegate.swift */; };
 		32300C0F2BC14E07002296DC /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32300C0D2BC14E07002296DC /* SceneDelegate.swift */; };
 		32300C112BC15584002296DC /* ToggleHUDIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32300C102BC15584002296DC /* ToggleHUDIntentHandler.swift */; };
@@ -200,6 +206,12 @@
 		320F730B2BCC0EF10033417A /* AlertToast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertToast.swift; sourceTree = "<group>"; };
 		320F730E2BCC0F000033417A /* BlurView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlurView.swift; sourceTree = "<group>"; };
 		320F73172BCD0DBC0033417A /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Intents.strings"; sourceTree = "<group>"; };
+		320F73182BCD35AA0033417A /* IWeather.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IWeather.h; sourceTree = "<group>"; };
+		320F731F2BCE64CE0033417A /* DateTimeUtils.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = DateTimeUtils.mm; sourceTree = "<group>"; };
+		320F73222BCE65300033417A /* DateTimeUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DateTimeUtils.h; sourceTree = "<group>"; };
+		320F73232BCE6B5C0033417A /* IWeather.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = IWeather.mm; sourceTree = "<group>"; };
+		320F73262BCE71380033417A /* OpenWeatherMap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenWeatherMap.h; sourceTree = "<group>"; };
+		320F73272BCE729F0033417A /* OpenWeatherMap.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = OpenWeatherMap.mm; sourceTree = "<group>"; };
 		32300BE42BC0F480002296DC /* Intents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Intents.framework; path = System/Library/Frameworks/Intents.framework; sourceTree = SDKROOT; };
 		32300C0D2BC14E07002296DC /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		32300C102BC15584002296DC /* ToggleHUDIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleHUDIntentHandler.swift; sourceTree = "<group>"; };
@@ -688,6 +700,8 @@
 			isa = PBXGroup;
 			children = (
 				32E7F81E2BB6BE9E00507110 /* ColorfulClouds.h */,
+				320F73182BCD35AA0033417A /* IWeather.h */,
+				320F73262BCE71380033417A /* OpenWeatherMap.h */,
 				32E7F81F2BB6BE9E00507110 /* QWeather.h */,
 				32E7F8202BB6BE9E00507110 /* TWCWeather.h */,
 				32E7F8212BB6BE9E00507110 /* WeatherUtils.h */,
@@ -699,6 +713,7 @@
 			isa = PBXGroup;
 			children = (
 				320F72F92BCA9BDB0033417A /* CryptoCoinUtils.h */,
+				320F73222BCE65300033417A /* DateTimeUtils.h */,
 				32E7F8232BB6BE9E00507110 /* EZTimer.h */,
 				32E7F8242BB6BE9E00507110 /* FontUtils.h */,
 				32E7F8252BB6BE9E00507110 /* HMLog.h */,
@@ -758,6 +773,8 @@
 			isa = PBXGroup;
 			children = (
 				32E7F83D2BB6BE9E00507110 /* ColorfulClouds.mm */,
+				320F73232BCE6B5C0033417A /* IWeather.mm */,
+				320F73272BCE729F0033417A /* OpenWeatherMap.mm */,
 				32E7F83E2BB6BE9E00507110 /* QWeather.mm */,
 				32E7F83F2BB6BE9E00507110 /* TWCWeather.mm */,
 				32E7F8402BB6BE9E00507110 /* WeatherUtils.mm */,
@@ -769,6 +786,7 @@
 			isa = PBXGroup;
 			children = (
 				320F72F62BCA9BBE0033417A /* CryptoCoinUtils.mm */,
+				320F731F2BCE64CE0033417A /* DateTimeUtils.mm */,
 				32E7F8422BB6BE9E00507110 /* EZTimer.mm */,
 				32E7F8432BB6BE9E00507110 /* FontUtils.mm */,
 				32E7F8442BB6BE9E00507110 /* LocationUtils.mm */,
@@ -1068,10 +1086,12 @@
 				32E7F85C2BB6BE9E00507110 /* HUDMainApplication.mm in Sources */,
 				32300C112BC15584002296DC /* ToggleHUDIntentHandler.swift in Sources */,
 				32300C172BC1650A002296DC /* ShowHUDIntentHandler.swift in Sources */,
+				320F73202BCE64CE0033417A /* DateTimeUtils.mm in Sources */,
 				32E7F8722BB6BE9F00507110 /* LRCLyricsParser.mm in Sources */,
 				329934B82BB04F59009BE9B0 /* UserDefaultsExtensions.swift in Sources */,
 				32E7F8822BB6BE9F00507110 /* WidgetsContainerView.mm in Sources */,
 				32E7F8702BB6BE9F00507110 /* LocationUtils.mm in Sources */,
+				320F73282BCE729F0033417A /* OpenWeatherMap.mm in Sources */,
 				32E7F8882BB6BE9F00507110 /* SwiftObjCPPBridger.m in Sources */,
 				320F72F72BCA9BBE0033417A /* CryptoCoinUtils.mm in Sources */,
 				320F730F2BCC0F000033417A /* BlurView.swift in Sources */,
@@ -1088,6 +1108,7 @@
 				32E7F86C2BB6BE9F00507110 /* EZTimer.mm in Sources */,
 				32ADE5B42BB05A62002621A5 /* DebugPageView.swift in Sources */,
 				32E7F8802BB6BE9F00507110 /* AnyBackdropView.mm in Sources */,
+				320F73242BCE6B5C0033417A /* IWeather.mm in Sources */,
 				329934C52BB04FDB009BE9B0 /* Haptic++.swift in Sources */,
 				32E7F85A2BB6BE9E00507110 /* HUDHelper.mm in Sources */,
 				32E7F67D2BB19A7400507110 /* EditWidgetSetView.swift in Sources */,
@@ -1139,10 +1160,12 @@
 				32E7F85D2BB6BE9F00507110 /* HUDMainApplication.mm in Sources */,
 				32300C122BC1569C002296DC /* ToggleHUDIntentHandler.swift in Sources */,
 				32E7F8732BB6BE9F00507110 /* LRCLyricsParser.mm in Sources */,
+				320F73212BCE64CE0033417A /* DateTimeUtils.mm in Sources */,
 				32E7F79D2BB5A55900507110 /* UserDefaultsExtensions.swift in Sources */,
 				32E7F8832BB6BE9F00507110 /* WidgetsContainerView.mm in Sources */,
 				32E7F8712BB6BE9F00507110 /* LocationUtils.mm in Sources */,
 				32E7F8892BB6BE9F00507110 /* SwiftObjCPPBridger.m in Sources */,
+				320F73292BCE729F0033417A /* OpenWeatherMap.mm in Sources */,
 				32E7F8772BB6BE9F00507110 /* LyricsUtils.mm in Sources */,
 				320F72F82BCA9BBE0033417A /* CryptoCoinUtils.mm in Sources */,
 				320F73102BCC0F000033417A /* BlurView.swift in Sources */,
@@ -1159,6 +1182,7 @@
 				32E7F7AD2BB5A55900507110 /* DebugPageView.swift in Sources */,
 				32300C1B2BC165E1002296DC /* ShowHUDIntentHandler.swift in Sources */,
 				32E7F8812BB6BE9F00507110 /* AnyBackdropView.mm in Sources */,
+				320F73252BCE6B5C0033417A /* IWeather.mm in Sources */,
 				32E7F7AF2BB5A55900507110 /* Haptic++.swift in Sources */,
 				32E7F85B2BB6BE9E00507110 /* HUDHelper.mm in Sources */,
 				32E7F7B02BB5A55900507110 /* EditWidgetSetView.swift in Sources */,
