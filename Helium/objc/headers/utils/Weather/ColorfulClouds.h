@@ -13,6 +13,8 @@
 
 @interface ColorfulClouds : IWeather
 
+@property (nonatomic, strong) NSDictionary *weatherData;
+
 - (NSDictionary *)fetchWeatherForLocation:(NSString *)location;
 
 - (NSString *)UVIndex;

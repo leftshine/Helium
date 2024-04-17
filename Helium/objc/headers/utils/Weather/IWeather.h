@@ -20,7 +20,6 @@ typedef void (^IWeatherLocationCallbackBlock)(NSString *location);
 @property (nonatomic) BOOL useMetric;
 @property (nonatomic) BOOL useFahrenheit;
 @property (nonatomic) NSString *locale;
-@property (nonatomic, strong) NSDictionary *weatherData;
 @property (nonatomic, strong) CLPlacemark *city;
 @property (nonatomic) long long lastUpdateTime;
 @property (nonatomic, strong) NSString *lastLocation;

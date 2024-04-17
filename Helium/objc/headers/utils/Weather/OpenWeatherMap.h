@@ -13,8 +13,11 @@
 
 @interface OpenWeatherMap : IWeather
 
+@property (nonatomic, strong) NSDictionary *weather;
+@property (nonatomic, strong) NSDictionary *forecast;
+
 - (NSDictionary *)fetchWeatherForLocation:(NSString *)location;
-- (NSString *)UVIndex;
+- (NSDictionary *)fetchForecastForLocation:(NSString *)location;
 
 @end
 

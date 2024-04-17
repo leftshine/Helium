@@ -39,7 +39,21 @@
 
 - (NSDictionary *)fetchWeatherForLocation:(NSString *)location {
     NSArray *components = [location componentsSeparatedByString:@","];
-    NSString *res = [NetworkUtils getDataFrom:[NSString stringWithFormat:@"https://app.owm.io/app/1.0/weather?lat=%@&lon=%@&units=%@&appid=%@&exclude=minutely,alerts", components[1], components[0], self.useMetric ? @"metric" : @"imperial", self.apiKey]];
+    NSString *res = [NetworkUtils getDataFrom:[NSString stringWithFormat:@"https://api.openweathermap.org/data/2.5/weather?lat=%@&lon=%@&units=%@&appid=%@&lang=%@", components[1], components[0], self.useMetric ? @"metric" : @"imperial", self.apiKey, self.locale]];
+    NSData *data = [res dataUsingEncoding:NSUTF8StringEncoding];
+    NSError *erro = nil;
+
+    if (data != nil) {
+        NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&erro ];
+        return json;
+    }
+
+    return nil;
+}
+
+- (NSDictionary *)fetchForecastForLocation:(NSString *)location {
+    NSArray *components = [location componentsSeparatedByString:@","];
+    NSString *res = [NetworkUtils getDataFrom:[NSString stringWithFormat:@"https://api.openweathermap.org/data/2.5/forecast?lat=%@&lon=%@&units=%@&appid=%@&cnt=1&lang=%@", components[1], components[0], self.useMetric ? @"metric" : @"imperial", self.apiKey, self.locale]];
     NSData *data = [res dataUsingEncoding:NSUTF8StringEncoding];
     NSError *erro = nil;
 
@@ -62,10 +76,10 @@
 - (NSString *)temperature:(BOOL)withSymbol {
     NSString *temperatureString = nil;
 
-    if (self.weatherData) {
+    if (self.weather && [self.weather[@"cod"] isEqualToNumber:@200]) {
         NSMeasurementFormatter *formatter = [self sharedNSMeasurementFormatter];
         formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:self.locale];
-        NSMeasurement *measurement = [[NSMeasurement alloc] initWithDoubleValue:getIntFromDictKey(self.weatherData[@"current"], @"temp") unit:[self useMetric] ? NSUnitTemperature.celsius : NSUnitTemperature.fahrenheit];
+        NSMeasurement *measurement = [[NSMeasurement alloc] initWithDoubleValue:getIntFromDictKey(self.weather[@"main"], @"temp") unit:[self useMetric] ? NSUnitTemperature.celsius : NSUnitTemperature.fahrenheit];
         measurement = [self useFahrenheit] ? [measurement measurementByConvertingToUnit:NSUnitTemperature.fahrenheit] : [measurement measurementByConvertingToUnit:NSUnitTemperature.celsius];
 
         if (withSymbol) {
@@ -87,10 +101,10 @@
 - (NSString *)feelsLike:(BOOL)withSymbol {
     NSString *temperatureString = nil;
 
-    if (self.weatherData) {
+    if (self.weather && [self.weather[@"cod"] isEqualToNumber:@200]) {
         NSMeasurementFormatter *formatter = [self sharedNSMeasurementFormatter];
         formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:self.locale];
-        NSMeasurement *measurement = [[NSMeasurement alloc] initWithDoubleValue:getIntFromDictKey(self.weatherData[@"current"], @"feels_like") unit:[self useMetric] ? NSUnitTemperature.celsius : NSUnitTemperature.fahrenheit];
+        NSMeasurement *measurement = [[NSMeasurement alloc] initWithDoubleValue:getIntFromDictKey(self.weather[@"main"], @"feels_like") unit:[self useMetric] ? NSUnitTemperature.celsius : NSUnitTemperature.fahrenheit];
         measurement = [self useFahrenheit] ? [measurement measurementByConvertingToUnit:NSUnitTemperature.fahrenheit] : [measurement measurementByConvertingToUnit:NSUnitTemperature.celsius];
 
         if (withSymbol) {
@@ -108,8 +122,8 @@
 - (NSString *)conditionsEmoji {
     NSString *weatherEmoji = @"";
 
-    if (self.weatherData) {
-        NSString *weatherCode = getStringFromDictKey([self.weatherData[@"current"][@"weather"] firstObject], @"icon", @"UNKNOWN");
+    if (self.weather && [self.weather[@"cod"] isEqualToNumber:@200]) {
+        NSString *weatherCode = getStringFromDictKey([self.weather[@"weather"] firstObject], @"icon", @"UNKNOWN");
 
         if ([weatherCode isEqualToString:@"01d"]) {
             weatherEmoji = @"☀️";
@@ -139,11 +153,9 @@
 
 - (UIImage *)conditionsImage:(double)fontSize {
     UIImage *weatherImage = nil;
-    NSInteger hour = [[NSCalendar currentCalendar] component:NSCalendarUnitHour fromDate:[NSDate date]];
-    BOOL isDayTime = (hour >= 6 && hour < 18); // Assuming day time is between 6 AM and 6 PM
 
-    if (self.weatherData) {
-        NSString *weatherCode = getStringFromDictKey([self.weatherData[@"current"][@"weather"] firstObject], @"icon", @"UNKNOWN");
+    if (self.weather && [self.weather[@"cod"] isEqualToNumber:@200]) {
+        NSString *weatherCode = getStringFromDictKey([self.weather[@"weather"] firstObject], @"icon", @"UNKNOWN");
 
         // NSLog(@"boom %d", weatherCode);
         if ([weatherCode isEqualToString:@"01d"]) {
@@ -179,8 +191,8 @@
 }
 
 - (NSString *)conditionsDescription {
-    if (self.weatherData) {
-        return NSLocalizedString(getStringFromDictKey([self.weatherData[@"current"][@"weather"] firstObject], @"main", @"UNKNOWN"), comment: @"");
+    if (self.weather && [self.weather[@"cod"] isEqualToNumber:@200]) {
+        return NSLocalizedString(getStringFromDictKey([self.weather[@"weather"] firstObject], @"description", @"UNKNOWN"), comment: @"");
     }
 
     return NSLocalizedString(@"UNKNOWN", comment: @"");
@@ -193,20 +205,16 @@
 - (NSString *)lowDescription:(BOOL)withSymbol {
     NSString *temperatureString = nil;
 
-    if (self.weatherData) {
-        NSArray *dailyForecasts = self.weatherData[@"daily"];
+    if (self.weather && [self.weather[@"cod"] isEqualToNumber:@200]) {
+        NSMeasurementFormatter *formatter = [self sharedNSMeasurementFormatter];
+        formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:self.locale];
+        NSMeasurement *measurement = [[NSMeasurement alloc] initWithDoubleValue:getIntFromDictKey(self.weather[@"main"], @"temp_min") unit:[self useMetric] ? NSUnitTemperature.celsius : NSUnitTemperature.fahrenheit];
+        measurement = [self useFahrenheit] ? [measurement measurementByConvertingToUnit:NSUnitTemperature.fahrenheit] : [measurement measurementByConvertingToUnit:NSUnitTemperature.celsius];
 
-        if (dailyForecasts != nil && dailyForecasts.count > 0) {
-            NSMeasurementFormatter *formatter = [self sharedNSMeasurementFormatter];
-            formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:self.locale];
-            NSMeasurement *measurement = [[NSMeasurement alloc] initWithDoubleValue:getIntFromDictKey([dailyForecasts firstObject], @"temp_min") unit:[self useMetric] ? NSUnitTemperature.celsius : NSUnitTemperature.fahrenheit];
-            measurement = [self useFahrenheit] ? [measurement measurementByConvertingToUnit:NSUnitTemperature.fahrenheit] : [measurement measurementByConvertingToUnit:NSUnitTemperature.celsius];
-
-            if (withSymbol) {
-                temperatureString = [formatter stringFromMeasurement:measurement];
-            } else {
-                temperatureString = [self formatFloat:measurement.doubleValue];
-            }
+        if (withSymbol) {
+            temperatureString = [formatter stringFromMeasurement:measurement];
+        } else {
+            temperatureString = [self formatFloat:measurement.doubleValue];
         }
     } else {
         temperatureString = @"--";
@@ -222,20 +230,16 @@
 - (NSString *)highDescription:(BOOL)withSymbol {
     NSString *temperatureString = nil;
 
-    if (self.weatherData) {
-        NSArray *dailyForecasts = self.weatherData[@"daily"];
+    if (self.weather && [self.weather[@"cod"] isEqualToNumber:@200]) {
+        NSMeasurementFormatter *formatter = [self sharedNSMeasurementFormatter];
+        formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:self.locale];
+        NSMeasurement *measurement = [[NSMeasurement alloc] initWithDoubleValue:getIntFromDictKey(self.weather[@"main"], @"temp_max") unit:[self useMetric] ? NSUnitTemperature.celsius : NSUnitTemperature.fahrenheit];
+        measurement = [self useFahrenheit] ? [measurement measurementByConvertingToUnit:NSUnitTemperature.fahrenheit] : [measurement measurementByConvertingToUnit:NSUnitTemperature.celsius];
 
-        if (dailyForecasts != nil && dailyForecasts.count > 0) {
-            NSMeasurementFormatter *formatter = [self sharedNSMeasurementFormatter];
-            formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:self.locale];
-            NSMeasurement *measurement = [[NSMeasurement alloc] initWithDoubleValue:getIntFromDictKey([dailyForecasts firstObject], @"temp_max") unit:[self useMetric] ? NSUnitTemperature.celsius : NSUnitTemperature.fahrenheit];
-            measurement = [self useFahrenheit] ? [measurement measurementByConvertingToUnit:NSUnitTemperature.fahrenheit] : [measurement measurementByConvertingToUnit:NSUnitTemperature.celsius];
-
-            if (withSymbol) {
-                temperatureString = [formatter stringFromMeasurement:measurement];
-            } else {
-                temperatureString = [self formatFloat:measurement.doubleValue];
-            }
+        if (withSymbol) {
+            temperatureString = [formatter stringFromMeasurement:measurement];
+        } else {
+            temperatureString = [self formatFloat:measurement.doubleValue];
         }
     } else {
         temperatureString = @"--";
@@ -251,10 +255,10 @@
 - (NSString *)windSpeed:(BOOL)withUnit {
     NSString *windSpeedString = nil;
 
-    if (self.weatherData) {
+    if (self.weather && [self.weather[@"cod"] isEqualToNumber:@200]) {
         NSMeasurementFormatter *formatter = [self sharedNSMeasurementFormatter];
         formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:self.locale];
-        NSMeasurement *measurement = [[NSMeasurement alloc] initWithDoubleValue:getDoubleFromDictKey(self.weatherData[@"current"], @"wind_speed") unit:NSUnitSpeed.metersPerSecond];
+        NSMeasurement *measurement = [[NSMeasurement alloc] initWithDoubleValue:getDoubleFromDictKey(self.weather[@"wind"], @"speed") unit:NSUnitSpeed.metersPerSecond];
         measurement = [self useMetric] ? [measurement measurementByConvertingToUnit:NSUnitSpeed.kilometersPerHour] : [measurement measurementByConvertingToUnit:NSUnitSpeed.milesPerHour];
 
         if (withUnit) {
@@ -276,10 +280,10 @@
 - (NSString *)windDirection:(BOOL)shortDescription {
     NSString *windDirectionString = nil;
 
-    if (self.weatherData) {
+    if (self.weather && [self.weather[@"cod"] isEqualToNumber:@200]) {
         WeatherWindSpeedFormatter *formatter = [WeatherWindSpeedFormatter convenienceFormatter];
         formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:self.locale];
-        windDirectionString = [formatter stringForWindDirection:getDoubleFromDictKey(self.weatherData[@"current"], @"wind_deg") shortDescription:shortDescription];
+        windDirectionString = [formatter stringForWindDirection:getDoubleFromDictKey(self.weather[@"wind"], @"deg") shortDescription:shortDescription];
     }
 
     return windDirectionString ? : @"--";
@@ -292,8 +296,8 @@
 - (NSString *)humidity:(BOOL)withSymbol {
     NSString *humidityString = nil;
 
-    if (self.weatherData) {
-        humidityString = [NSString stringWithFormat:withSymbol ? @"%.0f%%" : @"%.0f", getDoubleFromDictKey(self.weatherData[@"current"], @"humidity")];
+    if (self.weather && [self.weather[@"cod"] isEqualToNumber:@200]) {
+        humidityString = [NSString stringWithFormat:withSymbol ? @"%.0f%%" : @"%.0f", getDoubleFromDictKey(self.weather[@"main"], @"humidity")];
     }
 
     return humidityString ? : @"--";
@@ -306,10 +310,10 @@
 - (NSString *)visibility:(BOOL)withUnit {
     NSString *visibilityString = nil;
 
-    if (self.weatherData) {
+    if (self.weather && [self.weather[@"cod"] isEqualToNumber:@200]) {
         NSMeasurementFormatter *formatter = [self sharedNSMeasurementFormatter];
         formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:self.locale];
-        NSMeasurement *measurement = [[NSMeasurement alloc] initWithDoubleValue:getDoubleFromDictKey(self.weatherData[@"current"], @"visibility") unit:NSUnitLength.meters];
+        NSMeasurement *measurement = [[NSMeasurement alloc] initWithDoubleValue:getDoubleFromDictKey(self.weather, @"visibility") unit:NSUnitLength.meters];
         measurement = [self useMetric] ? [measurement measurementByConvertingToUnit:NSUnitLength.kilometers] : [measurement measurementByConvertingToUnit:NSUnitLength.miles];
 
         if (withUnit) {
@@ -324,35 +328,6 @@
     return visibilityString;
 }
 
-- (NSString *)precipitationPast24Hours {
-    return [self precipitationPast24Hours:NO];
-}
-
-- (NSString *)precipitationPast24Hours:(BOOL)withUnit {
-    NSString *precipitationString = nil;
-
-    if (self.weatherData) {
-        NSArray *dailyForecasts = self.weatherData[@"daily"];
-
-        if (dailyForecasts != nil && dailyForecasts.count > 0) {
-            NSMeasurementFormatter *formatter = [self sharedNSMeasurementFormatter];
-            formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:self.locale];
-            NSMeasurement *measurement = [[NSMeasurement alloc] initWithDoubleValue:getDoubleFromDictKey([dailyForecasts firstObject], @"precipitation") unit:NSUnitLength.millimeters];
-            measurement = [self useMetric] ? measurement : [measurement measurementByConvertingToUnit:NSUnitLength.inches];
-
-            if (withUnit) {
-                precipitationString = [formatter stringFromMeasurement:measurement];
-            } else {
-                precipitationString = [self formatFloat:measurement.doubleValue];
-            }
-        }
-    } else {
-        precipitationString = @"--";
-    }
-
-    return precipitationString;
-}
-
 - (NSString *)precipitationNextHour {
     return [self precipitationNextHour:NO];
 }
@@ -360,13 +335,13 @@
 - (NSString *)precipitationNextHour:(BOOL)withSymbol {
     NSString *precipitationString = nil;
 
-    if (self.weatherData) {
-        NSArray *hourlyForecasts = self.weatherData[@"hourly"];
+    if (self.forecast && [self.forecast[@"cod"] isEqualToString:@"200"]) {
+        NSArray *hourlyForecasts = self.forecast[@"list"];
 
         if (hourlyForecasts != nil && hourlyForecasts.count > 0) {
             NSMeasurementFormatter *formatter = [self sharedNSMeasurementFormatter];
             formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:self.locale];
-            NSMeasurement *measurement = [[NSMeasurement alloc] initWithDoubleValue:getIntFromDictKey([hourlyForecasts firstObject][@"rain"], @"1h", 0) unit:NSUnitLength.millimeters];
+            NSMeasurement *measurement = [[NSMeasurement alloc] initWithDoubleValue:getIntFromDictKey([hourlyForecasts firstObject][@"rain"], @"3h", 0) unit:NSUnitLength.millimeters];
             measurement = [self useMetric] ? measurement : [measurement measurementByConvertingToUnit:NSUnitLength.inches];
 
             if (withSymbol) {
@@ -389,8 +364,8 @@
 - (NSString *)precipitationPercentNextHour:(BOOL)withSymbol {
     NSString *precipitationString = nil;
 
-    if (self.weatherData) {
-        NSArray *hourlyForecasts = self.weatherData[@"hourly"];
+    if (self.forecast && [self.forecast[@"cod"] isEqualToString:@"200"]) {
+        NSArray *hourlyForecasts = self.forecast[@"list"];
 
         if (hourlyForecasts != nil && hourlyForecasts.count > 0) {
             precipitationString = [NSString stringWithFormat:withSymbol ? @"%.0f%%" : @"%.0f", getDoubleFromDictKey([hourlyForecasts firstObject], @"pop") * 100];
@@ -409,10 +384,10 @@
 - (NSString *)pressure:(BOOL)withUnit {
     NSString *pressureString = nil;
 
-    if (self.weatherData) {
+    if (self.weather && [self.weather[@"cod"] isEqualToNumber:@200]) {
         NSMeasurementFormatter *formatter = [self sharedNSMeasurementFormatter];
         formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:self.locale];
-        NSMeasurement *measurement = [[NSMeasurement alloc] initWithDoubleValue:getDoubleFromDictKey(self.weatherData[@"current"], @"pressure") unit:NSUnitPressure.hectopascals];
+        NSMeasurement *measurement = [[NSMeasurement alloc] initWithDoubleValue:getDoubleFromDictKey(self.weather[@"main"], @"pressure") unit:NSUnitPressure.hectopascals];
         measurement = [self useMetric] ? measurement : [measurement measurementByConvertingToUnit:NSUnitPressure.poundsForcePerSquareInch];
 
         if (withUnit) {
@@ -425,16 +400,6 @@
     }
 
     return pressureString;
-}
-
-- (NSString *)UVIndex {
-    NSString *uvIndexString = nil;
-
-    if (self.weatherData) {
-        uvIndexString = [NSString stringWithFormat:@"%.0f", getDoubleFromDictKey(self.weatherData[@"current"], @"uvi")];
-    }
-
-    return uvIndexString ? : @"--";
 }
 
 - (NSDictionary *)getWeatherData {
@@ -475,13 +440,9 @@
     [data setObject:self.precipitationPercentNextHour forKey:@"precipitation_percent_next_hour"];
     [data setObject:[self precipitationPercentNextHour:YES] forKey:@"precipitation_percent_next_hour_with_symbol"];
 
-    [data setObject:self.precipitationPast24Hours forKey:@"precipitation_24h"];
-    [data setObject:[self precipitationPast24Hours:YES] forKey:@"precipitation_24h_with_unit"];
-
     [data setObject:self.pressure forKey:@"pressure"];
     [data setObject:[self pressure:YES] forKey:@"pressure_with_unit"];
 
-    [data setObject:self.UVIndex forKey:@"uv_index"];
     return data;
 }
 
@@ -496,8 +457,10 @@
                                // NSLog(@"boom location %@", location);
                                if (location != nil && nowTime - weakSelf.lastUpdateTime > 60) {
                                    // Fetch current, daily, and hourly weather for the location.
-                                   weakSelf.weatherData = [weakSelf fetchWeatherForLocation:location != nil ?
-                                                           location : weakSelf.lastLocation] ? : weakSelf.weatherData;
+                                   weakSelf.weather = [weakSelf fetchWeatherForLocation:location != nil ?
+                                                       location : weakSelf.lastLocation] ? : weakSelf.weather;
+                                   weakSelf.forecast = [weakSelf fetchForecastForLocation:location != nil ?
+                                                        location : weakSelf.lastLocation] ? : weakSelf.forecast;
 
                                    weakSelf.city = [WeatherUtils getPlacemarkByGeocode:location != nil ?
                                                     location : weakSelf.lastLocation] ? : weakSelf.city;
@@ -515,7 +478,8 @@
         // Check if location unchanged or more than 60 seconds since last update.
         if ((self.location != nil && [self.location length] > 0) && (![self.lastLocation isEqualToString:self.location] || nowTime - self.lastUpdateTime > 60)) {
             // Fetch current, daily, and hourly weather for the location.
-            self.weatherData = [self fetchWeatherForLocation:self.location] ? : self.weatherData;
+            self.weather = [self fetchWeatherForLocation:self.location] ? : self.weather;
+            self.forecast = [self fetchForecastForLocation:self.location] ? : self.forecast;
 
             self.city = [WeatherUtils getPlacemarkByGeocode:self.location] ? : self.city;
 
