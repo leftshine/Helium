@@ -303,7 +303,11 @@ class WidgetManager: ObservableObject {
     public func removeWidget(widgetSet: WidgetSetStruct, id: Int, save: Bool = true) {
         for (i, wSet) in widgetSets.enumerated() {
             if wSet == widgetSet {
-                widgetSets[i].widgetIDs.remove(at: id)
+                if id < widgetSets[i].widgetIDs.count && id >= 0 {
+                    widgetSets[i].widgetIDs.remove(at: id)
+                } else {
+                    print("Invalid widget ID:", id)
+                }
             }
         }
         if save { saveWidgetSets() }

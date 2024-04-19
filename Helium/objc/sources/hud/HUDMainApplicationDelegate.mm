@@ -13,7 +13,6 @@
 
 #import "FontUtils.h"
 #import "NSBundle+Language.h"
-#import "TWCWeather.h"
 
 #import "SBSAccessibilityWindowHostingController.h"
 #import "UIWindow+Private.h"
@@ -46,8 +45,6 @@
 
         [[NSUserDefaults standardUserDefaults] synchronize];
         [NSBundle setLanguage:[self dateLocale]];
-
-        [TWCWeather sharedInstance];
     }
 
     return self;
