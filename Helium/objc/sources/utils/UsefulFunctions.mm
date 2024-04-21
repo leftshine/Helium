@@ -44,3 +44,19 @@ NSString * getStringFromDictKey(NSDictionary *dict, NSString *key, NSString *def
 NSString * getStringFromDictKey(NSDictionary *dict, NSString *key) {
     return getStringFromDictKey(dict, key, @"");
 }
+
+// MARK: Sentry
+
+NSString * maskCoordinatesAndApiKey(NSString *inputString) {
+    NSError *error = nil;
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"(-?\\d+\\.\\d+)|([a-fA-F0-9]{32})|([a-zA-Z0-9]{16})" options:0 error:&error];
+
+    if (regex == nil) {
+        HMLog(error);
+        return inputString;
+    }
+
+    NSString *maskedString = [regex stringByReplacingMatchesInString:inputString options:0 range:NSMakeRange(0, [inputString length]) withTemplate:@"[Filtered]"];
+
+    return maskedString;
+}

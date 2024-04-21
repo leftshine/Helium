@@ -19,4 +19,6 @@ double getDoubleFromDictKey(NSDictionary *dict, NSString *key);
 NSString * getStringFromDictKey(NSDictionary *dict, NSString *key, NSString *defaultValue);
 NSString * getStringFromDictKey(NSDictionary *dict, NSString *key);
 
+NSString * maskCoordinatesAndApiKey(NSString *inputString);
+
 #endif /* UsefulFunctions_h */

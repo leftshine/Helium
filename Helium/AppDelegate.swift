@@ -35,6 +35,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             options.enableTimeToFullDisplayTracing = true
             options.swiftAsyncStacktraces = true
 //            options.tracesSampleRate = 1.0
+            options.beforeSend = { event in
+                // modify event here or return NULL to discard the event
+                if event.user != nil {
+                    event.user!.ipAddress = "0.0.0.0"
+                }
+                return event
+            }
         }
 
         return true

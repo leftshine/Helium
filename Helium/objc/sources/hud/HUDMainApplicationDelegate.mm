@@ -13,6 +13,7 @@
 
 #import "FontUtils.h"
 #import "NSBundle+Language.h"
+#import "UsefulFunctions.h"
 
 #import "SBSAccessibilityWindowHostingController.h"
 #import "UIWindow+Private.h"
@@ -92,6 +93,31 @@
         options.enableTimeToFullDisplayTracing = YES;
         options.swiftAsyncStacktraces = YES;
 //        options.tracesSampleRate = @1.0;
+        options.beforeSend = ^SentryEvent *_Nullable (SentryEvent *_Nonnull event) {
+            // modify event here or return NULL to discard the event
+            if (event.user != nil) {
+                event.user.ipAddress = @"0.0.0.0";
+            }
+
+            return event;
+        };
+        options.beforeBreadcrumb = ^SentryBreadcrumb *_Nullable (SentryBreadcrumb *_Nonnull breadcrumb) {
+            if ([breadcrumb.type isEqualToString:@"http"]) {
+                NSMutableDictionary *mutableData = [NSMutableDictionary dictionaryWithDictionary:breadcrumb.data];
+
+                if (breadcrumb.data[@"url"] != nil) {
+                    mutableData[@"url"] = maskCoordinatesAndApiKey(breadcrumb.data[@"url"]);
+                }
+
+                if (breadcrumb.data[@"http.query"] != nil) {
+                    mutableData[@"http.query"] = maskCoordinatesAndApiKey(breadcrumb.data[@"http.query"]);
+                }
+
+                breadcrumb.data = mutableData;
+            }
+
+            return breadcrumb;
+        };
     }];
 
     return YES;
