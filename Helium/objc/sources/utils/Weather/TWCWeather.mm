@@ -36,9 +36,9 @@ typedef NSUInteger ConditionImageType;
 
     dispatch_once(&onceToken, ^{
         formatter = [[NSMeasurementFormatter alloc] init];
+        [formatter setUnitOptions:NSMeasurementFormatterUnitOptionsProvidedUnit];
+        formatter.numberFormatter.maximumFractionDigits = 1;
     });
-    [formatter setUnitOptions:NSMeasurementFormatterUnitOptionsProvidedUnit];
-    formatter.numberFormatter.maximumFractionDigits = 1;
     return formatter;
 }
 
