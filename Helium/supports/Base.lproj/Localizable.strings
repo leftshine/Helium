@@ -1,5 +1,6 @@
 /* Alert++.swift */
 "Error" = "Error";
+"Info" = "Info";
 "OK" = "OK";
 "Cancel" = "Cancel";
 "Text" = "Text";
@@ -56,6 +57,13 @@
 "UI improvements" = "UI improvements";
 "Credits" = "Credits";
 "Settings saved successfully" = "Settings saved successfully";
+"Update" = "Update";
+"Check Update" = "Check Update";
+"Pre-Release version?" = "Pre-Release version?";
+"Would you like to check for updates?" = "Would you like to check for updates?";
+"The current version is already up to date!" = "The current version is already up to date!";
+"New version found, Would you like to install it via TrollStore?" = "New version found, Would you like to install it via TrollStore?";
+"Unable to get updates." = "Unable to get updates.";
 
 /* WidgetCustomizationView.swift */
 "Delete " = "Delete ";
@@ -193,6 +201,7 @@
 "Are you sure you want to delete this widget?" = "Are you sure you want to delete this widget?";
 "Widgets" = "Widgets";
 "Edit Widget" = "Edit Widget";
+"Save Changes" = "Save Changes";
 "Would you like to save the changes to your current widget set?" = "Would you like to save the changes to your current widget set?";
 "Weather Update Interval" = "Weather Update Interval";
 "WEATHER_INTERVAL_WARNING" = "Weather update intervals less than 10 minutes may exceed api limits, continue saving?";

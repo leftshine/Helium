@@ -1,5 +1,6 @@
 /* Alert++.swift */
 "Error" = "出错了";
+"Info" = "信息";
 "OK" = "确定";
 "Cancel" = "取消";
 "Text" = "文字段";
@@ -35,7 +36,6 @@
 "ColorfulClouds" = "彩云天气";
 "Weather API Key" = "天气API Key";
 "Free Subscription API" = "免费订阅API";
-"Show when Rotating" = "旋转屏幕时显示";
 "Hide Save Confirmation Popup" = "不显示保存确认弹窗";
 "Hide HUD On Screenshot" = "截图时隐藏HUD";
 "Display Debug Border" = "显示调试边框";
@@ -57,6 +57,13 @@
 "UI improvements" = "UI优化";
 "Credits" = "致谢";
 "Settings saved successfully" = "设置保存成功";
+"Update" = "更新";
+"Check Update" = "检查更新";
+"Pre-Release version?" = "预发布版本?";
+"Would you like to check for updates?" = "是否检查更新？";
+"The current version is already up to date!" = "当前已经是最新版本！";
+"New version found, Would you like to install it via TrollStore?" = "发现新版本，是否通过TrollStore安装？";
+"Unable to get updates." = "无法获取更新。";
 
 /* WidgetCustomizationView.swift */
 "Delete " = "删除 ";
@@ -161,8 +168,6 @@
 "Vertical Anchor Side" = "垂直显示位置";
 "Top" = "顶部";
 "Bottom" = "底部";
-"Offset X" = "X偏移";
-"Offset Y" = "Y偏移";
 "Portrait Offset X" = "竖屏X偏移";
 "Portrait Offset Y" = "竖屏Y偏移";
 "Landscape Offset X" = "横屏X偏移";

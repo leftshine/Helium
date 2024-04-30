@@ -10,6 +10,7 @@
 #import "FontUtils.h"
 #import "LunarDate.h"
 #import "SwiftObjCPPBridger.h"
+#import "UpdateUtils.h"
 #import "WeatherUtils.h"
 
 #import "DisableWidgetSetIntent.h"

@@ -19,6 +19,7 @@ struct SettingsView: View {
     @State var weatherProvider: Int = 0
     @State var weatherApiKey: String = ""
     @State var freeSub: Bool = true
+    @State var isPreRelease = false
 
     var body: some View {
         NavigationView {
@@ -129,6 +130,32 @@ struct SettingsView: View {
                     Label(NSLocalizedString("Weather", comment: ""), systemImage: "cloud.sun")
                 }
 
+                // Update List
+                Section {
+                    HStack {
+                        Toggle(isOn: $isPreRelease) {
+                            Text(NSLocalizedString("Pre-Release version?", comment: ""))
+                                .bold()
+                                .minimumScaleFactor(0.5)
+                        }
+                    }
+
+                    HStack {
+                        Text(NSLocalizedString("Update", comment: ""))
+                            .bold()
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        Button(action: {
+                            UIApplication.shared.confirmAlert(title: NSLocalizedString("Update", comment: ""), body: NSLocalizedString("Would you like to check for updates?", comment: ""), onOK: {
+                                updateCheck()
+                            }, noCancel: false)
+                        }) {
+                            Text(NSLocalizedString("Check Update", comment: ""))
+                        }
+                    }
+                } header: {
+                    Label(NSLocalizedString("Update", comment: ""), systemImage: "arrow.up.square")
+                }
+
                 // Credits List
                 Section {
                     LinkCell(imageName: "LeminLimez", url: "https://github.com/leminlimez", title: "LeminLimez", contribution: NSLocalizedString("Main Developer", comment: "leminlimez's contribution"), circle: true)
@@ -165,6 +192,7 @@ struct SettingsView: View {
         weatherProvider = UserDefaults.standard.integer(forKey: "weatherProvider", forPath: USER_DEFAULTS_PATH)
         weatherApiKey = UserDefaults.standard.string(forKey: "weatherApiKey", forPath: USER_DEFAULTS_PATH) ?? ""
         freeSub = UserDefaults.standard.bool(forKey: "freeSub", forPath: USER_DEFAULTS_PATH)
+        isPreRelease = UserDefaults.standard.bool(forKey: "isPreRelease", forPath: USER_DEFAULTS_PATH)
     }
 
     func saveChanges() {
@@ -173,10 +201,41 @@ struct SettingsView: View {
         UserDefaults.standard.setValue(hideOnScreenshot, forKey: "hideOnScreenshot", forPath: USER_DEFAULTS_PATH)
         UserDefaults.standard.setValue(debugBorder, forKey: "debugBorder", forPath: USER_DEFAULTS_PATH)
         UserDefaults.standard.setValue(freeSub, forKey: "freeSub", forPath: USER_DEFAULTS_PATH)
+        UserDefaults.standard.setValue(isPreRelease, forKey: "isPreRelease", forPath: USER_DEFAULTS_PATH)
         UserDefaults.standard.setValue(weatherProvider, forKey: "weatherProvider", forPath: USER_DEFAULTS_PATH)
         UserDefaults.standard.setValue(weatherApiKey, forKey: "weatherApiKey", forPath: USER_DEFAULTS_PATH)
         UIApplication.shared.alert(title: NSLocalizedString("Save Changes", comment: ""), body: NSLocalizedString("Settings saved successfully", comment: ""))
         DarwinNotificationCenter.default.post(name: NOTIFY_RELOAD_HUD)
+    }
+
+    func updateCheck() {
+        UpdateUtils.fetchLatestRelease(forRepo: "AsakuraFuuko/Helium", isPreRelease: isPreRelease) { result in
+            guard let resultDict = result as? [String: String],
+                  let currentVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String,
+                  let latestVersion = resultDict["latestVersion"],
+                  let assetUrl = resultDict["assetUrl"] else {
+                // Unable to fetch latest release information or retrieve current version or latest version or asset URL
+                UIApplication.shared.alert(body: NSLocalizedString("Unable to get updates.", comment: ""))
+                return
+            }
+
+            if let err = resultDict["error"] {
+                UIApplication.shared.alert(body: err)
+                return
+            }
+
+            if currentVersion == latestVersion {
+                UIApplication.shared.alert(title: NSLocalizedString("Info", comment: ""), body: NSLocalizedString("The current version is already up to date!", comment: ""))
+            } else {
+                UIApplication.shared.confirmAlert(title: NSLocalizedString("Info", comment: ""), body: "\(NSLocalizedString("New version found, Would you like to install it via TrollStore?", comment: ""))\n\(latestVersion)", onOK: {
+                    if UIApplication.shared.canOpenURL(URL(string: "apple-magnifier://install?url=\(assetUrl)")!) {
+                        UIApplication.shared.open(URL(string: "apple-magnifier://install?url=\(assetUrl)")!, options: [:], completionHandler: nil)
+                    } else {
+                        UIApplication.shared.alert(body: NSLocalizedString("Unable to open the link.", comment: ""))
+                    }
+                }, noCancel: false)
+            }
+        }
     }
 
     // Link Cell code from Cowabunga
