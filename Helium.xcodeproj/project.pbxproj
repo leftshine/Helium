@@ -49,6 +49,8 @@
 		32300CDC2BC2D99B002296DC /* ScreenshotInvincibleContainerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32300CDA2BC2D99B002296DC /* ScreenshotInvincibleContainerProtocol.swift */; };
 		32300CDE2BC2D9B7002296DC /* ScreenshotInvisibleContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32300CDD2BC2D9B7002296DC /* ScreenshotInvisibleContainer.swift */; };
 		32300CDF2BC2D9B7002296DC /* ScreenshotInvisibleContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32300CDD2BC2D9B7002296DC /* ScreenshotInvisibleContainer.swift */; };
+		3267F63B2BE10F7D00714FAF /* UpdateUtils.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3267F63A2BE10F7D00714FAF /* UpdateUtils.mm */; };
+		3267F63C2BE10F7D00714FAF /* UpdateUtils.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3267F63A2BE10F7D00714FAF /* UpdateUtils.mm */; };
 		3299349F2BB02AF3009BE9B0 /* MainAppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3299349E2BB02AF3009BE9B0 /* MainAppView.swift */; };
 		329934A12BB02AF6009BE9B0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 329934A02BB02AF6009BE9B0 /* Assets.xcassets */; };
 		329934AE2BB03AF0009BE9B0 /* HomePageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 329934AD2BB03AF0009BE9B0 /* HomePageView.swift */; };
@@ -225,6 +227,8 @@
 		32300CD72BC2D97C002296DC /* HiddenContainerRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HiddenContainerRecognizer.swift; sourceTree = "<group>"; };
 		32300CDA2BC2D99B002296DC /* ScreenshotInvincibleContainerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotInvincibleContainerProtocol.swift; sourceTree = "<group>"; };
 		32300CDD2BC2D9B7002296DC /* ScreenshotInvisibleContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotInvisibleContainer.swift; sourceTree = "<group>"; };
+		3267F6392BE10F4100714FAF /* UpdateUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UpdateUtils.h; sourceTree = "<group>"; };
+		3267F63A2BE10F7D00714FAF /* UpdateUtils.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = UpdateUtils.mm; sourceTree = "<group>"; };
 		329934992BB02AF3009BE9B0 /* Helium.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Helium.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3299349E2BB02AF3009BE9B0 /* MainAppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainAppView.swift; sourceTree = "<group>"; };
 		329934A02BB02AF6009BE9B0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -725,6 +729,7 @@
 				32E7F82B2BB6BE9E00507110 /* MusicPlayerUtils.h */,
 				320F72FA2BCAA2160033417A /* NetworkUtils.h */,
 				32E7F82C2BB6BE9E00507110 /* NSBundle+Language.h */,
+				3267F6392BE10F4100714FAF /* UpdateUtils.h */,
 				32E7F82D2BB6BE9E00507110 /* UsefulFunctions.h */,
 				32E7F8222BB6BE9E00507110 /* Weather */,
 			);
@@ -797,6 +802,7 @@
 				32E7F8492BB6BE9E00507110 /* MusicPlayerUtils.mm */,
 				320F72FB2BCAA3200033417A /* NetworkUtils.mm */,
 				32E7F84A2BB6BE9E00507110 /* NSBundle+Language.mm */,
+				3267F63A2BE10F7D00714FAF /* UpdateUtils.mm */,
 				32E7F84B2BB6BE9E00507110 /* UsefulFunctions.mm */,
 				32E7F8412BB6BE9E00507110 /* Weather */,
 			);
@@ -1067,6 +1073,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3267F63B2BE10F7D00714FAF /* UpdateUtils.mm in Sources */,
 				32E7F87A2BB6BE9F00507110 /* MusicPlayerUtils.mm in Sources */,
 				329934AE2BB03AF0009BE9B0 /* HomePageView.swift in Sources */,
 				32E7F6852BB19B6300507110 /* Const.swift in Sources */,
@@ -1141,6 +1148,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3267F63C2BE10F7D00714FAF /* UpdateUtils.mm in Sources */,
 				32E7F87B2BB6BE9F00507110 /* MusicPlayerUtils.mm in Sources */,
 				32E7F7922BB5A55900507110 /* HomePageView.swift in Sources */,
 				32E7F7962BB5A55900507110 /* Const.swift in Sources */,
