@@ -275,9 +275,9 @@ static void ReloadHUD
 - (void)resumeLoopTimer
 {
     for (WidgetsContainerView *containerView in _containerViews) {
-        if (containerView.isEnabled) {
+        //if (containerView.isEnabled) {
             [containerView resumeTimer];
-        }
+        //}
     }
 }
 
